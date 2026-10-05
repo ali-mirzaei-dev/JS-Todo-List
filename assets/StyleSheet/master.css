@@ -8,18 +8,26 @@
     --color-accent: #d63226;
     --color-bgDef: #fff9f4;
     --color-bgFocus: #ffefe6;
-    --color-hover:#e7e7e7;
+    --color-hover: #e7e7e7;
 }
 
 @layer components {
     .icon {
         @apply text-icons hover:bg-hover duration-400 cursor-pointer p-1 rounded-lg
     }
+
     .no-hover {
         @apply hover:bg-transparent
     }
 }
 
-body{
+body {
     /* color: #e7e7e7; */
+}
+
+.swipe {
+    transform: translateX(-200%);
+}
+.swipeIn {
+    transform: translateX(0);
 }

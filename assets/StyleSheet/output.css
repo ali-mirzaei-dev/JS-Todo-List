@@ -8,12 +8,9 @@
       "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-700: oklch(50.5% 0.213 27.518);
-    --color-blue-500: oklch(62.3% 0.214 259.815);
     --color-white: #fff;
     --spacing: 0.25rem;
-    --container-xs: 20rem;
     --text-2xl: 1.5rem;
     --text-2xl--line-height: calc(2 / 1.5);
     --text-3xl: 1.875rem;
@@ -21,9 +18,6 @@
     --font-weight-medium: 500;
     --font-weight-bold: 700;
     --radius-lg: 0.5rem;
-    --blur-md: 12px;
-    --default-transition-duration: 150ms;
-    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     --default-font-family: var(--font-sans);
     --default-mono-font-family: var(--font-mono);
     --color-primary: #202020;
@@ -201,6 +195,9 @@
   .left-1\/2 {
     left: calc(1 / 2 * 100%);
   }
+  .z-10 {
+    z-index: 10;
+  }
   .mt-0 {
     margin-top: 0px;
   }
@@ -259,6 +256,9 @@
     --tw-translate-y: calc(calc(70 / 100 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
+  .transform {
+    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
   .cursor-pointer {
     cursor: pointer;
   }
@@ -295,22 +295,15 @@
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
+  .overflow-hidden {
+    overflow: hidden;
+  }
   .rounded-lg {
     border-radius: var(--radius-lg);
   }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;
-  }
-  .border-2 {
-    border-style: var(--tw-border-style);
-    border-width: 2px;
-  }
-  .border-blue-500 {
-    border-color: var(--color-blue-500);
-  }
-  .border-red-500 {
-    border-color: var(--color-red-500);
   }
   .bg-accent {
     background-color: var(--color-accent);
@@ -320,9 +313,6 @@
   }
   .p-1 {
     padding: var(--spacing);
-  }
-  .p-2 {
-    padding: calc(var(--spacing) * 2);
   }
   .p-3 {
     padding: calc(var(--spacing) * 3);
@@ -386,9 +376,21 @@
     outline-style: var(--tw-outline-style);
     outline-width: 1px;
   }
+  .duration-300 {
+    --tw-duration: 300ms;
+    transition-duration: 300ms;
+  }
   .duration-400 {
     --tw-duration: 400ms;
     transition-duration: 400ms;
+  }
+  .duration-500 {
+    --tw-duration: 500ms;
+    transition-duration: 500ms;
+  }
+  .duration-700 {
+    --tw-duration: 700ms;
+    transition-duration: 700ms;
   }
   :is(.\*\:flex > *) {
     display: flex;
@@ -411,6 +413,14 @@
   :is(.\*\:capitalize > *) {
     text-transform: capitalize;
   }
+  :is(.\*\*\:duration-300 *) {
+    --tw-duration: 300ms;
+    transition-duration: 300ms;
+  }
+  :is(.\*\*\:duration-500 *) {
+    --tw-duration: 500ms;
+    transition-duration: 500ms;
+  }
   @media (hover: hover) {
     .hover\:bg-hover:hover {
       background-color: var(--color-hover);
@@ -423,23 +433,26 @@
     }
   }
   @media (width >= 48rem) {
+    .md\:static {
+      position: static;
+    }
     .md\:block {
       display: block;
-    }
-    .md\:flex {
-      display: flex;
     }
     .md\:hidden {
       display: none;
     }
+    .md\:w-0\! {
+      width: 0px !important;
+    }
     .md\:w-20\/100 {
       width: calc(20 / 100 * 100%);
     }
-    .md\:justify-between {
-      justify-content: space-between;
-    }
     .md\:justify-end {
       justify-content: flex-end;
+    }
+    .md\:p-0\! {
+      padding: 0px !important;
     }
   }
   @media (width >= 64rem) {
@@ -498,6 +511,12 @@
     }
   }
 }
+.swipe {
+  transform: translateX(-200%);
+}
+.swipeIn {
+  transform: translateX(0);
+}
 @property --tw-translate-x {
   syntax: "*";
   inherits: false;
@@ -512,6 +531,26 @@
   syntax: "*";
   inherits: false;
   initial-value: 0;
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
 }
 @property --tw-border-style {
   syntax: "*";
@@ -537,6 +576,11 @@
       --tw-translate-x: 0;
       --tw-translate-y: 0;
       --tw-translate-z: 0;
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
       --tw-border-style: solid;
       --tw-font-weight: initial;
       --tw-outline-style: solid;

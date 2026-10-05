@@ -16,11 +16,15 @@
 
     <!--==================#1 LEFT SIDE NAV ==================-->
     <!--==================================================-->
-    <nav class="hidden md:block md:w-20/100 lg:w-15/100 h-screen ">
+    <nav class="hidden absolute md:static w-full md:block md:w-20/100 lg:w-15/100 h-screen duration-700 z-10 overflow-hidden">
         <section class="flex h-full flex-wrap content-start gap-4 bg-bgDef py-5 px-4 2xl:container">
-            <div class="w-full  text-right">
-                <i class="text-2xl icon">ﵽ</i>
+
+            <!--==================#1-1 CLOSE SIDEBAR ICON  ==================-->
+            <div class="w-full text-right">
+                <i id="closeBtn" class="text-2xl icon">ﵽ</i>
             </div>
+
+            <!--==================#1-2 SIDE MENU ==================-->
             <ul class="w-full flex flex-wrap content-start *:py-1.5 *:px-1 *:hover:bg-hover *:cursor-pointer *:capitalize *:w-full *:flex *:gap-1">
                 <li><i class="icon"></i>inbox</li>
                 <li><i class="icon"></i>today</li>
@@ -33,13 +37,13 @@
 
     <!--==================#2 RIGHT CONTENT  ==================-->
     <!--======================================================-->
-    <main class="flex flex-col content-start justify-center flex-1 h-screen">
+    <main class="flex flex-col content-start justify-center duration-500 **:duration-500 flex-1 h-screen">
 
         <!--==================#2-1 HEADER ==================-->
-        <header class="flex w-full h-fit  justify-between md:justify-end p-3 ">
+        <header class="flex w-full h-fit  justify-between md:justify-end p-3">
 
             <!--=======#2-1-1 ICON LEFT  =======-->
-            <i class="md:hidden text-2xl icon px-1 py-2">ﵽ</i>
+            <i id="leftBtn" class="md:hidden text-2xl icon px-1 py-2">ﵽ</i>
 
             <!--=======#2-1-2 ICONS RIGHT  =======-->
             <div class="flex gap-5">
@@ -63,11 +67,45 @@
                     add task</button>
             </div>
 
+            <!--=======#2-2-2 NEW TASKS =======-->
+            <div class="flex flex-wrap content-start justify-center w-full h-full gap-5 ">
+            </div>
+
         </section>
 
 
     </main>
 
 </body>
+<script>
+
+    const closeBtn = document.getElementById("closeBtn")
+    const nav = document.querySelector("nav")
+    const main = document.querySelector("main")
+    const leftBtn = document.getElementById("leftBtn")
+
+    closeBtn.addEventListener("click", () => {
+        nav.classList.add("md:w-0!", "md:p-0!");
+        nav.classList.add("swipe");
+
+        setTimeout(() => {
+            nav.classList.remove("md:block")
+            leftBtn.classList.remove("md:hidden")
+            leftBtn.parentElement.classList.remove("md:justify-end")
+        }, 500);
+    })
+
+    leftBtn.addEventListener("click", () => {
+        leftBtn.classList.add("md:hidden")
+        nav.classList.add("md:block")
+        leftBtn.parentElement.classList.add("md:justify-end")
+        
+        setTimeout(() => {
+            nav.classList.remove("swipe");
+            nav.classList.remove("md:w-0!", "md:p-0!");
+        }, 500);
+    })
+
+</script>
 
 </html>
