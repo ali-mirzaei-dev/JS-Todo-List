@@ -6,12 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="assets/StyleSheet/output.css">
+    <link rel="stylesheet" href="assets/Font/font/style.css">
+    <link rel="stylesheet" href="assets/Font/font1/style.css">
 
     <!-- npx @tailwindcss/cli -i ./assets/StyleSheet/master.css -o ./assets/StyleSheet/output.css --watch -->
 </head>
 
-<body>
-    
+<body class="h-screen flex flex-wrap">
+
+    <!--==================#1 LEFT SIDE NAV ==================-->
+    <!--==================================================-->
+    <nav class="w-15/100 h-screen flex flex-wrap content-start gap-4 bg-bgDef py-5 px-4">
+        <div class="w-full  text-right">
+            <i class="text-2xl icon">ﵽ</i>
+        </div>
+        <ul class="w-full flex flex-wrap content-start *:py-1.5 *:px-1 *:hover:bg-hover *:cursor-pointer *:capitalize *:w-full *:flex *:gap-1">
+            <li><i class="icon"></i>inbox</li>
+            <li><i class="icon"></i>today</li>
+            <li><i class="icon"></i>upcomming</li>
+            <li><i class="icon"></i>completed</li>
+            <li><i class="icon"></i>setting</li>
+        </ul>
+    </nav>
+
+    <!--==================#2 RIGHT CONTENT  ==================-->
+    <!--======================================================-->
+    <main class="flex flex-col content-start flex-1 h-screen">
+
+        <!--==================#2-1 HEADER ==================-->
+        <header class="w-full flex h-fit justify-end p-3">
+
+            <!--=======#2-1-1 ICONS RIGHT  =======-->
+            <div class="flex gap-5">
+                <span class="flex text-md font-medium capitalize text-secondary items-center gap-1 p-1 rounded-lg hover:bg-hover cursor-pointer">
+                    <i class="text-2xl icon"></i>
+                    display</span>
+                <i class=" mt-0.5 text-3xl icon ">ￖ</i>
+            </div>
+        </header>
+
+        <!--==================#2-2 CONTENT ==================-->
+        <section class="w-full flex flex-1 relative">
+
+            <!--=======#2-2-1 EMPTY STATE =======-->
+            <div class="absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-70/100">
+                <img class="" src="assets/Images/EmptyInbox.png" alt="">
+                <span class="w-full font-bold text-primary">Capture now, plan later</span>
+                <span class="w-full text-secondary px-6">Inbox is your go-to spot for quick task entry. Clear your mind now, organize when you’re ready.</span>
+                <button class="text-white mt-3 bg-accent py-2 px-3 rounded-lg hover:bg-red-700 duration-400 capitalize gap-1 flex items-center cursor-pointer">
+                    <i class="icon text-white no-hover">ﭐ</i>
+                    add task</button>
+            </div>
+
+        </section>
+
+
+    </main>
+
 </body>
 
 </html>
