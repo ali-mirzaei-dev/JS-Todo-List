@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="assets/StyleSheet/output.css">
     <link rel="stylesheet" href="assets/Font/font/style.css">
     <link rel="stylesheet" href="assets/Font/font1/style.css">
+    <link rel="stylesheet" href="assets/Font/font2/style.css">
 
     <!-- npx @tailwindcss/cli -i ./assets/StyleSheet/master.css -o ./assets/StyleSheet/output.css --watch -->
 </head>
@@ -55,21 +56,24 @@
         </header>
 
         <!--==================#2-2 CONTENT ==================-->
-        <section class="w-full flex flex-1 relative">
+        <section class="w-full flex flex-wrap content-start flex-1 relative px-60 gap-2">
+
+            <h2 class="w-full capitalize text-[32px] ">Inbox</h2>
 
             <!--=======#2-2-1 EMPTY STATE =======-->
-            <div class="absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-70/100">
+            <div id="emptyState" class=" absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-70/100">
                 <img class="" src="assets/Images/EmptyInbox.png" alt="">
                 <span class="w-full font-bold text-primary">Capture now, plan later</span>
                 <span class="w-full text-secondary px-6">Inbox is your go-to spot for quick task entry. Clear your mind now, organize when you’re ready.</span>
-                <button class="text-white mt-3 bg-accent py-2 px-3 rounded-lg hover:bg-red-700 duration-400 capitalize gap-1 flex items-center cursor-pointer">
+                <button id="addTaskInEmpty" class="text-white mt-3 bg-accent py-2 px-3 rounded-lg hover:bg-red-700 duration-400 capitalize gap-1 flex items-center cursor-pointer">
                     <i class="icon text-white no-hover">ﭐ</i>
                     add task</button>
             </div>
 
             <!--=======#2-2-2 NEW TASKS =======-->
-            <div class="flex flex-wrap content-start justify-center w-full h-full gap-5 ">
-            </div>
+            <ul id="newTasksPlace" class="flex flex-wrap content-start w-full ">
+               
+            </ul>
 
         </section>
 
@@ -84,6 +88,7 @@
     const main = document.querySelector("main")
     const leftBtn = document.getElementById("leftBtn")
 
+    // ------- CLOSE SIDEBAR ------- //
     closeBtn.addEventListener("click", () => {
         nav.classList.add("md:w-0!", "md:p-0!");
         nav.classList.add("swipe");
@@ -95,17 +100,103 @@
         }, 500);
     })
 
+    // ------- OPEN SIDEBAR ------- //
     leftBtn.addEventListener("click", () => {
         leftBtn.classList.add("md:hidden")
-        nav.classList.add("md:block")
         leftBtn.parentElement.classList.add("md:justify-end")
+        nav.classList.add("md:block")
         nav.classList.remove("hidden")
-        
+
         setTimeout(() => {
             nav.classList.remove("swipe");
             nav.classList.remove("md:w-0!", "md:p-0!");
         }, 500);
     })
+
+    const emptyState = document.getElementById("emptyState")
+    const addTaskInEmpty = document.getElementById("addTaskInEmpty")
+    const newTasksPlace = document.getElementById("newTasksPlace")
+    let newTaskInput
+    let addNewTask
+
+    // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
+    function addTask() {
+        newTaskInput = document.createElement("li")
+        newTaskInput.className = "border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
+        newTaskInput.innerHTML = `
+
+        <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
+
+        <div class="flex justify-between">
+            <div class="flex gap-2 items-center">
+                <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
+
+                <span class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary">
+                    <i class="icon no-hover text-secondary">ﰅ</i>
+                    date
+                </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
+                <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
+            </div>
+        </div>
+        `
+
+        newTasksPlace.appendChild(newTaskInput)
+        setTimeout(() => {
+        const textarea = document.getElementById("inputValue");
+        if (textarea) textarea.focus();
+    }, 0);
+    }
+
+
+    // ------- FIRST TASK ------- //
+    addTaskInEmpty.addEventListener("click", () => {
+        emptyState.classList.add("hidden")
+        addTask()
+    })
+
+    // ------- SUBMIT TASK ------- //
+    function submitTask() {
+        const inputValue = document.getElementById("inputValue")
+        let addedTask = document.createElement("li")
+        addedTask.className = "w-full flex justify-between border-b border-gray-300 py-4 *:flex *:gap-2"
+        addedTask.innerHTML = `
+        
+        <div>
+            <input class="mt-1" type="checkbox">
+            <span>${inputValue.value}</span>
+        </div>
+        <div>
+            <i class="icon"></i>
+            <i class="icon">ﰅ</i>
+        </div>
+        `
+        addNewTask = document.createElement("div")
+        addNewTask.className = "w-full flex justify-center py-4"
+        addNewTask.innerHTML = `
+            <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
+                <i class="icon no-hover">ﭐ</i>
+                add task
+            </button>
+        `
+        newTaskInput.remove()
+        newTasksPlace.appendChild(addedTask)
+        addTask()
+    }
+
+    // ------- FOR ADDING NEW TASKS WITH THE BUTTON ------- //
+    function addNewTaskFunc() {
+        addNewTask.remove()
+        addTask()
+    }
+
+    function deleteAddBox() {
+        newTaskInput.remove()
+        newTasksPlace.appendChild(addNewTask)
+    }
 
 </script>
 
