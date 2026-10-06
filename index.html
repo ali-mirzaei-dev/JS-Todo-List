@@ -38,7 +38,7 @@
 
     <!--==================#2 RIGHT CONTENT  ==================-->
     <!--======================================================-->
-    <main class="flex flex-col content-start justify-center duration-500 **:duration-500 flex-1 h-screen">
+    <main class="flex flex-col content-start justify-center duration-500 **:duration-500 flex-1 min-h-screen">
 
         <!--==================#2-1 HEADER ==================-->
         <header class="flex w-full h-fit  justify-between md:justify-end p-3">
@@ -75,6 +75,7 @@
 
             </ul>
 
+
         </section>
 
 
@@ -87,6 +88,7 @@
     const nav = document.querySelector("nav")
     const main = document.querySelector("main")
     const leftBtn = document.getElementById("leftBtn")
+    const placeHolder = document.querySelector("body")
 
     // ------- CLOSE SIDEBAR ------- //
     closeBtn.addEventListener("click", () => {
@@ -123,7 +125,7 @@
     // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
     function addTask() {
         newTaskInput = document.createElement("li")
-        newTaskInput.className = "border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
+        newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
         newTaskInput.innerHTML = `
 
         <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
@@ -150,8 +152,9 @@
             const textarea = document.getElementById("inputValue");
             if (textarea) textarea.focus();
         }, 0);
-    }
 
+
+    }
 
     // ------- FIRST TASK ------- //
     addTaskInEmpty.addEventListener("click", () => {
@@ -172,7 +175,8 @@
         </div>
         <div>
             <i class="icon"></i>
-            <i class="icon">ﰅ</i>
+            <i onclick="deleteAddedTask(this)" class="icon"></i>
+            <i class="icon">ﭏ</i>
         </div>
         `
         addNewTask = document.createElement("div")
@@ -183,8 +187,14 @@
                 add task
             </button>
         `
+
+
+
+
         newTaskInput.remove()
-        newTasksPlace.appendChild(addedTask)
+        if (inputValue.value != "") {
+            newTasksPlace.appendChild(addedTask)
+        }
         addTask()
     }
 
@@ -194,18 +204,67 @@
         addTask()
     }
 
+    // ------- FOR REMOVING THE NEW TASK INPUT ------- //
     function deleteAddBox() {
         newTaskInput.remove()
 
         if (newTasksPlace.querySelectorAll("li").length == 0) {
-            newTaskInput.remove()
             emptyState.classList.remove("hidden")
         } else {
             newTasksPlace.appendChild(addNewTask)
         }
     }
 
+    // ------- FOR DELETING AN ADDED TASK ------- //
+    function deleteAddedTask(element) {
 
+        let deleteTaskConfirm = document.createElement("div")
+        deleteTaskConfirm.className = "absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+        deleteTaskConfirm.innerHTML = `
+            <div class="bg-bgDef border border-hover rounded-xl p-6 w-90 max-w-sm flex flex-col gap-5 shadow-2xl">
+        
+                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
+                    <i class="icon text-2xl text-accent no-hover"></i>
+                 </div>
+
+                <div class="text-center flex flex-col gap-2">
+                    <h3 class="text-lg font-bold text-primary">Delete this task?</h3>
+                    <p class="text-sm text-secondary">This action cannot be undone. Are you sure you want to proceed?</p>
+                </div>
+               
+                <div class="flex gap-3 mt-2">
+                    <button id="cancelDelete" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">
+                    Cancel
+                    </button>
+
+                    <button id="confirmDelete" class="flex-1 py-2 rounded-lg bg-accent text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer">
+                    Delete
+                    </button>
+
+                </div>
+            </div>`
+
+        placeHolder.appendChild(deleteTaskConfirm)
+
+        const cancelDelete = document.getElementById("cancelDelete")
+        const confirmDelete = document.getElementById("confirmDelete")
+
+        cancelDelete.addEventListener("click", () => {
+            deleteTaskConfirm.remove()
+        })
+        confirmDelete.addEventListener("click", () => {
+            element.parentElement.parentElement.remove()
+            deleteTaskConfirm.remove()
+        })
+
+        deleteTaskConfirm.addEventListener("click", (e) => {
+            if (e.target === deleteTaskConfirm) {
+                deleteTaskConfirm.remove();
+            }
+        });
+
+
+    }
 
 </script>
 
