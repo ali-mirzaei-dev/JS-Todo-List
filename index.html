@@ -72,7 +72,7 @@
 
             <!--=======#2-2-2 NEW TASKS =======-->
             <ul id="newTasksPlace" class="flex flex-wrap content-start w-full ">
-               
+
             </ul>
 
         </section>
@@ -116,6 +116,7 @@
     const emptyState = document.getElementById("emptyState")
     const addTaskInEmpty = document.getElementById("addTaskInEmpty")
     const newTasksPlace = document.getElementById("newTasksPlace")
+
     let newTaskInput
     let addNewTask
 
@@ -146,9 +147,9 @@
 
         newTasksPlace.appendChild(newTaskInput)
         setTimeout(() => {
-        const textarea = document.getElementById("inputValue");
-        if (textarea) textarea.focus();
-    }, 0);
+            const textarea = document.getElementById("inputValue");
+            if (textarea) textarea.focus();
+        }, 0);
     }
 
 
@@ -195,8 +196,16 @@
 
     function deleteAddBox() {
         newTaskInput.remove()
-        newTasksPlace.appendChild(addNewTask)
+
+        if (newTasksPlace.querySelectorAll("li").length == 0) {
+            newTaskInput.remove()
+            emptyState.classList.remove("hidden")
+        } else {
+            newTasksPlace.appendChild(addNewTask)
+        }
     }
+
+
 
 </script>
 
