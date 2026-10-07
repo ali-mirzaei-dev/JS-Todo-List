@@ -58,7 +58,7 @@
         <!--==================#2-2 CONTENT ==================-->
         <section class="w-full flex flex-wrap content-start flex-1 relative px-60 gap-2">
 
-            <h2 class="w-full capitalize text-[32px] ">Inbox</h2>
+            <h2 class="w-full capitalize text-[32px]">Inbox</h2>
 
             <!--=======#2-2-1 EMPTY STATE =======-->
             <div id="emptyState" class=" absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-70/100">
@@ -166,16 +166,16 @@
     function submitTask() {
         const inputValue = document.getElementById("inputValue")
         let addedTask = document.createElement("li")
-        addedTask.className = "w-full flex justify-between border-b border-gray-300 py-4 *:flex *:gap-2"
+        addedTask.className = "w-full flex justify-between border-b border-gray-300 rounded-md px-3 py-4 *:flex *:gap-2"
         addedTask.innerHTML = `
         
         <div>
-            <input class="mt-1" type="checkbox">
+            <input onchange="markComplete(this)" class="mt-1" type="checkbox">
             <span>${inputValue.value}</span>
         </div>
         <div>
             <i onclick="editAddedTask(this)" class="icon"></i>
-            <i onclick="deleteAddedTask(this)" class="icon"></i>
+            <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
             <i class="icon">ﭏ</i>
         </div>
         `
@@ -303,6 +303,25 @@
             editAddedTaskInput.remove()
             isEditing = false;
         })
+    }
+
+    // ------- MARING TASKS AS COMPLETED ------- //
+    function markComplete(element) {
+
+        const iconForRemove = element.parentElement.nextElementSibling.querySelectorAll("i")
+
+        element.parentElement.parentElement.classList.toggle("bg-[#f0fdf4]", element.checked)
+        element.nextElementSibling.classList.toggle("line-through", element.checked)
+        element.nextElementSibling.classList.toggle("decoration-1", element.checked)
+        element.nextElementSibling.classList.toggle("decoration-green-800", element.checked)
+        element.nextElementSibling.classList.toggle("text-green-700", element.checked)
+        
+        iconForRemove.forEach((val) => {
+            if (!val.classList.contains("icon-delete")) {
+                val.classList.toggle("hidden", element.checked)
+            }
+
+        });
     }
 
 
