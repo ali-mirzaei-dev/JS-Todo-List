@@ -292,15 +292,23 @@
         element.parentElement.parentElement.classList.add("hidden")
 
         document.getElementById("editOkay").addEventListener("click", () => {
-            tempValAdded.innerText = editAddedTaskInput.querySelector("textarea").value
-            element.parentElement.parentElement.classList.remove("hidden")
-            editAddedTaskInput.remove()
-            isEditing = false;
+            let newText = editAddedTaskInput.querySelector("textarea").value;
+
+            if (newText.trim() !== "") {
+                tempValAdded.innerText = newText;
+                element.parentElement.parentElement.classList.remove("hidden");
+                editAddedTaskInput.remove();
+                isEditing = false;
+            } else {
+                element.parentElement.parentElement.classList.remove("hidden");
+                editAddedTaskInput.remove();
+                isEditing = false;
+            }
         })
 
         document.getElementById("editBad").addEventListener("click", () => {
             element.parentElement.parentElement.classList.remove("hidden")
-            editAddedTaskInput.remove()
+            editAddedTaskInput.remove();
             isEditing = false;
         })
     }
