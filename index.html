@@ -162,7 +162,7 @@
         addTask()
     })
 
-    // ------- SUBMIT TASK ------- //
+    // ------- SUBMIT TASK AND ADDED TASKS------- //
     function submitTask() {
         const inputValue = document.getElementById("inputValue")
         let addedTask = document.createElement("li")
@@ -174,7 +174,7 @@
             <span>${inputValue.value}</span>
         </div>
         <div>
-            <i class="icon"></i>
+            <i onclick="editAddedTask(this)" class="icon"></i>
             <i onclick="deleteAddedTask(this)" class="icon"></i>
             <i class="icon">ﭏ</i>
         </div>
@@ -185,11 +185,7 @@
             <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
                 <i class="icon no-hover">ﭐ</i>
                 add task
-            </button>
-        `
-
-
-
+            </button>`
 
         newTaskInput.remove()
         if (inputValue.value != "") {
@@ -198,7 +194,7 @@
         addTask()
     }
 
-    // ------- FOR ADDING NEW TASKS WITH THE BUTTON ------- //
+    // ------- FOR ADDING NEW TASKS WITH THE ADD BUTTON ------- //
     function addNewTaskFunc() {
         addNewTask.remove()
         addTask()
@@ -215,7 +211,7 @@
         }
     }
 
-    // ------- FOR DELETING AN ADDED TASK ------- //
+    // ------- DELETING AN ADDED TASK ------- //
     function deleteAddedTask(element) {
 
         let deleteTaskConfirm = document.createElement("div")
@@ -265,6 +261,44 @@
 
 
     }
+
+    // ------- EDITING AN ADDED TASK ------- //
+    function editAddedTask(element) {
+
+
+        const tempValAdded = element.parentElement.parentElement.querySelector("span")
+
+        // ------- CREATING THE EDITING BOX
+        let editAddedTaskInput = document.createElement("li")
+        editAddedTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
+        editAddedTaskInput.innerHTML = `
+        <textarea placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none">${tempValAdded.innerText}</textarea>
+        <div class="flex justify-end gap-2">
+            <i id="editBad" class="icon text-secondary text-lg"></i>
+            <i id="editOkay" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
+            </div>`
+
+
+        // ------- EXECUTAIONS
+        deleteAddBox()
+        element.parentElement.parentElement.before(editAddedTaskInput)
+        setTimeout(() => {
+            editAddedTaskInput.querySelector("textarea").focus();
+        }, 0);
+        element.parentElement.parentElement.classList.add("hidden")
+
+        document.getElementById("editOkay").addEventListener("click", () => {
+            tempValAdded.innerText = editAddedTaskInput.querySelector("textarea").value
+            element.parentElement.parentElement.classList.remove("hidden")
+            editAddedTaskInput.remove()
+        })
+
+        document.getElementById("editBad").addEventListener("click", () => {
+            element.parentElement.parentElement.classList.remove("hidden")
+            editAddedTaskInput.remove()
+        })
+    }
+
 
 </script>
 
