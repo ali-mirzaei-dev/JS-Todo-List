@@ -58,10 +58,33 @@
         <!--==================#2-2 CONTENT ==================-->
         <section class="w-full flex flex-wrap content-start flex-1 relative px-60 gap-2">
 
-            <h2 class="w-full capitalize text-[32px]">Inbox</h2>
+            <h2 onclick="check()" class="w-full capitalize text-[32px]">Inbox</h2>
+
+            <!--=======#2-2-0 TOOLBAR =======-->
+            <div class="w-full flex flex-wrap justify-between items-center gap-4 py-2 mb-2 border-b border-border-soft">
+
+                <!-- Left btns -->
+                <div class="flex items-center gap-6 text-sm font-medium text-secondary capitalize">
+                    <span class="flex items-center gap-1.5">
+                        <i class="icon no-hover text-base"></i>
+                        Total: <span id="totalCounter" class="text-primary font-bold">0</span>
+                    </span>
+                    <span class="flex items-center gap-1.5">
+                        <i class="icon no-hover text-base"></i>
+                        Completed: <span id="completedCounter" class="text-accent font-bold">0</span>
+                    </span>
+                </div>
+
+                <!-- Right btns -->
+                <button onclick="clearCompletedTasks()" class="text-sm text-secondary hover:text-accent capitalize flex items-center gap-1.5 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover">
+                    <i class="icon no-hover text-base"></i>
+                    Clear Completed
+                </button>
+            </div>
+
 
             <!--=======#2-2-1 EMPTY STATE =======-->
-            <div id="emptyState" class=" absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-70/100">
+            <div id="emptyState" class=" absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-50/100">
                 <img class="" src="assets/Images/EmptyInbox.png" alt="">
                 <span class="w-full font-bold text-primary">Capture now, plan later</span>
                 <span class="w-full text-secondary px-6">Inbox is your go-to spot for quick task entry. Clear your mind now, organize when you’re ready.</span>
@@ -167,6 +190,7 @@
         const inputValue = document.getElementById("inputValue")
         let addedTask = document.createElement("li")
         addedTask.className = "w-full flex justify-between border-b border-gray-300 rounded-md px-3 py-4 *:flex *:gap-2"
+        addedTask.setAttribute("data-checker", "off")
         addedTask.innerHTML = `
         
         <div>
@@ -192,6 +216,7 @@
             newTasksPlace.appendChild(addedTask)
         }
         addTask()
+        check()
     }
 
     // ------- FOR ADDING NEW TASKS WITH THE ADD BUTTON ------- //
@@ -251,6 +276,7 @@
         confirmDelete.addEventListener("click", () => {
             element.parentElement.parentElement.remove()
             deleteTaskConfirm.remove()
+            check()
         })
 
         deleteTaskConfirm.addEventListener("click", (e) => {
@@ -258,8 +284,6 @@
                 deleteTaskConfirm.remove();
             }
         });
-
-
     }
 
 
@@ -313,7 +337,7 @@
         })
     }
 
-    // ------- MARING TASKS AS COMPLETED ------- //
+    // ------- MARKING TASKS AS COMPLETED ------- //
     function markComplete(element) {
 
         const iconForRemove = element.parentElement.nextElementSibling.querySelectorAll("i")
@@ -323,6 +347,7 @@
         element.nextElementSibling.classList.toggle("decoration-1", element.checked)
         element.nextElementSibling.classList.toggle("decoration-green-800", element.checked)
         element.nextElementSibling.classList.toggle("text-green-700", element.checked)
+        element.parentElement.parentElement.dataset.checker = element.checked ? "on" : "off"
 
         iconForRemove.forEach((val) => {
             if (!val.classList.contains("icon-delete")) {
@@ -330,8 +355,48 @@
             }
 
         });
+
+        check()
     }
 
+    // ------- TASKS COUNTER ------- //
+    const totalTasksPlace = document.getElementById("totalCounter")
+    const completedTaskPlace = document.getElementById("completedCounter")
+
+    function check() {
+        let totalCounter = 0
+        let completeCounter = 0
+
+        const checkForComplete = newTasksPlace.querySelectorAll("li")
+        checkForComplete.forEach((val) => {
+            const liGrab = val.getAttribute("data-checker")
+
+            if (liGrab == "on" || liGrab == "off") {
+                totalCounter++
+            }
+
+            if (liGrab == "on") {
+                completeCounter++
+            }
+        });
+
+        totalTasksPlace.innerText = totalCounter
+        completedTaskPlace.innerText = completeCounter
+
+    }
+
+    function clearCompletedTasks() {
+        const checkForComplete = newTasksPlace.querySelectorAll("li")
+        checkForComplete.forEach((val) => {
+            const liGrab = val.getAttribute("data-checker")
+
+            if (liGrab == "on") {
+                val.remove()
+            }
+        });
+        
+        check()
+    }
 
 </script>
 
