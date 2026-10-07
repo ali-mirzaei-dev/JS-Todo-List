@@ -262,9 +262,13 @@
 
     }
 
-    // ------- EDITING AN ADDED TASK ------- //
-    function editAddedTask(element) {
 
+    // ------- EDITING AN ADDED TASK ------- //
+    let isEditing = false;
+
+    function editAddedTask(element) {
+        if (isEditing) { return };
+        isEditing = true;
 
         const tempValAdded = element.parentElement.parentElement.querySelector("span")
 
@@ -291,11 +295,13 @@
             tempValAdded.innerText = editAddedTaskInput.querySelector("textarea").value
             element.parentElement.parentElement.classList.remove("hidden")
             editAddedTaskInput.remove()
+            isEditing = false;
         })
 
         document.getElementById("editBad").addEventListener("click", () => {
             element.parentElement.parentElement.classList.remove("hidden")
             editAddedTaskInput.remove()
+            isEditing = false;
         })
     }
 
