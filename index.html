@@ -60,8 +60,8 @@
 
             <h2 onclick="check()" class="w-full capitalize text-[32px]">Inbox</h2>
 
-            <!--=======#2-2-0 TOOLBAR =======-->
-            <div class="w-full flex flex-wrap justify-between items-center gap-4 py-2 mb-2 border-b border-border-soft">
+            <!--=======#2-2-1 TOOLBAR =======-->
+            <div id="toolBar" class="w-full flex flex-wrap justify-between items-center gap-4 py-2 mb-2 border-b border-border-soft">
 
                 <!-- Left btns -->
                 <div class="flex items-center gap-6 text-sm font-medium text-secondary capitalize">
@@ -83,7 +83,7 @@
             </div>
 
 
-            <!--=======#2-2-1 EMPTY STATE =======-->
+            <!--=======#2-2-2 EMPTY STATE =======-->
             <div id="emptyState" class=" absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-50/100">
                 <img class="" src="assets/Images/EmptyInbox.png" alt="">
                 <span class="w-full font-bold text-primary">Capture now, plan later</span>
@@ -93,7 +93,7 @@
                     add task</button>
             </div>
 
-            <!--=======#2-2-2 NEW TASKS =======-->
+            <!--=======#2-2-3 NEW TASKS =======-->
             <ul id="newTasksPlace" class="flex flex-wrap content-start w-full ">
 
             </ul>
@@ -112,6 +112,23 @@
     const main = document.querySelector("main")
     const leftBtn = document.getElementById("leftBtn")
     const placeHolder = document.querySelector("body")
+
+    let tasks = []
+    // let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
+    // if (tempTasks) {
+    //     tasks = [...tempTasks]
+    //     tasks.forEach((val) => {
+
+    //     })
+    // }
+
+
+
+
+
+
+
+
 
     // ------- CLOSE SIDEBAR ------- //
     closeBtn.addEventListener("click", () => {
@@ -167,8 +184,8 @@
                 <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
                 <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
             </div>
-        </div>
-        `
+        </div>`
+
 
         newTasksPlace.appendChild(newTaskInput)
         setTimeout(() => {
@@ -188,35 +205,66 @@
     // ------- SUBMIT TASK AND ADDED TASKS------- //
     function submitTask() {
         const inputValue = document.getElementById("inputValue")
-        let addedTask = document.createElement("li")
-        addedTask.className = "w-full flex justify-between border-b border-gray-300 rounded-md px-3 py-4 *:flex *:gap-2"
-        addedTask.setAttribute("data-checker", "off")
-        addedTask.innerHTML = `
-        
-        <div>
-            <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
-            <span>${inputValue.value}</span>
-        </div>
-        <div>
-            <i onclick="editAddedTask(this)" class="icon"></i>
-            <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
-            <i class="icon">ﭏ</i>
-        </div>
-        `
-        addNewTask = document.createElement("div")
-        addNewTask.className = "w-full flex justify-center py-4"
-        addNewTask.innerHTML = `
-            <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
-                <i class="icon no-hover">ﭐ</i>
-                add task
-            </button>`
 
-        newTaskInput.remove()
-        if (inputValue.value != "") {
-            newTasksPlace.appendChild(addedTask)
+        if (inputValue.value.trim() != '') {
+
+            // ------- THIS CREATES THE OBJECTS TO ADD TO THE ARRAY
+            let tempAdd = {
+                name: inputValue.value,
+                id: Date.now(),
+                status: "off"
+            }
+            tasks.push(tempAdd);
+
+            renderTask()
+            addTask()
+            check()
         }
-        addTask()
-        check()
+    }
+
+    // ------- RENDER TASKS ------- // 
+    function renderTask() {
+        newTasksPlace.innerHTML = "";
+
+        tasks.forEach((val) => {
+            let addedTask = document.createElement("li");
+            addedTask.className = "w-full flex justify-between border-b border-gray-300 rounded-md px-3 py-4 *:flex *:gap-2";
+            addedTask.setAttribute("data-id", val.id);
+
+            if (val.status == "on") {
+                addedTask.classList.add("bg-[#f0fdf4]");
+                addedTask.innerHTML = `
+            <div>
+                <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox mt-0.5">
+                <span class="line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+            </div>
+            <div>
+                <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
+            </div>`;
+            } else {
+
+                addedTask.innerHTML = `
+            <div>
+                <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
+                <span>${val.name}</span>
+            </div>
+            <div>
+                <i onclick="editAddedTask(this)" class="icon"></i>
+                <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
+                <i class="icon">ﭏ</i>
+            </div>`;
+            }
+
+            newTasksPlace.appendChild(addedTask);
+        });
+
+        addNewTask = document.createElement("div");
+        addNewTask.className = "w-full flex justify-center py-4";
+        addNewTask.innerHTML = `
+        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
+            <i class="icon no-hover">ﭐ</i>
+            add task
+        </button>`;
     }
 
     // ------- FOR ADDING NEW TASKS WITH THE ADD BUTTON ------- //
@@ -276,6 +324,17 @@
         confirmDelete.addEventListener("click", () => {
             element.parentElement.parentElement.remove()
             deleteTaskConfirm.remove()
+
+            // ------- DELETEING FROM ARRAY 
+            const taskToDelete = element.parentElement.parentElement.getAttribute("data-id")
+
+            tasks.forEach((val, i) => {
+                if (val.id == taskToDelete) {
+                    {
+                        tasks.splice(i, 1)
+                    }
+                }
+            })
             check()
         })
 
@@ -295,6 +354,7 @@
         isEditing = true;
 
         const tempValAdded = element.parentElement.parentElement.querySelector("span")
+        const tempValEditId = element.parentElement.parentElement.getAttribute("data-id")
 
         // ------- CREATING THE EDITING BOX
         let editAddedTaskInput = document.createElement("li")
@@ -302,7 +362,7 @@
         editAddedTaskInput.innerHTML = `
         <textarea placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none">${tempValAdded.innerText}</textarea>
         <div class="flex justify-end gap-2">
-            <i id="editBad" class="icon text-secondary text-lg"></i>
+            <i id="editCancel" class="icon text-secondary text-lg"></i>
             <i id="editOkay" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
             </div>`
 
@@ -318,11 +378,18 @@
         document.getElementById("editOkay").addEventListener("click", () => {
             let newText = editAddedTaskInput.querySelector("textarea").value;
 
-            if (newText.trim() !== "") {
+            if (newText.trim() != "") {
                 tempValAdded.innerText = newText;
+                tasks.forEach((val, i) => {
+                    if (val.id == tempValEditId) {
+                        val.name = newText
+                    }
+                })
+
                 element.parentElement.parentElement.classList.remove("hidden");
                 editAddedTaskInput.remove();
                 isEditing = false;
+                check()
             } else {
                 element.parentElement.parentElement.classList.remove("hidden");
                 editAddedTaskInput.remove();
@@ -330,11 +397,12 @@
             }
         })
 
-        document.getElementById("editBad").addEventListener("click", () => {
+        document.getElementById("editCancel").addEventListener("click", () => {
             element.parentElement.parentElement.classList.remove("hidden")
             editAddedTaskInput.remove();
             isEditing = false;
         })
+
     }
 
     // ------- MARKING TASKS AS COMPLETED ------- //
@@ -347,55 +415,65 @@
         element.nextElementSibling.classList.toggle("decoration-1", element.checked)
         element.nextElementSibling.classList.toggle("decoration-green-800", element.checked)
         element.nextElementSibling.classList.toggle("text-green-700", element.checked)
-        element.parentElement.parentElement.dataset.checker = element.checked ? "on" : "off"
 
         iconForRemove.forEach((val) => {
             if (!val.classList.contains("icon-delete")) {
                 val.classList.toggle("hidden", element.checked)
             }
-
         });
+
+        let tempMarkId = element.parentElement.parentElement.getAttribute("data-id")
+
+        tasks.forEach((val, i) => {
+
+            if (val.id == tempMarkId && val.status == "off") {
+                val.status = "on"
+            } else if (val.id == tempMarkId && val.status == "on") {
+                val.status = "off"
+            }
+
+
+        })
 
         check()
     }
 
-    // ------- TASKS COUNTER ------- //
+    // ------- TASKS COUNTER || CHECK() ------- //
     const totalTasksPlace = document.getElementById("totalCounter")
     const completedTaskPlace = document.getElementById("completedCounter")
+    let totalTaskCount = 0
 
     function check() {
-        let totalCounter = 0
-        let completeCounter = 0
 
-        const checkForComplete = newTasksPlace.querySelectorAll("li")
-        checkForComplete.forEach((val) => {
-            const liGrab = val.getAttribute("data-checker")
+        totalTaskCount = tasks.length
+        let completeTaskCount = 0
 
-            if (liGrab == "on" || liGrab == "off") {
-                totalCounter++
-            }
+        if (tasks.length > 0) {
+            tasks.forEach((val) => {
+                if (val.status == "on") {
+                    completeTaskCount++
+                }
+            })
+        } else {
+            emptyState.classList.remove("hidden")
+            newTaskInput.remove()
+        }
 
-            if (liGrab == "on") {
-                completeCounter++
-            }
-        });
-
-        totalTasksPlace.innerText = totalCounter
-        completedTaskPlace.innerText = completeCounter
+        totalTasksPlace.innerText = totalTaskCount
+        completedTaskPlace.innerText = completeTaskCount
+        console.log(tasks);
 
     }
 
+    // ------- CLEAR COMPLETE TASKS ------- //
     function clearCompletedTasks() {
-        const checkForComplete = newTasksPlace.querySelectorAll("li")
-        checkForComplete.forEach((val) => {
-            const liGrab = val.getAttribute("data-checker")
 
-            if (liGrab == "on") {
-                val.remove()
-            }
-        });
-        
-        check()
+        if (tasks.length > 0) {
+            tasks = tasks.filter((task) => task.status !== "on");
+            renderTask()
+            addNewTaskFunc()
+            check()
+        }
     }
 
 </script>
