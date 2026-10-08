@@ -113,22 +113,6 @@
     const leftBtn = document.getElementById("leftBtn")
     const placeHolder = document.querySelector("body")
 
-    let tasks = []
-    // let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
-    // if (tempTasks) {
-    //     tasks = [...tempTasks]
-    //     tasks.forEach((val) => {
-
-    //     })
-    // }
-
-
-console.log(document.body);
-
-
-
-
-
 
 
     // ------- CLOSE SIDEBAR ------- //
@@ -156,26 +140,42 @@ console.log(document.body);
         }, 500);
     })
 
+    let tasks = []
     const emptyState = document.getElementById("emptyState")
     const addTaskInEmpty = document.getElementById("addTaskInEmpty")
     const newTasksPlace = document.getElementById("newTasksPlace")
     const toolBar = document.getElementById("toolBar")
+    const totalTasksPlace = document.getElementById("totalCounter")
+    const completedTaskPlace = document.getElementById("completedCounter")
 
     let newTaskInput
     let addNewTask
+    let totalTaskCount = 0
+    let isEditing = false;
+
+    // ------- LOCAL STORAGE LOAD ------- //
+    let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
+
+    if (tempTasks) {
+        tasks = tempTasks
+        renderTask()
+        check()
+        loader()
+    }
+
 
     // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
     function addTask() {
         newTaskInput = document.createElement("li")
         newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
         newTaskInput.innerHTML = `
-
+        
         <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
-
+        
         <div class="flex justify-between">
             <div class="flex gap-2 items-center">
                 <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
-
+                
                 <span class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary">
                     <i class="icon no-hover text-secondary">ﰅ</i>
                     date
@@ -206,24 +206,33 @@ console.log(document.body);
         addTask()
     })
 
-    // ------- SUBMIT TASK AND ADDED TASKS------- //
+    // ------- SUBMIT TASK AND CREATING THE ARRAY AND DATABASE------- //
     function submitTask() {
         const inputValue = document.getElementById("inputValue")
 
         if (inputValue.value.trim() != '') {
 
             // ------- THIS CREATES THE OBJECTS TO ADD TO THE ARRAY
-            let tempAdd = {
+            let tempAdd = {}
+
+            tempAdd = {
                 name: inputValue.value,
                 id: Date.now(),
                 status: "off"
             }
             tasks.push(tempAdd);
 
+
+
             renderTask()
             addTask()
             check()
         }
+    }
+
+    // ------- THIS SAVES TO LOCAL STORAGE ------- //
+    function saveTask() {
+        localStorage.setItem('dataBase', JSON.stringify(tasks))
     }
 
     // ------- RENDER TASKS ------- // 
@@ -269,12 +278,11 @@ console.log(document.body);
             <i class="icon no-hover">ﭐ</i>
             add task
         </button>`;
-        // newTasksPlace.appendChild(addNewTask);
     }
 
     // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
     function showAddBtn() {
-        if(addNewTask && document.body.contains(addNewTask)) return ;
+        if (addNewTask && document.body.contains(addNewTask)) return;
 
         addNewTask = document.createElement("div");
         addNewTask.className = "w-full flex justify-center py-4";
@@ -369,7 +377,7 @@ console.log(document.body);
 
 
     // ------- EDITING AN ADDED TASK ------- //
-    let isEditing = false;
+
 
     function editAddedTask(element) {
         if (isEditing) { return };
@@ -391,8 +399,6 @@ console.log(document.body);
 
         // ------- EXECUTAIONS
         deleteAddBox()
-
-        // console.log();
 
         element.parentElement.parentElement.before(editAddedTaskInput)
         setTimeout(() => {
@@ -464,9 +470,8 @@ console.log(document.body);
     }
 
     // ------- TASKS COUNTER || CHECK() ------- //
-    const totalTasksPlace = document.getElementById("totalCounter")
-    const completedTaskPlace = document.getElementById("completedCounter")
-    let totalTaskCount = 0
+
+
 
     function check() {
 
@@ -488,8 +493,7 @@ console.log(document.body);
 
         totalTasksPlace.innerText = totalTaskCount
         completedTaskPlace.innerText = completeTaskCount
-        console.log(tasks);
-
+        saveTask()
     }
 
     // ------- CLEAR COMPLETE TASKS ------- //
@@ -500,6 +504,15 @@ console.log(document.body);
             renderTask()
             addNewTaskFunc()
             check()
+        }
+    }
+
+    function loader() {
+        if (tasks.length > 0) {
+            emptyState.classList.add("hidden")
+            toolBar.classList.add("flex")
+            toolBar.classList.remove("hidden")
+            showAddBtn()
         }
     }
 
