@@ -6,10 +6,25 @@
     --color-icons: #969696;
     --color-secondary: #666;
     --color-accent: #d63226;
-    --color-bgDef: #fff9f4;
+    --color-bgDef: #FFFFFF;
     --color-bgFocus: #ffefe6;
     --color-hover: #e7e7e7;
 }
+
+@layer base {
+    .dark-theme {
+        --color-primary: #F5F5F5 !important;
+        --color-secondary: #999999 !important;
+        --color-icons: #888888 !important;
+        --color-bgDef: #121212 !important;
+        --color-bgFocus: #1A1A1A !important;
+        --color-hover: #2A2A2A !important;
+        --color-accent: #ff4b3e !important;
+        color: #F5F5F5 !important;
+    }
+
+}
+
 
 @layer components {
     .icon {
@@ -24,16 +39,10 @@
         @apply appearance-none h-5 w-5 rounded-md border-2 border-secondary bg-transparent cursor-pointer transition-all duration-300 hover:border-green-700 checked:bg-green-700 checked:border-white;
     }
 
-    .custom-checkbox:checked::after {
-        content: "";
-        display: block;
-        width: 5px;
-        height: 9px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-        margin-left: 6px;
-        margin-top: 3px;
+
+
+    .active-link {
+        @apply bg-bgFocus text-[#BE3144] font-bold border-l-4 border-[#BE3144] -ml-1;
     }
 }
 
@@ -44,6 +53,19 @@ body {
 .swipe {
     transform: translateX(-200%);
 }
+
 .swipeIn {
     transform: translateX(0);
+}
+
+.custom-checkbox:checked::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-left: 6px;
+    margin-top: 3px;
 }
