@@ -123,6 +123,7 @@
     // }
 
 
+console.log(document.body);
 
 
 
@@ -273,6 +274,8 @@
 
     // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
     function showAddBtn() {
+        if(addNewTask && document.body.contains(addNewTask)) return ;
+
         addNewTask = document.createElement("div");
         addNewTask.className = "w-full flex justify-center py-4";
         addNewTask.innerHTML = `
