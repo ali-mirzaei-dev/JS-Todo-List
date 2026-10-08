@@ -17,7 +17,7 @@
 
     <!--==================#1 LEFT SIDE NAV ==================-->
     <!--==================================================-->
-    <nav class="hidden absolute inset-y-0 left-0 w-full md:static md:block md:w-[20%] lg:w-[15%] h-screen duration-700 z-10 overflow-hidden">
+    <nav class="absolute inset-y-0 left-0 w-full -translate-x-full md:translate-x-0 md:static md:block md:w-[20%] lg:w-[15%] h-screen transition-all duration-500 z-30 overflow-hidden">
         <section class="flex h-full flex-wrap content-start gap-4 bg-bgDef py-5 px-4 2xl:container">
 
             <!--==================#1-1 CLOSE SIDEBAR ICON  ==================-->
@@ -112,28 +112,32 @@
         const placeHolder = document.querySelector("body")
 
         // ------- CLOSE SIDEBAR ------- //
-        closeBtn.addEventListener("click", () => {
+        function closeSidebar() {
             nav.classList.add("md:w-0!", "md:p-0!");
-            nav.classList.add("swipe");
+            nav.classList.add("-translate-x-full");
 
-            setTimeout(() => {
-                nav.classList.remove("md:block")
-                leftBtn.classList.remove("md:hidden")
-                leftBtn.parentElement.classList.remove("md:justify-end")
-            }, 500);
-        })
+            leftBtn.classList.remove("md:hidden");
+            leftBtn.parentElement.classList.remove("md:justify-end");
+        }
 
-        // ------- OPEN SIDEBAR ------- //
+        closeBtn.addEventListener("click", closeSidebar);
+
         leftBtn.addEventListener("click", () => {
-            leftBtn.classList.add("md:hidden")
-            leftBtn.parentElement.classList.add("md:justify-end")
-            nav.classList.add("md:block")
-            nav.classList.remove("hidden")
+            if (nav.classList.contains("-translate-x-full")) {
 
-            setTimeout(() => {
-                nav.classList.remove("swipe");
-                nav.classList.remove("md:w-0!", "md:p-0!");
-            }, 500);
+                // OPEN SIDEBAR
+                nav.classList.remove("-translate-x-full");
+                leftBtn.classList.add("md:hidden");
+                leftBtn.parentElement.classList.add("md:justify-end");
+
+                setTimeout(() => {
+                    nav.classList.remove("md:w-0!", "md:p-0!");
+                }, 50);
+            } else {
+
+                // CLOSE SIDE BAR
+                closeSidebar();
+            }
         })
 
         let tasks = []
@@ -165,23 +169,23 @@
             newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
             newTaskInput.innerHTML = `
         
-        <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
+            <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
         
-        <div class="flex justify-between">
-            <div class="flex gap-2 items-center">
-                <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
-                
-                <span class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary">
-                    <i class="icon no-hover text-secondary">ﰅ</i>
-                    date
-                </span>
-            </div>
+            <div class="flex justify-between">
+                 <div class="flex gap-2 items-center">
+                     <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
 
-            <div class="flex items-center gap-2">
-                <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
-                <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
-            </div>
-        </div>`
+                     <span class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary">
+                         <i class="icon no-hover text-secondary">ﰅ</i>
+                         date
+                     </span>
+                 </div>
+             
+                 <div class="flex items-center gap-2">
+                     <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
+                     <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
+                 </div>
+            </div>`
 
             newTasksPlace.appendChild(newTaskInput)
             setTimeout(() => {
@@ -234,24 +238,24 @@
                 if (val.status == "on") {
                     addedTask.classList.add("bg-[#f0fdf4]");
                     addedTask.innerHTML = `
-            <div class="items-center">
-                <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox mt-0.5">
-                <span class="line-through decoration-1 decoration-green-800 text-green-700 break-words">${val.name}</span>
-            </div>
-            <div class=" shrink-0">
-                <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
-            </div>`;
+                    <div class="items-center">
+                        <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox mt-0.5">
+                        <span class="line-through decoration-1 decoration-green-800 text-green-700 break-words">${val.name}</span>
+                    </div>
+                    <div class=" shrink-0">
+                        <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
+                    </div>`;
                 } else {
                     addedTask.innerHTML = `
-            <div class="items-center">
-                <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
-                <span class="break-words">${val.name}</span>
-            </div>
-            <div class="shrink-0">
-                <i onclick="editAddedTask(this)" class="icon"></i>
-                <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
-                <i class="icon">ﭏ</i>
-            </div>`;
+                    <div class="items-center">
+                        <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
+                        <span class="break-words">${val.name}</span>
+                    </div>
+                    <div class="shrink-0">
+                        <i onclick="editAddedTask(this)" class="icon"></i>
+                        <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
+                        <i class="icon">ﭏ</i>
+                    </div>`;
                 }
 
                 newTasksPlace.appendChild(addedTask);
@@ -260,10 +264,10 @@
             addNewTask = document.createElement("div");
             addNewTask.className = "w-full flex justify-center py-4";
             addNewTask.innerHTML = `
-        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
-            <i class="icon no-hover">ﭐ</i>
-            add task
-        </button>`;
+                <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
+                    <i class="icon no-hover">ﭐ</i>
+                    add task
+                </button>`;
         }
 
         // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -273,10 +277,10 @@
             addNewTask = document.createElement("div");
             addNewTask.className = "w-full flex justify-center py-4";
             addNewTask.innerHTML = `
-        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
-            <i class="icon no-hover">ﭐ</i>
-            add task
-        </button>`;
+                <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
+                    <i class="icon no-hover">ﭐ</i>
+                    add task
+                </button>`;
             newTasksPlace.appendChild(addNewTask);
         }
 
@@ -352,11 +356,13 @@
             let editAddedTaskInput = document.createElement("li")
             editAddedTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
             editAddedTaskInput.innerHTML = `
-        <textarea placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none">${tempValAdded.innerText}</textarea>
-        <div class="flex justify-end gap-2">
-            <i id="editCancel" class="icon text-secondary text-lg"></i>
-            <i id="editOkay" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
-        </div>`
+            
+                <textarea placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none">${tempValAdded.innerText}</textarea>
+
+                <div class="flex justify-end gap-2">
+                    <i id="editCancel" class="icon text-secondary text-lg"></i>
+                    <i id="editOkay" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
+                </div>`
 
             deleteAddBox()
             element.parentElement.parentElement.before(editAddedTaskInput)
