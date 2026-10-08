@@ -13,11 +13,11 @@
     <!-- npx @tailwindcss/cli -i ./assets/StyleSheet/master.css -o ./assets/StyleSheet/output.css --watch -->
 </head>
 
-<body class="flex flex-wrap">
+<body class="relative flex flex-col md:flex-row">
 
     <!--==================#1 LEFT SIDE NAV ==================-->
     <!--==================================================-->
-    <nav class="hidden absolute md:static w-full md:block md:w-20/100 lg:w-15/100 h-screen duration-700 z-10 overflow-hidden">
+    <nav class="hidden absolute inset-y-0 left-0 w-full md:static md:block md:w-[20%] lg:w-[15%] h-screen duration-700 z-10 overflow-hidden">
         <section class="flex h-full flex-wrap content-start gap-4 bg-bgDef py-5 px-4 2xl:container">
 
             <!--==================#1-1 CLOSE SIDEBAR ICON  ==================-->
@@ -38,40 +38,42 @@
 
     <!--==================#2 RIGHT CONTENT  ==================-->
     <!--======================================================-->
-    <main class="flex flex-col content-start justify-center duration-500 **:duration-500 flex-1 min-h-screen">
+    <main class="flex flex-col content-start justify-center duration-500 **:duration-500 flex-1 min-h-screen w-full">
 
         <!--==================#2-1 HEADER ==================-->
-        <header class="flex w-full h-fit  justify-between md:justify-end p-3">
+        <header class="flex w-full h-fit justify-between md:justify-end p-3 sticky top-0 backdrop-blur-md z-20">
 
             <!--=======#2-1-1 ICON LEFT  =======-->
             <i id="leftBtn" class="md:hidden text-2xl icon px-1 py-2">ﵽ</i>
 
             <!--=======#2-1-2 ICONS RIGHT  =======-->
-            <div class="flex gap-5">
+            <div class="flex gap-3 md:gap-5 items-center">
                 <span class="flex text-md font-medium capitalize text-secondary items-center gap-1 p-1 rounded-lg hover:bg-hover cursor-pointer">
                     <i class="text-2xl icon"></i>
-                    display</span>
-                <i class=" mt-0.5 text-3xl icon ">ￖ</i>
+                    <span class="hidden sm:inline">display</span> </span>
+                <i class="mt-0.5 text-3xl icon cursor-pointer">ￖ</i>
             </div>
         </header>
 
         <!--==================#2-2 CONTENT ==================-->
-        <section class="w-full flex flex-wrap content-start flex-1 relative px-60 gap-2">
+        <section class="w-full flex flex-wrap content-start flex-1 relative px-4 md:px-16 lg:px-60 gap-2">
 
-            <h2 onclick="check()" class="w-full capitalize text-[32px]">Inbox</h2>
+            <h2 onclick="check()" class="w-full capitalize text-[32px] mt-4">Inbox</h2>
 
             <!--=======#2-2-1 TOOLBAR =======-->
-            <div id="toolBar" class="w-full  flex-wrap justify-between items-center gap-4 py-2 mb-2 border-b border-border-soft hidden">
+            <div id="toolBar" class="w-full flex-col md:flex-row flex-wrap justify-between items-start md:items-center gap-4 py-2 mb-2 border-b border-border-soft hidden">
 
                 <!-- Left btns -->
-                <div class="flex items-center gap-6 text-sm font-medium text-secondary capitalize">
+                <div class="flex items-center gap-4 md:gap-6 text-sm font-medium text-secondary capitalize">
                     <span class="flex items-center gap-1.5">
                         <i class="icon no-hover text-base"></i>
-                        Total: <span id="totalCounter" class="text-primary font-bold">0</span>
+                        Total:
+                        <span id="totalCounter" class="text-primary font-bold">0</span>
                     </span>
                     <span class="flex items-center gap-1.5">
                         <i class="icon no-hover text-base"></i>
-                        Completed: <span id="completedCounter" class="text-accent font-bold">0</span>
+                        Completed:
+                        <span id="completedCounter" class="text-accent font-bold">0</span>
                     </span>
                 </div>
 
@@ -84,8 +86,8 @@
 
 
             <!--=======#2-2-2 EMPTY STATE =======-->
-            <div id="emptyState" class=" absolute w-90 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-50/100">
-                <img class="" src="assets/Images/EmptyInbox.png" alt="">
+            <div id="emptyState" class="absolute w-full max-w-sm px-4 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <img class="max-w-xs w-full h-auto" src="assets/Images/EmptyInbox.png" alt="">
                 <span class="w-full font-bold text-primary">Capture now, plan later</span>
                 <span class="w-full text-secondary px-6">Inbox is your go-to spot for quick task entry. Clear your mind now, organize when you’re ready.</span>
                 <button id="addTaskInEmpty" class="text-white mt-3 bg-accent py-2 px-3 rounded-lg hover:bg-red-700 duration-400 capitalize gap-1 flex items-center cursor-pointer">
@@ -94,81 +96,74 @@
             </div>
 
             <!--=======#2-2-3 NEW TASKS =======-->
-            <ul id="newTasksPlace" class="flex flex-wrap content-start w-full ">
+            <ul id="newTasksPlace" class="flex flex-wrap content-start w-full">
 
             </ul>
 
-
         </section>
-
 
     </main>
 
-</body>
-<script>
+    <script>
+        const closeBtn = document.getElementById("closeBtn")
+        const nav = document.querySelector("nav")
+        const main = document.querySelector("main")
+        const leftBtn = document.getElementById("leftBtn")
+        const placeHolder = document.querySelector("body")
 
-    const closeBtn = document.getElementById("closeBtn")
-    const nav = document.querySelector("nav")
-    const main = document.querySelector("main")
-    const leftBtn = document.getElementById("leftBtn")
-    const placeHolder = document.querySelector("body")
+        // ------- CLOSE SIDEBAR ------- //
+        closeBtn.addEventListener("click", () => {
+            nav.classList.add("md:w-0!", "md:p-0!");
+            nav.classList.add("swipe");
 
+            setTimeout(() => {
+                nav.classList.remove("md:block")
+                leftBtn.classList.remove("md:hidden")
+                leftBtn.parentElement.classList.remove("md:justify-end")
+            }, 500);
+        })
 
+        // ------- OPEN SIDEBAR ------- //
+        leftBtn.addEventListener("click", () => {
+            leftBtn.classList.add("md:hidden")
+            leftBtn.parentElement.classList.add("md:justify-end")
+            nav.classList.add("md:block")
+            nav.classList.remove("hidden")
 
-    // ------- CLOSE SIDEBAR ------- //
-    closeBtn.addEventListener("click", () => {
-        nav.classList.add("md:w-0!", "md:p-0!");
-        nav.classList.add("swipe");
+            setTimeout(() => {
+                nav.classList.remove("swipe");
+                nav.classList.remove("md:w-0!", "md:p-0!");
+            }, 500);
+        })
 
-        setTimeout(() => {
-            nav.classList.remove("md:block")
-            leftBtn.classList.remove("md:hidden")
-            leftBtn.parentElement.classList.remove("md:justify-end")
-        }, 500);
-    })
+        let tasks = []
+        const emptyState = document.getElementById("emptyState")
+        const addTaskInEmpty = document.getElementById("addTaskInEmpty")
+        const newTasksPlace = document.getElementById("newTasksPlace")
+        const toolBar = document.getElementById("toolBar")
+        const totalTasksPlace = document.getElementById("totalCounter")
+        const completedTaskPlace = document.getElementById("completedCounter")
 
-    // ------- OPEN SIDEBAR ------- //
-    leftBtn.addEventListener("click", () => {
-        leftBtn.classList.add("md:hidden")
-        leftBtn.parentElement.classList.add("md:justify-end")
-        nav.classList.add("md:block")
-        nav.classList.remove("hidden")
+        let newTaskInput
+        let addNewTask
+        let totalTaskCount = 0
+        let isEditing = false;
 
-        setTimeout(() => {
-            nav.classList.remove("swipe");
-            nav.classList.remove("md:w-0!", "md:p-0!");
-        }, 500);
-    })
+        // ------- LOCAL STORAGE LOAD ------- //
+        let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
 
-    let tasks = []
-    const emptyState = document.getElementById("emptyState")
-    const addTaskInEmpty = document.getElementById("addTaskInEmpty")
-    const newTasksPlace = document.getElementById("newTasksPlace")
-    const toolBar = document.getElementById("toolBar")
-    const totalTasksPlace = document.getElementById("totalCounter")
-    const completedTaskPlace = document.getElementById("completedCounter")
+        if (tempTasks) {
+            tasks = tempTasks
+            renderTask()
+            check()
+            loader()
+        }
 
-    let newTaskInput
-    let addNewTask
-    let totalTaskCount = 0
-    let isEditing = false;
-
-    // ------- LOCAL STORAGE LOAD ------- //
-    let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
-
-    if (tempTasks) {
-        tasks = tempTasks
-        renderTask()
-        check()
-        loader()
-    }
-
-
-    // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
-    function addTask() {
-        newTaskInput = document.createElement("li")
-        newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
-        newTaskInput.innerHTML = `
+        // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
+        function addTask() {
+            newTaskInput = document.createElement("li")
+            newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
+            newTaskInput.innerHTML = `
         
         <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
         
@@ -188,344 +183,273 @@
             </div>
         </div>`
 
-
-        newTasksPlace.appendChild(newTaskInput)
-        setTimeout(() => {
-            const textarea = document.getElementById("inputValue");
-            if (textarea) textarea.focus();
-        }, 0);
-
-
-    }
-
-    // ------- FIRST TASK ------- //
-    addTaskInEmpty.addEventListener("click", () => {
-        emptyState.classList.add("hidden")
-        toolBar.classList.remove("hidden")
-        toolBar.classList.add("flex")
-        addTask()
-    })
-
-    // ------- SUBMIT TASK AND CREATING THE ARRAY AND DATABASE------- //
-    function submitTask() {
-        const inputValue = document.getElementById("inputValue")
-
-        if (inputValue.value.trim() != '') {
-
-            // ------- THIS CREATES THE OBJECTS TO ADD TO THE ARRAY
-            let tempAdd = {}
-
-            tempAdd = {
-                name: inputValue.value,
-                id: Date.now(),
-                status: "off"
-            }
-            tasks.push(tempAdd);
-
-
-
-            renderTask()
-            addTask()
-            check()
+            newTasksPlace.appendChild(newTaskInput)
+            setTimeout(() => {
+                const textarea = document.getElementById("inputValue");
+                if (textarea) textarea.focus();
+            }, 0);
         }
-    }
 
-    // ------- THIS SAVES TO LOCAL STORAGE ------- //
-    function saveTask() {
-        localStorage.setItem('dataBase', JSON.stringify(tasks))
-    }
+        // ------- FIRST TASK ------- //
+        addTaskInEmpty.addEventListener("click", () => {
+            emptyState.classList.add("hidden")
+            toolBar.classList.remove("hidden")
+            toolBar.classList.add("flex")
+            addTask()
+        })
 
-    // ------- RENDER TASKS ------- // 
-    function renderTask() {
-        newTasksPlace.innerHTML = "";
+        // ------- SUBMIT TASK AND CREATING THE ARRAY AND DATABASE------- //
+        function submitTask() {
+            const inputValue = document.getElementById("inputValue")
 
-        tasks.forEach((val) => {
-            let addedTask = document.createElement("li");
-            addedTask.className = "w-full flex justify-between border-b border-gray-300 rounded-md px-3 py-4 *:flex *:gap-2";
-            addedTask.setAttribute("data-id", val.id);
+            if (inputValue.value.trim() != '') {
+                let tempAdd = {
+                    name: inputValue.value,
+                    id: Date.now(),
+                    status: "off"
+                }
+                tasks.push(tempAdd);
 
-            if (val.status == "on") {
-                addedTask.classList.add("bg-[#f0fdf4]");
-                addedTask.innerHTML = `
-            <div>
+                renderTask()
+                addTask()
+                check()
+            }
+        }
+
+        // ------- THIS SAVES TO LOCAL STORAGE ------- //
+        function saveTask() {
+            localStorage.setItem('dataBase', JSON.stringify(tasks))
+        }
+
+        // ------- RENDER TASKS ------- // 
+        function renderTask() {
+            newTasksPlace.innerHTML = "";
+
+            tasks.forEach((val) => {
+                let addedTask = document.createElement("li");
+                // Added flex-col md:flex-row so tasks stack nicely on very small screens
+                addedTask.className = "w-full flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-300 rounded-md px-3 py-4 gap-2 *:flex *:gap-2";
+                addedTask.setAttribute("data-id", val.id);
+
+                if (val.status == "on") {
+                    addedTask.classList.add("bg-[#f0fdf4]");
+                    addedTask.innerHTML = `
+            <div class="items-center">
                 <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox mt-0.5">
-                <span class="line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                <span class="line-through decoration-1 decoration-green-800 text-green-700 break-words">${val.name}</span>
             </div>
-            <div>
+            <div class=" shrink-0">
                 <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
             </div>`;
-            } else {
-
-                addedTask.innerHTML = `
-            <div>
+                } else {
+                    addedTask.innerHTML = `
+            <div class="items-center">
                 <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
-                <span>${val.name}</span>
+                <span class="break-words">${val.name}</span>
             </div>
-            <div>
+            <div class="shrink-0">
                 <i onclick="editAddedTask(this)" class="icon"></i>
                 <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
                 <i class="icon">ﭏ</i>
             </div>`;
-            }
+                }
 
-            newTasksPlace.appendChild(addedTask);
-        });
+                newTasksPlace.appendChild(addedTask);
+            });
 
-        addNewTask = document.createElement("div");
-        addNewTask.className = "w-full flex justify-center py-4";
-        addNewTask.innerHTML = `
+            addNewTask = document.createElement("div");
+            addNewTask.className = "w-full flex justify-center py-4";
+            addNewTask.innerHTML = `
         <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
             <i class="icon no-hover">ﭐ</i>
             add task
         </button>`;
-    }
-
-    // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
-    function showAddBtn() {
-        if (addNewTask && document.body.contains(addNewTask)) return;
-
-        addNewTask = document.createElement("div");
-        addNewTask.className = "w-full flex justify-center py-4";
-        addNewTask.innerHTML = `
-        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
-            <i class="icon no-hover">ﭐ</i>
-            add task
-        </button>`;
-        newTasksPlace.appendChild(addNewTask);
-    }
-
-    // ------- FOR ADDING NEW TASKS WITH THE ADD BUTTON ------- //
-    function addNewTaskFunc() {
-        if (isEditing) { return };
-        addNewTask.remove()
-        addTask()
-    }
-
-    // ------- FOR REMOVING THE NEW TASK INPUT ------- //
-    function deleteAddBox() {
-        if (newTaskInput) newTaskInput.remove();
-
-        if (newTasksPlace.querySelectorAll("li").length == 0) {
-            emptyState.classList.remove("hidden")
-            toolBar.classList.remove("flex")
-            toolBar.classList.add("hidden")
-        } else {
-            showAddBtn();
         }
-    }
 
-    // ------- DELETING AN ADDED TASK ------- //
-    function deleteAddedTask(element) {
+        // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
+        function showAddBtn() {
+            if (addNewTask && document.body.contains(addNewTask)) return;
 
-        let deleteTaskConfirm = document.createElement("div")
-        deleteTaskConfirm.className = "absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-        deleteTaskConfirm.innerHTML = `
-            <div class="bg-bgDef border border-hover rounded-xl p-6 w-90 max-w-sm flex flex-col gap-5 shadow-2xl">
-        
+            addNewTask = document.createElement("div");
+            addNewTask.className = "w-full flex justify-center py-4";
+            addNewTask.innerHTML = `
+        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
+            <i class="icon no-hover">ﭐ</i>
+            add task
+        </button>`;
+            newTasksPlace.appendChild(addNewTask);
+        }
+
+        // ------- FOR ADDING NEW TASKS WITH THE ADD BUTTON ------- //
+        function addNewTaskFunc() {
+            if (isEditing) { return };
+            addNewTask.remove()
+            addTask()
+        }
+
+        // ------- FOR REMOVING THE NEW TASK INPUT ------- //
+        function deleteAddBox() {
+            if (newTaskInput) newTaskInput.remove();
+
+            if (newTasksPlace.querySelectorAll("li").length == 0) {
+                emptyState.classList.remove("hidden")
+                toolBar.classList.remove("flex")
+                toolBar.classList.add("hidden")
+            } else {
+                showAddBtn();
+            }
+        }
+
+        // ------- DELETING AN ADDED TASK ------- //
+        function deleteAddedTask(element) {
+            let deleteTaskConfirm = document.createElement("div")
+            deleteTaskConfirm.className = "absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+            deleteTaskConfirm.innerHTML = `
+            <div class="bg-bgDef border border-hover rounded-xl p-6 w-full max-w-sm flex flex-col gap-5 shadow-2xl">
                 <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
                     <i class="icon text-2xl text-accent no-hover"></i>
-                 </div>
-
+                </div>
                 <div class="text-center flex flex-col gap-2">
                     <h3 class="text-lg font-bold text-primary">Delete this task?</h3>
                     <p class="text-sm text-secondary">This action cannot be undone. Are you sure you want to proceed?</p>
                 </div>
-               
                 <div class="flex gap-3 mt-2">
-                    <button id="cancelDelete" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">
-                    Cancel
-                    </button>
-
-                    <button id="confirmDelete" class="flex-1 py-2 rounded-lg bg-accent text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer">
-                    Delete
-                    </button>
-
+                    <button id="cancelDelete" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">Cancel</button>
+                    <button id="confirmDelete" class="flex-1 py-2 rounded-lg bg-accent text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer">Delete</button>
                 </div>
             </div>`
 
-        placeHolder.appendChild(deleteTaskConfirm)
+            placeHolder.appendChild(deleteTaskConfirm)
 
-        const cancelDelete = document.getElementById("cancelDelete")
-        const confirmDelete = document.getElementById("confirmDelete")
+            const cancelDelete = document.getElementById("cancelDelete")
+            const confirmDelete = document.getElementById("confirmDelete")
 
-        cancelDelete.addEventListener("click", () => {
-            deleteTaskConfirm.remove()
-        })
+            cancelDelete.addEventListener("click", () => deleteTaskConfirm.remove())
 
-        // ------- CONFIRM DELETE
-        confirmDelete.addEventListener("click", () => {
-            element.parentElement.parentElement.remove()
-            deleteTaskConfirm.remove()
-
-            //  DELETEING FROM ARRAY 
-            const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
-
-            tasks.forEach((val, i) => {
-                if (val.id === taskToDelete) {
-                    {
-                        tasks.splice(i, 1)
-                    }
-                }
+            confirmDelete.addEventListener("click", () => {
+                element.parentElement.parentElement.remove()
+                deleteTaskConfirm.remove()
+                const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
+                tasks.forEach((val, i) => {
+                    if (val.id === taskToDelete) tasks.splice(i, 1)
+                })
+                check()
             })
-            check()
-        })
 
+            deleteTaskConfirm.addEventListener("click", (e) => {
+                if (e.target === deleteTaskConfirm) deleteTaskConfirm.remove();
+            });
+        }
 
-        deleteTaskConfirm.addEventListener("click", (e) => {
-            if (e.target === deleteTaskConfirm) {
-                deleteTaskConfirm.remove();
-            }
-        });
-    }
+        // ------- EDITING AN ADDED TASK ------- //
+        function editAddedTask(element) {
+            if (isEditing) { return };
+            isEditing = true;
 
+            const tempValAdded = element.parentElement.parentElement.querySelector("span")
+            const tempValEditId = element.parentElement.parentElement.getAttribute("data-id")
 
-    // ------- EDITING AN ADDED TASK ------- //
-    function editAddedTask(element) {
-        if (isEditing) { return };
-        isEditing = true;
-
-        const tempValAdded = element.parentElement.parentElement.querySelector("span")
-        const tempValEditId = element.parentElement.parentElement.getAttribute("data-id")
-
-        // ------- CREATING THE EDITING BOX
-        let editAddedTaskInput = document.createElement("li")
-        editAddedTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
-        editAddedTaskInput.innerHTML = `
+            let editAddedTaskInput = document.createElement("li")
+            editAddedTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
+            editAddedTaskInput.innerHTML = `
         <textarea placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none">${tempValAdded.innerText}</textarea>
         <div class="flex justify-end gap-2">
             <i id="editCancel" class="icon text-secondary text-lg"></i>
             <i id="editOkay" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
-            </div>`
+        </div>`
 
+            deleteAddBox()
+            element.parentElement.parentElement.before(editAddedTaskInput)
+            setTimeout(() => editAddedTaskInput.querySelector("textarea").focus(), 0);
+            element.parentElement.parentElement.classList.add("hidden")
 
-        // ------- EXECUTAIONS
-        deleteAddBox()
-
-        element.parentElement.parentElement.before(editAddedTaskInput)
-        setTimeout(() => {
-            editAddedTaskInput.querySelector("textarea").focus();
-        }, 0);
-        element.parentElement.parentElement.classList.add("hidden")
-
-        document.getElementById("editOkay").addEventListener("click", () => {
-            let newText = editAddedTaskInput.querySelector("textarea").value;
-
-            if (newText.trim() != "") {
-                tempValAdded.innerText = newText;
-                tasks.forEach((val, i) => {
-                    if (val.id == tempValEditId) {
-                        val.name = newText
-                    }
-                })
-
-                element.parentElement.parentElement.classList.remove("hidden");
-                editAddedTaskInput.remove();
-                isEditing = false;
-                check()
-            } else {
-                element.parentElement.parentElement.classList.remove("hidden");
-                editAddedTaskInput.remove();
-                isEditing = false;
-            }
-        })
-
-        document.getElementById("editCancel").addEventListener("click", () => {
-            element.parentElement.parentElement.classList.remove("hidden")
-            editAddedTaskInput.remove();
-            isEditing = false;
-        })
-
-    }
-
-    // ------- MARKING TASKS AS COMPLETED ------- //
-    function markComplete(element) {
-
-        const iconForRemove = element.parentElement.nextElementSibling.querySelectorAll("i")
-
-        element.parentElement.parentElement.classList.toggle("bg-[#f0fdf4]", element.checked)
-        element.nextElementSibling.classList.toggle("line-through", element.checked)
-        element.nextElementSibling.classList.toggle("decoration-1", element.checked)
-        element.nextElementSibling.classList.toggle("decoration-green-800", element.checked)
-        element.nextElementSibling.classList.toggle("text-green-700", element.checked)
-
-        iconForRemove.forEach((val) => {
-            if (!val.classList.contains("icon-delete")) {
-                val.classList.toggle("hidden", element.checked)
-            }
-        });
-
-        let tempMarkId = +element.parentElement.parentElement.getAttribute("data-id")
-
-        tasks.forEach((val, i) => {
-
-            if (val.id === tempMarkId && val.status == "off") {
-                val.status = "on"
-            } else if (val.id === tempMarkId && val.status == "on") {
-                val.status = "off"
-            }
-
-
-        })
-
-        check()
-    }
-
-    // ------- TASKS COUNTER || CHECK() ------- //
-
-
-
-    function check() {
-
-        totalTaskCount = tasks.length
-        let completeTaskCount = 0
-
-        if (tasks.length > 0) {
-            tasks.forEach((val) => {
-                if (val.status == "on") {
-                    completeTaskCount++
+            document.getElementById("editOkay").addEventListener("click", () => {
+                let newText = editAddedTaskInput.querySelector("textarea").value;
+                if (newText.trim() != "") {
+                    tempValAdded.innerText = newText;
+                    tasks.forEach((val, i) => {
+                        if (val.id == tempValEditId) val.name = newText
+                    })
+                    element.parentElement.parentElement.classList.remove("hidden");
+                    editAddedTaskInput.remove();
+                    isEditing = false;
+                    check()
+                } else {
+                    element.parentElement.parentElement.classList.remove("hidden");
+                    editAddedTaskInput.remove();
+                    isEditing = false;
                 }
             })
+
+            document.getElementById("editCancel").addEventListener("click", () => {
+                element.parentElement.parentElement.classList.remove("hidden")
+                editAddedTaskInput.remove();
+                isEditing = false;
+            })
         }
-        loader()
 
-        totalTasksPlace.innerText = totalTaskCount
-        completedTaskPlace.innerText = completeTaskCount
-        saveTask()
-    }
+        // ------- MARKING TASKS AS COMPLETED ------- //
+        function markComplete(element) {
+            const iconForRemove = element.parentElement.nextElementSibling.querySelectorAll("i")
+            element.parentElement.parentElement.classList.toggle("bg-[#f0fdf4]", element.checked)
+            element.nextElementSibling.classList.toggle("line-through", element.checked)
+            element.nextElementSibling.classList.toggle("decoration-1", element.checked)
+            element.nextElementSibling.classList.toggle("decoration-green-800", element.checked)
+            element.nextElementSibling.classList.toggle("text-green-700", element.checked)
 
-    // ------- CLEAR COMPLETE TASKS ------- //
-    function clearCompletedTasks() {
+            iconForRemove.forEach((val) => {
+                if (!val.classList.contains("icon-delete")) val.classList.toggle("hidden", element.checked)
+            });
 
-        if (tasks.length > 0) {
-            tasks = tasks.filter((task) => task.status !== "on");
-            renderTask()
-            loader()
+            let tempMarkId = +element.parentElement.parentElement.getAttribute("data-id")
+            tasks.forEach((val, i) => {
+                if (val.id === tempMarkId && val.status == "off") val.status = "on"
+                else if (val.id === tempMarkId && val.status == "on") val.status = "off"
+            })
             check()
         }
-    }
 
-    function loader() {
+        // ------- TASKS COUNTER || CHECK() ------- //
+        function check() {
+            totalTaskCount = tasks.length
+            let completeTaskCount = 0
+            if (tasks.length > 0) {
+                tasks.forEach((val) => {
+                    if (val.status == "on") completeTaskCount++
+                })
+            }
+            loader()
+            totalTasksPlace.innerText = totalTaskCount
+            completedTaskPlace.innerText = completeTaskCount
+            saveTask()
+        }
 
-
-        if (tasks.length == 0) {
-            if (newTaskInput) newTaskInput.remove();
-            if (addNewTask) addNewTask.remove();
-            
-            emptyState.classList.remove("hidden")
-            toolBar.classList.remove("flex")
-            toolBar.classList.add("hidden")
-
-
-        } else {
-            emptyState.classList.add("hidden")
-            toolBar.classList.add("flex")
-            toolBar.classList.remove("hidden")
-            if (!newTaskInput || !document.body.contains(newTaskInput)) {
-                showAddBtn()
+        // ------- CLEAR COMPLETE TASKS ------- //
+        function clearCompletedTasks() {
+            if (tasks.length > 0) {
+                tasks = tasks.filter((task) => task.status !== "on");
+                renderTask()
+                loader()
+                check()
             }
         }
-    }
 
-</script>
+        function loader() {
+            if (tasks.length == 0) {
+                if (newTaskInput) newTaskInput.remove();
+                if (addNewTask) addNewTask.remove();
+                emptyState.classList.remove("hidden")
+                toolBar.classList.remove("flex")
+                toolBar.classList.add("hidden")
+            } else {
+                emptyState.classList.add("hidden")
+                toolBar.classList.add("flex")
+                toolBar.classList.remove("hidden")
+                if (!newTaskInput || !document.body.contains(newTaskInput)) showAddBtn()
+            }
+        }
+    </script>
+
+</body>
 
 </html>
