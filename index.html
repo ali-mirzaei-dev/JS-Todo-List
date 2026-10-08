@@ -351,6 +351,7 @@
         cancelDelete.addEventListener("click", () => {
             deleteTaskConfirm.remove()
         })
+
         confirmDelete.addEventListener("click", () => {
             element.parentElement.parentElement.remove()
             deleteTaskConfirm.remove()
@@ -367,6 +368,7 @@
             })
             check()
         })
+        
 
         deleteTaskConfirm.addEventListener("click", (e) => {
             if (e.target === deleteTaskConfirm) {
@@ -377,8 +379,6 @@
 
 
     // ------- EDITING AN ADDED TASK ------- //
-
-
     function editAddedTask(element) {
         if (isEditing) { return };
         isEditing = true;
@@ -484,12 +484,8 @@
                     completeTaskCount++
                 }
             })
-        } else {
-            emptyState.classList.remove("hidden")
-            if (newTaskInput) newTaskInput.remove();
-            toolBar.classList.remove("flex")
-            toolBar.classList.add("hidden")
         }
+        loader()
 
         totalTasksPlace.innerText = totalTaskCount
         completedTaskPlace.innerText = completeTaskCount
@@ -502,17 +498,28 @@
         if (tasks.length > 0) {
             tasks = tasks.filter((task) => task.status !== "on");
             renderTask()
-            addNewTaskFunc()
+            loader()
             check()
         }
     }
 
     function loader() {
-        if (tasks.length > 0) {
+
+
+        if (tasks.length == 0) {
+            if (newTaskInput) newTaskInput.remove();
+            emptyState.classList.remove("hidden")
+            toolBar.classList.remove("flex")
+            toolBar.classList.add("hidden")
+
+
+        } else {
             emptyState.classList.add("hidden")
             toolBar.classList.add("flex")
             toolBar.classList.remove("hidden")
-            showAddBtn()
+            if (!newTaskInput || !document.body.contains(newTaskInput)) {
+                showAddBtn()
+            }
         }
     }
 
