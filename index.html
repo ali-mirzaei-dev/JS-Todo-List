@@ -61,7 +61,7 @@
             <h2 onclick="check()" class="w-full capitalize text-[32px]">Inbox</h2>
 
             <!--=======#2-2-1 TOOLBAR =======-->
-            <div id="toolBar" class="w-full flex flex-wrap justify-between items-center gap-4 py-2 mb-2 border-b border-border-soft">
+            <div id="toolBar" class="w-full  flex-wrap justify-between items-center gap-4 py-2 mb-2 border-b border-border-soft hidden">
 
                 <!-- Left btns -->
                 <div class="flex items-center gap-6 text-sm font-medium text-secondary capitalize">
@@ -158,6 +158,7 @@
     const emptyState = document.getElementById("emptyState")
     const addTaskInEmpty = document.getElementById("addTaskInEmpty")
     const newTasksPlace = document.getElementById("newTasksPlace")
+    const toolBar = document.getElementById("toolBar")
 
     let newTaskInput
     let addNewTask
@@ -199,6 +200,8 @@
     // ------- FIRST TASK ------- //
     addTaskInEmpty.addEventListener("click", () => {
         emptyState.classList.add("hidden")
+        toolBar.classList.remove("hidden")
+        toolBar.classList.add("flex")
         addTask()
     })
 
@@ -265,22 +268,38 @@
             <i class="icon no-hover">ﭐ</i>
             add task
         </button>`;
+        // newTasksPlace.appendChild(addNewTask);
+    }
+
+    // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
+    function showAddBtn() {
+        addNewTask = document.createElement("div");
+        addNewTask.className = "w-full flex justify-center py-4";
+        addNewTask.innerHTML = `
+        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
+            <i class="icon no-hover">ﭐ</i>
+            add task
+        </button>`;
+        newTasksPlace.appendChild(addNewTask);
     }
 
     // ------- FOR ADDING NEW TASKS WITH THE ADD BUTTON ------- //
     function addNewTaskFunc() {
+        if (isEditing) { return };
         addNewTask.remove()
         addTask()
     }
 
     // ------- FOR REMOVING THE NEW TASK INPUT ------- //
     function deleteAddBox() {
-        newTaskInput.remove()
+        if (newTaskInput) newTaskInput.remove();
 
         if (newTasksPlace.querySelectorAll("li").length == 0) {
             emptyState.classList.remove("hidden")
+            toolBar.classList.remove("flex")
+            toolBar.classList.add("hidden")
         } else {
-            newTasksPlace.appendChild(addNewTask)
+            showAddBtn();
         }
     }
 
@@ -326,10 +345,10 @@
             deleteTaskConfirm.remove()
 
             // ------- DELETEING FROM ARRAY 
-            const taskToDelete = element.parentElement.parentElement.getAttribute("data-id")
+            const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
 
             tasks.forEach((val, i) => {
-                if (val.id == taskToDelete) {
+                if (val.id === taskToDelete) {
                     {
                         tasks.splice(i, 1)
                     }
@@ -369,6 +388,9 @@
 
         // ------- EXECUTAIONS
         deleteAddBox()
+
+        // console.log();
+
         element.parentElement.parentElement.before(editAddedTaskInput)
         setTimeout(() => {
             editAddedTaskInput.querySelector("textarea").focus();
@@ -422,13 +444,13 @@
             }
         });
 
-        let tempMarkId = element.parentElement.parentElement.getAttribute("data-id")
+        let tempMarkId = +element.parentElement.parentElement.getAttribute("data-id")
 
         tasks.forEach((val, i) => {
 
-            if (val.id == tempMarkId && val.status == "off") {
+            if (val.id === tempMarkId && val.status == "off") {
                 val.status = "on"
-            } else if (val.id == tempMarkId && val.status == "on") {
+            } else if (val.id === tempMarkId && val.status == "on") {
                 val.status = "off"
             }
 
@@ -456,7 +478,9 @@
             })
         } else {
             emptyState.classList.remove("hidden")
-            newTaskInput.remove()
+            if (newTaskInput) newTaskInput.remove();
+            toolBar.classList.remove("flex")
+            toolBar.classList.add("hidden")
         }
 
         totalTasksPlace.innerText = totalTaskCount
