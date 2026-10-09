@@ -233,6 +233,15 @@
   .top-1\/2 {
     top: calc(1 / 2 * 100%);
   }
+  .top-full {
+    top: 100%;
+  }
+  .right-0 {
+    right: 0px;
+  }
+  .right-full {
+    right: 100%;
+  }
   .left-0 {
     left: 0px;
   }
@@ -244,6 +253,9 @@
   }
   .left-\[110\%\] {
     left: 110%;
+  }
+  .left-full {
+    left: 100%;
   }
   .z-20 {
     z-index: 20;
@@ -280,9 +292,6 @@
   }
   .ml-2 {
     margin-left: calc(var(--spacing) * 2);
-  }
-  .ml-5 {
-    margin-left: calc(var(--spacing) * 5);
   }
   .contents {
     display: contents;
@@ -326,17 +335,14 @@
   .w-2\.5 {
     width: calc(var(--spacing) * 2.5);
   }
-  .w-3 {
-    width: calc(var(--spacing) * 3);
-  }
-  .w-4 {
-    width: calc(var(--spacing) * 4);
-  }
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
   .w-40 {
     width: calc(var(--spacing) * 40);
+  }
+  .w-48 {
+    width: calc(var(--spacing) * 48);
   }
   .w-full {
     width: 100%;
@@ -481,9 +487,6 @@
       border-color: color-mix(in oklab, var(--color-secondary) 20%, transparent);
     }
   }
-  .bg-\[\#f0fdf4\] {
-    background-color: #f0fdf4;
-  }
   .bg-accent {
     background-color: var(--color-accent);
   }
@@ -508,12 +511,6 @@
   .bg-gray-300 {
     background-color: var(--color-gray-300);
   }
-  .bg-gray-400 {
-    background-color: var(--color-gray-400);
-  }
-  .bg-green-300 {
-    background-color: var(--color-green-300);
-  }
   .bg-green-500 {
     background-color: var(--color-green-500);
   }
@@ -531,12 +528,6 @@
   }
   .bg-red-500 {
     background-color: var(--color-red-500);
-  }
-  .bg-white {
-    background-color: var(--color-white);
-  }
-  .bg-yellow-300 {
-    background-color: var(--color-yellow-300);
   }
   .bg-yellow-500 {
     background-color: var(--color-yellow-500);
@@ -636,23 +627,14 @@
     --tw-tracking: var(--tracking-wider);
     letter-spacing: var(--tracking-wider);
   }
-  .break-words {
-    overflow-wrap: break-word;
-  }
   .wrap-break-word {
     overflow-wrap: break-word;
   }
   .text-accent {
     color: var(--color-accent);
   }
-  .text-amber-500 {
-    color: var(--color-amber-500);
-  }
   .text-amber-600 {
     color: var(--color-amber-600);
-  }
-  .text-green-300 {
-    color: var(--color-green-300);
   }
   .text-green-500 {
     color: var(--color-green-500);
@@ -669,9 +651,6 @@
   .text-red-500 {
     color: var(--color-red-500);
   }
-  .text-red-600 {
-    color: var(--color-red-600);
-  }
   .text-red-700 {
     color: var(--color-red-700);
   }
@@ -680,9 +659,6 @@
   }
   .text-white {
     color: var(--color-white);
-  }
-  .text-yellow-300 {
-    color: var(--color-yellow-300);
   }
   .text-yellow-500 {
     color: var(--color-yellow-500);
@@ -707,10 +683,6 @@
   }
   .shadow-2xl {
     --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .ring {
-    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
   .ring-2 {
@@ -785,9 +757,6 @@
   }
   :is(.\*\:items-center > *) {
     align-items: center;
-  }
-  :is(.\*\:gap-2 > *) {
-    gap: calc(var(--spacing) * 2);
   }
   :is(.\*\:gap-3 > *) {
     gap: calc(var(--spacing) * 3);

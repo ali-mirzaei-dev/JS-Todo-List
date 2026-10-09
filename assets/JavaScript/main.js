@@ -93,7 +93,7 @@ function addTask() {
                 <div class="flex gap-2 items-center">
                     <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
 
-                   <span onclick="setPriorityMenu(this)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
+                   <span onclick="setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
                         <i class="icon no-hover text-secondary"></i>
                         <span>set priority</span>
                     </span>
@@ -177,12 +177,14 @@ function renderTask() {
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
                     <span class="wrap-break-word flex-1">${val.name}</span>
-                    <span class="w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0 ml-2">
                     <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
                     <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
-                    <i class="icon">ﭏ</i>
+                    <div class="relative">
+                        <i onclick="openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                    </div>
                 </div>`;
         }
 
@@ -379,10 +381,47 @@ function loader() {
     }
 }
 
-// ------- PRIORITY MENU |||| THIS OPENS THE PRIORITY MENU ------- //
-function setPriorityMenu(element) {
+// ------- MORE MENU ||| THIS OPENS MORE MENU  ------- //
+function openMoreMenu(element, taskId = null) {
 
-    const isPriority = element.querySelector("ul")
+    const isMoreOpen = element.querySelector("ul")
+    console.log(isMoreOpen);
+
+
+    if (isMoreOpen) {
+        isMoreOpen.remove()
+    } else {
+
+        let moreMenu = document.createElement("ul")
+        moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2";
+        moreMenu.innerHTML = `
+            <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+                <i class="icon no-hover text-base">ﰅ</i>
+                Set Priority
+            </li>
+            <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+                <i class="icon no-hover text-base"></i>
+                Add Date
+            </li>
+            <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+                <i class="icon no-hover text-base"></i>
+                Move to...
+            </li>
+        `
+
+        element.appendChild(moreMenu)
+
+    }
+
+
+}
+
+// ------- PRIORITY MENU ||| THIS OPENS THE PRIORITY MENU ------- //
+function setPriorityMenu(e, taskId = null) {
+
+    e.stopImmediatePropagation()
+
+    const isPriority = e.currentTarget.querySelector("ul")
 
     if (isPriority) {
         isPriority.remove()
@@ -391,70 +430,73 @@ function setPriorityMenu(element) {
 
         let dropDownPriority = document.createElement("ul")
 
-        dropDownPriority.className = "absolute top-0 left-[110%] w-40 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2";
+        dropDownPriority.className = "absolute top-0 left-full w-40 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2";
 
         dropDownPriority.innerHTML = `
-            <li onclick="setTaskPriority(event , 'high' , 'text-red-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <li onclick="setTaskPriority(event , 'high' , 'text-red-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
                 High
             </li>
-            <li onclick="setTaskPriority(event , 'medium' , 'text-yellow-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <li onclick="setTaskPriority(event , 'medium' , 'text-yellow-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
                 Medium
             </li>
-            <li onclick="setTaskPriority(event , 'low' , 'text-green-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <li onclick="setTaskPriority(event , 'low' , 'text-green-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
                 Low
             </li>`
 
-        element.appendChild(dropDownPriority)
+        e.target.appendChild(dropDownPriority)
     }
 
 }
 
 // ------- SET PRIORITY ||| THIS SETS THE PRIORITY ------- //
-function setTaskPriority(e, priority, color) {
+function setTaskPriority(e, priority, color, taskId = null) {
 
     e.stopImmediatePropagation()
 
-    newTaskPriority = priority
-    let currentText = color
+    if (taskId != null) {
+        tasks.forEach((val) => {
 
-    const menu = e.target.closest("ul")
-    const button = menu.parentElement
-    const labelSpan = button.querySelector("span")
-    const icon = labelSpan.previousElementSibling
-
-    if (labelSpan) {
-
-        labelSpan.innerText = "priority: " + newTaskPriority
-        labelSpan.classList.remove("text-red-500", "text-yellow-500", "text-green-500", "text-secondary")
-        labelSpan.classList.add(currentText)
+            if (val.id == taskId){
+                val.priority = priority
+                renderTask()
+                check()
+            }
 
 
-        let darkColor = "text-secondary";
-        if (currentText === "text-red-500") darkColor = "text-red-700";
-        else if (currentText === "text-yellow-500") darkColor = "text-amber-600";
-        else if (currentText === "text-green-500") darkColor = "text-green-600";
-
-        if (icon) {
-            icon.classList.remove("text-red-700", "text-amber-600", "text-green-600", "text-secondary")
-            icon.classList.add(darkColor)
-        }
-
-
-
-
-
-
-
-
-
-
-
-
+        })
 
     }
 
-    menu.remove();
+    if (taskId == null) {
+        newTaskPriority = priority
+        let currentText = color
+
+        const menu = e.target.closest("ul")
+        const button = menu.parentElement
+        const labelSpan = button.querySelector("span")
+        const icon = labelSpan.previousElementSibling
+
+        if (labelSpan) {
+
+            labelSpan.innerText = "priority: " + newTaskPriority
+            labelSpan.classList.remove("text-red-500", "text-yellow-500", "text-green-500", "text-secondary")
+            labelSpan.classList.add(currentText)
+
+
+            let darkColor = "text-secondary";
+            if (currentText === "text-red-500") darkColor = "text-red-700";
+            else if (currentText === "text-yellow-500") darkColor = "text-amber-600";
+            else if (currentText === "text-green-500") darkColor = "text-green-600";
+
+            if (icon) {
+                icon.classList.remove("text-red-700", "text-amber-600", "text-green-600", "text-secondary")
+                icon.classList.add(darkColor)
+            }
+        }
+
+        menu.remove();
+    }
 }
