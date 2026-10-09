@@ -93,7 +93,7 @@ function addTask() {
                 <div class="flex gap-2 items-center">
                     <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
 
-                   <span onclick="setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
+                   <span  onclick="event.stopPropagation(); setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
                         <i class="icon no-hover text-secondary"></i>
                         <span>set priority</span>
                     </span>
@@ -183,7 +183,7 @@ function renderTask() {
                     <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
                     <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
                     <div class="relative">
-                        <i onclick="openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
                     </div>
                 </div>`;
         }
@@ -232,6 +232,8 @@ function deleteAddBox() {
     } else {
         showAddBtn();
     }
+
+    newTaskPriority = "not assigned"
 }
 
 // ------- DELETING AN ADDED TASK ------- //
@@ -258,7 +260,9 @@ function deleteAddedTask(element) {
     const cancelDelete = document.getElementById("cancelDelete")
     const confirmDelete = document.getElementById("confirmDelete")
 
-    cancelDelete.addEventListener("click", () => deleteTaskConfirm.remove())
+    cancelDelete.addEventListener("click", () => {
+        deleteTaskConfirm.remove()
+    })
 
     confirmDelete.addEventListener("click", () => {
         element.parentElement.parentElement.remove()
@@ -381,19 +385,35 @@ function loader() {
     }
 }
 
+// ------- GLOBAL CLICK OUTSIDE LISTENER ------- //
+document.addEventListener("click", (e) => {
+
+    const isClickInsideMenu = e.target.closest(".dropdown-menu");
+
+    if (!isClickInsideMenu) {
+        const openMenus = document.querySelectorAll(".dropdown-menu");
+
+        openMenus.forEach(menu => menu.remove());
+    }
+});
+
 // ------- MORE MENU ||| THIS OPENS MORE MENU  ------- //
 function openMoreMenu(element, taskId = null) {
 
     const isMoreOpen = element.querySelector("ul")
-    console.log(isMoreOpen);
 
+    // ------- THIS ALLOWS ONLY ONE MENU TO OPEN
+    const isMoreOpen2 = document.querySelectorAll(".dropdown-menu")
+    isMoreOpen2.forEach(menu => menu.remove());
+    deleteAddBox()
 
     if (isMoreOpen) {
         isMoreOpen.remove()
     } else {
 
         let moreMenu = document.createElement("ul")
-        moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2";
+        moreMenu.addEventListener("click", (e) => e.stopPropagation());
+        moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2 dropdown-menu";
         moreMenu.innerHTML = `
             <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <i class="icon no-hover text-base">ﰅ</i>
@@ -421,7 +441,8 @@ function setPriorityMenu(e, taskId = null) {
 
     e.stopImmediatePropagation()
 
-    const isPriority = e.currentTarget.querySelector("ul")
+    const wrapper = e.currentTarget;
+    const isPriority = wrapper.querySelector("ul")
 
     if (isPriority) {
         isPriority.remove()
@@ -429,8 +450,8 @@ function setPriorityMenu(e, taskId = null) {
     } else {
 
         let dropDownPriority = document.createElement("ul")
-
-        dropDownPriority.className = "absolute top-0 left-full w-40 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2";
+        dropDownPriority.addEventListener("click", (e) => e.stopPropagation());
+        dropDownPriority.className = "absolute top-0 left-[105%] w-40 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2 dropdown-menu";
 
         dropDownPriority.innerHTML = `
             <li onclick="setTaskPriority(event , 'high' , 'text-red-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
@@ -446,9 +467,8 @@ function setPriorityMenu(e, taskId = null) {
                 Low
             </li>`
 
-        e.target.appendChild(dropDownPriority)
+        wrapper.appendChild(dropDownPriority)
     }
-
 }
 
 // ------- SET PRIORITY ||| THIS SETS THE PRIORITY ------- //
@@ -458,16 +478,17 @@ function setTaskPriority(e, priority, color, taskId = null) {
 
     if (taskId != null) {
         tasks.forEach((val) => {
-
-            if (val.id == taskId){
+            if (val.id == taskId) {
                 val.priority = priority
-                renderTask()
-                check()
             }
-
-
         })
 
+        const menu = e.target.closest("ul");
+        if (menu) menu.remove();
+
+        renderTask()
+        check()
+        return;
     }
 
     if (taskId == null) {
@@ -476,15 +497,14 @@ function setTaskPriority(e, priority, color, taskId = null) {
 
         const menu = e.target.closest("ul")
         const button = menu.parentElement
+
         const labelSpan = button.querySelector("span")
         const icon = labelSpan.previousElementSibling
 
         if (labelSpan) {
-
             labelSpan.innerText = "priority: " + newTaskPriority
             labelSpan.classList.remove("text-red-500", "text-yellow-500", "text-green-500", "text-secondary")
             labelSpan.classList.add(currentText)
-
 
             let darkColor = "text-secondary";
             if (currentText === "text-red-500") darkColor = "text-red-700";
