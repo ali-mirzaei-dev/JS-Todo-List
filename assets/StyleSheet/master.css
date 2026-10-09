@@ -6,7 +6,8 @@
     --color-icons: #969696;
     --color-secondary: #666;
     --color-accent: #d63226;
-    --color-bgDef: #FFFFFF;
+   --color-bgDef: #FFFFFF;
+    --color-sidebar: #fff9f5;
     --color-bgFocus: #ffefe6;
     --color-hover: #e7e7e7;
 }
@@ -17,6 +18,7 @@
         --color-secondary: #999999 !important;
         --color-icons: #888888 !important;
         --color-bgDef: #121212 !important;
+        --color-sidebar: #1A1A1A !important;
         --color-bgFocus: #1A1A1A !important;
         --color-hover: #2A2A2A !important;
         --color-accent: #ff4b3e !important;
@@ -45,7 +47,7 @@
 }
 
 body {
-    /* color: #e7e7e7; */
+    /* color: #f8f6f2; */
 }
 
 .swipe {
