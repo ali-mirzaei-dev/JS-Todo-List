@@ -154,37 +154,36 @@ function renderTask() {
     tasks.forEach((val) => {
         let addedTask = document.createElement("li");
 
-        addedTask.className = "w-full flex flex-col md:flex-row justify-between items-start md:items-center border-b border-secondary/20 rounded-md px-3 py-4 gap-2 *:flex *:gap-2";
+        addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
         addedTask.setAttribute("data-id", val.id);
 
         if (val.status == "on") {
-            addedTask.classList.add("bg-[#f0fdf4]");
+            addedTask.classList.add("bg-green-900/10");
             addedTask.innerHTML = `
-                    <div class="items-center">
-                        <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox mt-0.5">
-                        <span class="line-through decoration-1 decoration-green-800 text-green-700 wrap-break-word">${val.name}</span>
-                    </div>
-                    <div class=" shrink-0">
-                        <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
-                    </div>`;
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                </div>`;
         } else {
-
-            let priorityDot = "bg-white border "
+            let priorityDot = "bg-gray-300";
             if (val.priority === "high") priorityDot = "bg-red-500";
             else if (val.priority === "medium") priorityDot = "bg-yellow-500";
             else if (val.priority === "low") priorityDot = "bg-green-500";
 
             addedTask.innerHTML = `
-                    <div class="items-center">
-                        <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
-                        <span class="wrap-break-word">${val.name}</span>
-                        </div>
-                        <div class="shrink-0 items-center">
-                        <span class="w-2 h-2 rounded-full ${priorityDot} shrink-0" title="Priority"></span>
-                        <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
-                        <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
-                        <i class="icon">ﭏ</i>
-                    </div>`;
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1">${val.name}</span>
+                    <span class="w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-2">
+                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                    <i class="icon">ﭏ</i>
+                </div>`;
         }
 
         newTasksPlace.appendChild(addedTask);
@@ -193,10 +192,10 @@ function renderTask() {
     addNewTask = document.createElement("div");
     addNewTask.className = "w-full flex justify-center py-4";
     addNewTask.innerHTML = `
-            <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
-                <i class="icon no-hover">ﭐ</i>
-                add task
-            </button>`;
+        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1.5 pr-3 pl-2 rounded-lg transition-colors flex items-center gap-2 text-secondary">
+            <i class="icon no-hover">ﭐ</i>
+            add task
+        </button>`;
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
