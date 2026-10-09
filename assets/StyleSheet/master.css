@@ -39,10 +39,8 @@
         @apply appearance-none h-5 w-5 rounded-md border-2 border-secondary bg-transparent cursor-pointer transition-all duration-300 hover:border-green-700 checked:bg-green-700 checked:border-white;
     }
 
-
-
     .active-link {
-        @apply bg-bgFocus text-[#BE3144] font-bold border-l-4 border-[#BE3144] -ml-1;
+        @apply bg-bgFocus! text-[#BE3144] font-bold border-l-4 border-[#BE3144] -ml-1;
     }
 }
 
