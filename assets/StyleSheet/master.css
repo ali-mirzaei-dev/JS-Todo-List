@@ -28,7 +28,7 @@
 
 @layer components {
     .icon {
-        @apply text-icons hover:bg-hover duration-400 cursor-pointer p-1 rounded-lg
+        @apply text-icons hover:bg-hover duration-400 cursor-pointer p-1 mr-1 rounded-lg
     }
 
     .no-hover {

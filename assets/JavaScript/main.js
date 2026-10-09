@@ -68,6 +68,7 @@ const completedTaskPlace = document.getElementById("completedCounter")
 let newTaskInput
 let addNewTask
 let totalTaskCount = 0
+let newTaskPriority = "not assigned"
 let isEditing = false;
 
 // ------- LOCAL STORAGE LOAD ------- //
@@ -89,19 +90,20 @@ function addTask() {
             <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
         
             <div class="flex justify-between">
-                 <div class="flex gap-2 items-center">
-                     <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
+                <div class="flex gap-2 items-center">
+                    <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
 
-                     <span class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary">
-                         <i class="icon no-hover text-secondary">ﰅ</i>
-                         date
-                     </span>
-                 </div>
+                   <span onclick="setPriorityMenu(this)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
+                        <i class="icon no-hover text-secondary"></i>
+                        <span>set priority</span>
+                    </span>
+
+                </div>
              
-                 <div class="flex items-center gap-2">
-                     <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
-                     <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
-                 </div>
+                <div class="flex items-center gap-2">
+                    <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
+                    <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
+                </div>
             </div>`
 
     newTasksPlace.appendChild(newTaskInput)
@@ -127,9 +129,12 @@ function submitTask() {
         let tempAdd = {
             name: inputValue.value,
             id: Date.now(),
-            status: "off"
+            status: "off",
+            priority: newTaskPriority
         }
         tasks.push(tempAdd);
+
+        newTaskPriority = "not assigned"
 
         renderTask()
         addTask()
@@ -157,18 +162,25 @@ function renderTask() {
             addedTask.innerHTML = `
                     <div class="items-center">
                         <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox mt-0.5">
-                        <span class="line-through decoration-1 decoration-green-800 text-green-700 break-words">${val.name}</span>
+                        <span class="line-through decoration-1 decoration-green-800 text-green-700 wrap-break-word">${val.name}</span>
                     </div>
                     <div class=" shrink-0">
                         <i onclick="deleteAddedTask(this)" class="icon icon-delete"></i>
                     </div>`;
         } else {
+
+            let priorityDot = "bg-white border "
+            if (val.priority === "high") priorityDot = "bg-red-500";
+            else if (val.priority === "medium") priorityDot = "bg-yellow-500";
+            else if (val.priority === "low") priorityDot = "bg-green-500";
+
             addedTask.innerHTML = `
                     <div class="items-center">
                         <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox mt-0.5">
-                        <span class="break-words">${val.name}</span>
-                    </div>
-                    <div class="shrink-0">
+                        <span class="wrap-break-word">${val.name}</span>
+                        </div>
+                        <div class="shrink-0 items-center">
+                        <span class="w-2 h-2 rounded-full ${priorityDot} shrink-0" title="Priority"></span>
                         <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
                         <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
                         <i class="icon">ﭏ</i>
@@ -337,6 +349,9 @@ function check() {
     totalTasksPlace.innerText = totalTaskCount
     completedTaskPlace.innerText = completeTaskCount
     saveTask()
+
+    console.log(newTaskPriority);
+
 }
 
 // ------- CLEAR COMPLETE TASKS ------- //
@@ -349,6 +364,7 @@ function clearCompletedTasks() {
     }
 }
 
+// ------- THIS CEHCKS IF IT SHOULD SHOW THE EMPTY STATE and TOOLBAR ------- //
 function loader() {
     if (tasks.length == 0) {
         if (newTaskInput) newTaskInput.remove();
@@ -362,4 +378,84 @@ function loader() {
         toolBar.classList.remove("hidden")
         if (!newTaskInput || !document.body.contains(newTaskInput)) showAddBtn()
     }
+}
+
+// ------- PRIORITY MENU |||| THIS OPENS THE PRIORITY MENU ------- //
+function setPriorityMenu(element) {
+
+    const isPriority = element.querySelector("ul")
+
+    if (isPriority) {
+        isPriority.remove()
+
+    } else {
+
+        let dropDownPriority = document.createElement("ul")
+
+        dropDownPriority.className = "absolute top-0 left-[110%] w-40 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2";
+
+        dropDownPriority.innerHTML = `
+            <li onclick="setTaskPriority(event , 'high' , 'text-red-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                High
+            </li>
+            <li onclick="setTaskPriority(event , 'medium' , 'text-yellow-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                Medium
+            </li>
+            <li onclick="setTaskPriority(event , 'low' , 'text-green-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+                <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                Low
+            </li>`
+
+        element.appendChild(dropDownPriority)
+    }
+
+}
+
+// ------- SET PRIORITY ||| THIS SETS THE PRIORITY ------- //
+function setTaskPriority(e, priority, color) {
+
+    e.stopImmediatePropagation()
+
+    newTaskPriority = priority
+    let currentText = color
+
+    const menu = e.target.closest("ul")
+    const button = menu.parentElement
+    const labelSpan = button.querySelector("span")
+    const icon = labelSpan.previousElementSibling
+
+    if (labelSpan) {
+
+        labelSpan.innerText = "priority: " + newTaskPriority
+        labelSpan.classList.remove("text-red-500", "text-yellow-500", "text-green-500", "text-secondary")
+        labelSpan.classList.add(currentText)
+
+
+        let darkColor = "text-secondary";
+        if (currentText === "text-red-500") darkColor = "text-red-700";
+        else if (currentText === "text-yellow-500") darkColor = "text-amber-600";
+        else if (currentText === "text-green-500") darkColor = "text-green-600";
+
+        if (icon) {
+            icon.classList.remove("text-red-700", "text-amber-600", "text-green-600", "text-secondary")
+            icon.classList.add(darkColor)
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+    menu.remove();
 }
