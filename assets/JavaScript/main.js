@@ -24,7 +24,7 @@ themeToggle.addEventListener("click", () => {
     }
 });
 
-// ------- CLOSE SIDEBAR ------- //
+// ------- CLOSE AND OPEN SIDEBAR ------- //
 function closeSidebar() {
     nav.classList.add("md:w-0!", "md:p-0!");
     nav.classList.add("-translate-x-full");
@@ -58,6 +58,7 @@ leftBtn.addEventListener("click", () => {
 
 
 let tasks = []
+let completedTasks = []
 const emptyState = document.getElementById("emptyState")
 const addTaskInEmpty = document.getElementById("addTaskInEmpty")
 const newTasksPlace = document.getElementById("newTasksPlace")
@@ -71,7 +72,7 @@ let totalTaskCount = 0
 let newTaskPriority = "not assigned"
 let isEditing = false;
 
-// ------- LOCAL STORAGE LOAD ------- //
+// ------- LOCAL STORAGE ALL TASKS LOAD ------- //
 let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
 
 if (tempTasks) {
@@ -79,6 +80,13 @@ if (tempTasks) {
     renderTask()
     check()
     loader()
+}
+
+// ------- LOCAL STORAGE COMPLETE TASKS LOAD ------- //
+let tempCompletedTasks = JSON.parse(localStorage.getItem("completedDataBase"))
+
+if (tempCompletedTasks) {
+    completedTasks = tempCompletedTasks
 }
 
 // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
@@ -145,6 +153,11 @@ function submitTask() {
 // ------- THIS SAVES TO LOCAL STORAGE ------- //
 function saveTask() {
     localStorage.setItem('dataBase', JSON.stringify(tasks))
+}
+
+// ------- THIS SAVE THE COMPLETED TASKS ------- //
+function saveCompletedTasks() {
+    localStorage.setItem("completedDataBase", JSON.stringify(completedTasks))
 }
 
 // ------- RENDER TASKS ------- // 
@@ -265,12 +278,26 @@ function deleteAddedTask(element) {
     })
 
     confirmDelete.addEventListener("click", () => {
+        const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
+
+
+
+        tasks.forEach((val, i) => {
+            if (val.id === taskToDelete) {
+
+                if (val.status == "on") {
+                    completedTasks.push(val)
+                    saveCompletedTasks()
+                }
+
+
+                tasks.splice(i, 1)
+            }
+        })
+
+
         element.parentElement.parentElement.remove()
         deleteTaskConfirm.remove()
-        const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
-        tasks.forEach((val, i) => {
-            if (val.id === taskToDelete) tasks.splice(i, 1)
-        })
         check()
     })
 
@@ -355,14 +382,23 @@ function check() {
     completedTaskPlace.innerText = completeTaskCount
     saveTask()
 
-    console.log(newTaskPriority);
+    // console.log(newTaskPriority);
 
 }
 
 // ------- CLEAR COMPLETE TASKS ------- //
 function clearCompletedTasks() {
     if (tasks.length > 0) {
-        tasks = tasks.filter((task) => task.status !== "on");
+
+        tasks.forEach((val) => {
+            if (val.status === "on") {
+                completedTasks.push(val);
+            }
+        });
+
+        saveCompletedTasks();
+
+        tasks = tasks.filter((val) => val.status !== "on");
         renderTask()
         loader()
         check()
