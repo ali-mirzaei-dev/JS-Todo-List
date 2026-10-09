@@ -167,11 +167,12 @@ function renderTask() {
     tasks.forEach((val) => {
         let addedTask = document.createElement("li");
 
-        addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
+        addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30";
         addedTask.setAttribute("data-id", val.id);
 
         if (val.status == "on") {
-            addedTask.classList.add("bg-green-900/10");
+            addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30";
+            addedTask.classList.add("bg-green-700/20");
             addedTask.innerHTML = `
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
@@ -186,6 +187,7 @@ function renderTask() {
             else if (val.priority === "medium") priorityDot = "bg-yellow-500";
             else if (val.priority === "low") priorityDot = "bg-green-500";
 
+            addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
             addedTask.innerHTML = `
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
@@ -457,11 +459,11 @@ function openMoreMenu(element, taskId = null) {
             </li>
             <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <i class="icon no-hover text-base"></i>
-                Add Date
+                coming soon ...
             </li>
             <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <i class="icon no-hover text-base"></i>
-                Move to...
+                coming soon ...
             </li>
         `
 
