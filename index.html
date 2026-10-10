@@ -28,11 +28,11 @@
             <!--==================#1-2 SIDE MENU ==================-->
             <ul class="w-full flex flex-col gap-1.5 p-2 *:flex *:items-center *:gap-3 *:py-2.5 *:px-3 *:rounded-lg *:cursor-pointer *:capitalize *:text-sm *:font-medium *:text-secondary *:transition-colors *:duration-200 *:hover:bg-hover *:hover:text-primary">
 
-                <li class="active-link">
+                <li onclick="switchTab(this ,'inbox' )" class="active-link">
                     <i class="icon text-lg"></i>inbox
                 </li>
-                <li class="text-xs!">
-                    <i class="icon text-lg"></i>comming soon ...
+                <li onclick="switchTab(this , 'completed')" class="">
+                    <i class="icon text-lg"></i>Completed
                 </li>
                 <li class="text-xs!">
                     <i class="icon text-lg"></i>comming soon ...
@@ -142,7 +142,14 @@
                     add task</button>
             </div>
 
-            <!--=======#2-2-3 NEW TASKS =======-->
+            <!--=======#2-2-3 EMPTY COMPLETED STATE =======-->
+            <div id="emptyCompletedState" class="absolute w-full max-w-sm px-4  flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
+                <img class="max-w-xs w-full h-auto" src="assets/Images/Friendly Character Behind Loading Window.png" alt="">
+                <span class="w-full font-bold text-primary">Nothing completed yet</span>
+                <span class="w-full text-secondary px-6">Tasks you complete will appear here so you can look back at what you've accomplished.</span>
+            </div>
+
+            <!--=======#2-2-4 NEW TASKS =======-->
             <ul id="newTasksPlace" class="flex flex-wrap content-start w-full">
 
             </ul>

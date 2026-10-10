@@ -59,7 +59,9 @@ leftBtn.addEventListener("click", () => {
 
 let tasks = []
 let completedTasks = []
+let currentTab = "inbox"
 const emptyState = document.getElementById("emptyState")
+const emptystateComplete = document.getElementById("emptyCompletedState")
 const addTaskInEmpty = document.getElementById("addTaskInEmpty")
 const newTasksPlace = document.getElementById("newTasksPlace")
 const toolBar = document.getElementById("toolBar")
@@ -165,22 +167,26 @@ function renderTask() {
     newTasksPlace.innerHTML = "";
 
     tasks.forEach((val) => {
-        let addedTask = document.createElement("li");
 
-        addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30";
+        // 1. VIEW FILTER: If we are in the completed view, skip uncompleted tasks
+        if (currentTab === "completed" && val.status !== "on") {
+            return;
+        }
+
+        let addedTask = document.createElement("li");
         addedTask.setAttribute("data-id", val.id);
 
         if (val.status == "on") {
-            addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30";
+            addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
             addedTask.classList.add("bg-green-700/20");
             addedTask.innerHTML = `
-                <div class="flex items-center gap-3 flex-1 min-w-0">
-                    <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
-                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
-                </div>
-                <div class="flex items-center gap-2 shrink-0">
-                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
-                </div>`;
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+                <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
+                <span class="break-words flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+            </div>`;
         } else {
             let priorityDot = "bg-gray-300";
             if (val.priority === "high") priorityDot = "bg-red-500";
@@ -189,30 +195,23 @@ function renderTask() {
 
             addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
             addedTask.innerHTML = `
-                <div class="flex items-center gap-3 flex-1 min-w-0">
-                    <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
-                    <span class="wrap-break-word flex-1">${val.name}</span>
-                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+                <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
+                <span class="break-words flex-1">${val.name}</span>
+                <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 ml-2">
+                <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
+                <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                <div class="relative">
+                    <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
                 </div>
-                <div class="flex items-center gap-2 shrink-0 ml-2">
-                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
-                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
-                    <div class="relative">
-                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
-                    </div>
-                </div>`;
+            </div>`;
         }
 
         newTasksPlace.appendChild(addedTask);
     });
 
-    addNewTask = document.createElement("div");
-    addNewTask.className = "w-full flex justify-center py-4";
-    addNewTask.innerHTML = `
-        <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1.5 pr-3 pl-2 rounded-lg transition-colors flex items-center gap-2 text-secondary">
-            <i class="icon no-hover">ﭐ</i>
-            add task
-        </button>`;
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -292,7 +291,6 @@ function deleteAddedTask(element) {
                     saveCompletedTasks()
                 }
 
-
                 tasks.splice(i, 1)
             }
         })
@@ -362,10 +360,13 @@ function markComplete(element) {
     let tempMarkId = +element.parentElement.parentElement.getAttribute("data-id")
 
     tasks.forEach((val, i) => {
-        if (val.id === tempMarkId && val.status == "off") val.status = "on"
-        else if (val.id === tempMarkId && val.status == "on") val.status = "off"
+        if (val.id === tempMarkId && val.status == "off") {
+            val.status = "on"
+        }
+        else if (val.id === tempMarkId && val.status == "on") {
+            val.status = "off"
+        }
     })
-
     renderTask()
     check()
 }
@@ -374,6 +375,7 @@ function markComplete(element) {
 function check() {
     totalTaskCount = tasks.length
     let completeTaskCount = 0
+
     if (tasks.length > 0) {
         tasks.forEach((val) => {
             if (val.status == "on") completeTaskCount++
@@ -384,7 +386,6 @@ function check() {
     completedTaskPlace.innerText = completeTaskCount
     saveTask()
 
-    // console.log(newTaskPriority);
 
 }
 
@@ -401,6 +402,8 @@ function clearCompletedTasks() {
         saveCompletedTasks();
 
         tasks = tasks.filter((val) => val.status !== "on");
+
+
         renderTask()
         loader()
         check()
@@ -409,18 +412,42 @@ function clearCompletedTasks() {
 
 // ------- THIS CEHCKS IF IT SHOULD SHOW THE EMPTY STATE and TOOLBAR ------- //
 function loader() {
-    if (tasks.length == 0) {
-        if (newTaskInput) newTaskInput.remove();
-        if (addNewTask) addNewTask.remove();
-        emptyState.classList.remove("hidden")
-        toolBar.classList.remove("flex")
-        toolBar.classList.add("hidden")
-    } else {
-        emptyState.classList.add("hidden")
-        toolBar.classList.add("flex")
-        toolBar.classList.remove("hidden")
-        if (!newTaskInput || !document.body.contains(newTaskInput)) showAddBtn()
+
+    let completedCount = 0;
+    tasks.forEach(val => { if (val.status === "on") completedCount++; });
+
+    if (currentTab === 'inbox') {
+        if (tasks.length == 0) {
+            if (newTaskInput) newTaskInput.remove();
+            if (addNewTask) addNewTask.remove();
+            emptyState.classList.remove("hidden")
+            toolBar.classList.remove("flex")
+            toolBar.classList.add("hidden")
+            emptystateComplete.classList.add("hidden")
+            emptystateComplete.classList.remove("flex")
+        } else {
+            emptyState.classList.add("hidden")
+            toolBar.classList.add("flex")
+            toolBar.classList.remove("hidden")
+            if (!newTaskInput || !document.body.contains(newTaskInput)) showAddBtn()
+            emptystateComplete.classList.add("hidden")
+            emptystateComplete.classList.remove("flex")
+        }
     }
+    else if (currentTab === 'completed') {
+        if (completedCount === 0) {
+            if (newTaskInput) newTaskInput.remove();
+            if (addNewTask) addNewTask.remove();
+            emptystateComplete.classList.remove("hidden")
+            emptystateComplete.classList.add("flex")
+        } else {
+            emptystateComplete.classList.add("hidden")
+            emptystateComplete.classList.remove("flex")
+            toolBar.classList.add("flex")
+            toolBar.classList.remove("hidden")
+        }
+    }
+
 }
 
 // ------- GLOBAL CLICK OUTSIDE LISTENER ------- //
@@ -557,4 +584,20 @@ function setTaskPriority(e, priority, color, taskId = null) {
 
         menu.remove();
     }
+}
+
+// ------- SWITCH TO COMPLETED TASKS MENU ------- //
+function switchTab(element, tabName) {
+    currentTab = tabName
+
+    document.querySelectorAll("nav ul li").forEach(val => {
+        val.classList.remove("active-link")
+    });
+
+    element.classList.add("active-link")
+
+    document.querySelector("h2").innerText = tabName
+
+    renderTask()
+    loader()
 }
