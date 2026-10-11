@@ -389,6 +389,7 @@ function deleteAddedTask(element) {
                 trashTasks.push(val)
                 saveTrashTasks()
                 tasks.splice(i, 1)
+                showToast("Task Moved to Trash!", "assets/Images/Delete.WebP");
             }
         })
 
@@ -737,7 +738,7 @@ function restoreTask(element) {
 
         tasks.push(trashTasks[indexRestoreId])
         trashTasks.splice(indexRestoreId, 1)
-        showRestoreToast()
+        showToast("Task Restored Successfully!", "assets/Images/Restore.WebP");
     }
 
     renderTask()
@@ -746,16 +747,15 @@ function restoreTask(element) {
     check()
 }
 
-// ------- RESTORE TOAST ------- //
-function showRestoreToast() {
-
+// ------- VISUAL TOAST ------- //
+function showToast(message, imagePath) {
     const toast = document.createElement("div");
 
     toast.className = "fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-bgDef border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
 
     toast.innerHTML = `
-        <img src="assets/Images/Restore.WebP" alt="Restored" class="w-10 h-10 object-contain shrink-0">
-        <span class="text-primary font-bold capitalize text-sm md:text-base">Task Restored Successfully!</span>`
+        <img src="${imagePath}" alt="Notification" class="w-10 h-10 object-contain shrink-0">
+        <span class="text-primary font-bold capitalize text-sm md:text-base">${message}</span>`;
 
     document.body.appendChild(toast);
 
@@ -771,7 +771,7 @@ function showRestoreToast() {
         setTimeout(() => {
             toast.remove();
         }, 500);
-    }, 2000);
+    }, 3000);
 }
 
 
