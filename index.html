@@ -83,16 +83,18 @@
             <!--==================#1-2 SIDE MENU ==================-->
             <ul class="w-full flex flex-col gap-1.5 p-2 *:flex *:items-center *:gap-3 *:py-2.5 *:px-3 *:rounded-lg *:cursor-pointer *:capitalize *:text-sm *:font-medium *:text-secondary *:transition-colors *:duration-200 *:hover:bg-hover *:hover:text-primary">
 
-                <li onclick="switchTab(this ,'inbox' )" class="active-link">
+                <li onclick="switchTab(this, 'inbox')" class="active-link">
                     <i class="icon text-lg"></i>
                     inbox
-                    <sup id="supInbox"></sup>
+                  <span id="supInbox" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
-                <li onclick="switchTab(this , 'completed')" class="">
-                    <i class="icon text-lg"></i>
+
+                <li onclick="switchTab(this, 'completed')" class="">
+                    <i class="icon text-lg"></i>
                     Completed
-                     <sup id="supCompleted"></sup>
+                  <span id="supCompleted" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
+
                 <li class="text-xs!">
                     <i class="icon text-lg"></i>
                     comming soon ...
