@@ -162,7 +162,6 @@ if (tempTasks) {
     tasks = tempTasks
     renderTask()
     check()
-    loader()
 }
 
 // ------- LOCAL STORAGE COMPLETE TASKS LOAD ------- //
@@ -304,11 +303,10 @@ function renderTask() {
 
             addedTrashTask.innerHTML = `
             <div class="flex items-center gap-3 flex-1 min-w-0">
-                <span class="break-words flex-1 text-secondary line-through decoration-red-500/50">${val.name}</span>
+                <span class="wrap-break-word flex-1 text-secondary line-through decoration-red-500/50">${val.name}</span>
             </div>
             <div class="flex items-center gap-2 shrink-0 ml-2">
-                <i onclick="restoreTask(this)" class="icon text-secondary hover:text-green-500 cursor-pointer" title="Restore"></i>
-        
+                <i onclick="restoreTask(this)" class="icon hover:text-green-500" title="Restore"></i>
                 <i onclick="deleteForever(this)" class="icon text-secondary hover:text-accent cursor-pointer" title="Delete Forever"></i>
             </div>`;
 
@@ -714,7 +712,6 @@ function setTaskPriority(e, priority, color, taskId = null) {
 
 // ------- SWITCH TO COMPLETED TASKS MENU ------- //
 function switchTab(element, tabName) {
-    check()
 
     currentTab = tabName
 
@@ -727,5 +724,63 @@ function switchTab(element, tabName) {
     document.querySelector("h2").innerText = tabName
 
     renderTask()
-    loader()
+    check()
 }
+
+// ------- RESTORE ||| TIHS RESTORES THE TRASHED TASKS ------- // 
+function restoreTask(element) {
+
+    const tempRestoreId = element.parentElement.parentElement.getAttribute('data-id')
+    const indexRestoreId = trashTasks.findIndex(val => val.id == tempRestoreId)
+
+    if (indexRestoreId !== -1) {
+
+        tasks.push(trashTasks[indexRestoreId])
+        trashTasks.splice(indexRestoreId, 1)
+    }
+
+    
+
+    renderTask()
+    saveTask()
+    saveTrashTasks()
+    check()
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+check()
