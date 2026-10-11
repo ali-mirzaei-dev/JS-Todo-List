@@ -730,16 +730,15 @@ function switchTab(element, tabName) {
 // ------- RESTORE ||| TIHS RESTORES THE TRASHED TASKS ------- // 
 function restoreTask(element) {
 
-    const tempRestoreId = element.parentElement.parentElement.getAttribute('data-id')
+    const tempRestoreId = +element.parentElement.parentElement.getAttribute('data-id')
     const indexRestoreId = trashTasks.findIndex(val => val.id == tempRestoreId)
 
     if (indexRestoreId !== -1) {
 
         tasks.push(trashTasks[indexRestoreId])
         trashTasks.splice(indexRestoreId, 1)
+        showRestoreToast()
     }
-
-    
 
     renderTask()
     saveTask()
@@ -747,7 +746,33 @@ function restoreTask(element) {
     check()
 }
 
+// ------- RESTORE TOAST ------- //
+function showRestoreToast() {
 
+    const toast = document.createElement("div");
+
+    toast.className = "fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-bgDef border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
+
+    toast.innerHTML = `
+        <img src="assets/Images/Restore.WebP" alt="Restored" class="w-10 h-10 object-contain shrink-0">
+        <span class="text-primary font-bold capitalize text-sm md:text-base">Task Restored Successfully!</span>`
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.remove("opacity-0", "-translate-y-4");
+        toast.classList.add("opacity-100", "translate-y-0");
+    }, 50);
+
+    setTimeout(() => {
+        toast.classList.remove("opacity-100", "translate-y-0");
+        toast.classList.add("opacity-0", "-translate-y-4");
+
+        setTimeout(() => {
+            toast.remove();
+        }, 500);
+    }, 2000);
+}
 
 
 
