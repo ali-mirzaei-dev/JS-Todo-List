@@ -500,6 +500,7 @@ function loader() {
         }
     }
     else if (currentTab === 'completed') {
+        emptyState.classList.add("hidden")
         if (completedCount === 0) {
             if (newTaskInput) newTaskInput.remove();
             if (addNewTask) addNewTask.remove();
