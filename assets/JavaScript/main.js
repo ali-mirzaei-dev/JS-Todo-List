@@ -8,8 +8,53 @@ const themeToggle = document.getElementById("themeToggle");
 const closeWelcome = document.getElementById("closeWelcome")
 const welcomepopup = document.getElementById("welcomePopUp")
 const neverShowPopUp = document.getElementById("neverShowBtn")
+const editNameBtn = document.getElementById("editNameBtn")
+const userNameDisplay = document.getElementById("userNameDisplay")
 
-/////////////////////----WELCOME POP UP----///////////////////////// ---->
+let tempUserName = localStorage.getItem("UserName")
+if (tempUserName) {
+    userNameDisplay.innerText = tempUserName
+}
+
+editNameBtn.addEventListener("click", () => {
+
+
+    const userNameInput = document.getElementById("userNameInput")
+    const buttonsBox = document.getElementById("buttonsBox")
+    let oldUserName = userNameDisplay.innerText
+
+    editNameBtn.classList.add("hidden")
+    userNameDisplay.classList.add("hidden")
+    userNameInput.value = oldUserName
+    userNameInput.classList.remove("hidden")
+    buttonsBox.classList.remove("hidden")
+    buttonsBox.classList.add("flex")
+    setTimeout(() => {
+        userNameInput.focus()
+    }, 0);
+
+    buttonsBox.children[0].addEventListener("click", () => {
+        editNameBtn.classList.remove("hidden")
+        userNameDisplay.classList.remove("hidden")
+        userNameInput.classList.add("hidden")
+        buttonsBox.classList.add("hidden")
+        buttonsBox.classList.remove("flex")
+
+    })
+
+    buttonsBox.children[1].addEventListener("click", () => {
+        editNameBtn.classList.remove("hidden")
+        userNameDisplay.classList.remove("hidden")
+        userNameInput.classList.add("hidden")
+        buttonsBox.classList.add("hidden")
+        buttonsBox.classList.remove("flex")
+        let newUserName = userNameInput.value
+        userNameDisplay.innerText = newUserName
+
+        localStorage.setItem("UserName", newUserName)
+
+    })
+})
 
 // ------- CLOSE WELCOME POP UP LOCAL STORAGE ------- //
 let savePopUp = localStorage.getItem('chiocePopUp')
@@ -28,11 +73,6 @@ closeWelcome.addEventListener("click", () => {
 
 })
 
-/////////////////////----WELCOME POP UP----////////////////////////// <----
-
-
-/////////////////////---- THEME SELECT ----////////////////////////// ---->
-
 // ------- THEME LOCAL STORAGE LOAD ------- //
 let savedTheme = localStorage.getItem('theme')
 if (savedTheme === 'dark') {
@@ -50,7 +90,6 @@ themeToggle.addEventListener("click", () => {
     }
 });
 
-/////////////////////---- THEME SELECT ----////////////////////////// <----
 
 // ------- CLOSE AND OPEN SIDEBAR ------- //
 function closeSidebar() {
