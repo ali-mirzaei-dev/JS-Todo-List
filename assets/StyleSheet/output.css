@@ -362,6 +362,9 @@
   .hidden {
     display: none;
   }
+  .inline {
+    display: inline;
+  }
   .table {
     display: table;
   }
@@ -657,6 +660,9 @@
   .bg-transparent {
     background-color: transparent;
   }
+  .bg-white {
+    background-color: var(--color-white);
+  }
   .bg-yellow-500 {
     background-color: var(--color-yellow-500);
   }
@@ -788,11 +794,17 @@
   .wrap-break-word {
     overflow-wrap: break-word;
   }
+  .text-\[\#202020\] {
+    color: #202020;
+  }
   .text-accent {
     color: var(--color-accent);
   }
   .text-amber-600 {
     color: var(--color-amber-600);
+  }
+  .text-black {
+    color: var(--color-black);
   }
   .text-green-500 {
     color: var(--color-green-500);

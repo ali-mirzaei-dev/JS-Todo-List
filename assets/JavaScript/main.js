@@ -747,15 +747,15 @@ function restoreTask(element) {
     check()
 }
 
-// ------- VISUAL TOAST ------- //
+// ------- TOAST Message ------- //
 function showToast(message, imagePath) {
     const toast = document.createElement("div");
 
-    toast.className = "fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-bgDef border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
+    toast.className = "fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-white border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
 
     toast.innerHTML = `
         <img src="${imagePath}" alt="Notification" class="w-10 h-10 object-contain shrink-0">
-        <span class="text-primary font-bold capitalize text-sm md:text-base">${message}</span>`;
+        <span class="text-[#202020] font-bold capitalize text-sm md:text-base">${message}</span>`;
 
     document.body.appendChild(toast);
 
@@ -774,7 +774,22 @@ function showToast(message, imagePath) {
     }, 3000);
 }
 
+// ------- DELETE PERMANENTLY  ------- //
+function deleteForever(element) {
 
+    const tempDeleteId = +element.parentElement.parentElement.getAttribute("data-id")
+    const indexToDelete = trashTasks.findIndex(val => val.id === tempDeleteId)
+
+    if (indexToDelete !== -1) {
+        trashTasks.splice(indexToDelete, 1)
+        
+        showToast("Task Deleted Forever!", "assets/Images/Delete.WebP");
+    }
+
+    saveTrashTasks()
+    renderTask()
+    check()
+}
 
 
 
