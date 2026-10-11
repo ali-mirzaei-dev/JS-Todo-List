@@ -758,6 +758,9 @@
   .break-words {
     overflow-wrap: break-word;
   }
+  .wrap-break-word {
+    overflow-wrap: break-word;
+  }
   .text-accent {
     color: var(--color-accent);
   }

@@ -14,6 +14,25 @@ const userNameInput = document.getElementById("userNameInput")
 const buttonsBox = document.getElementById("buttonsBox")
 const cancelNameBtn = document.getElementById("cancelNameBtn")
 const saveNameBtn = document.getElementById("saveNameBtn")
+const emptyState = document.getElementById("emptyState")
+const emptystateComplete = document.getElementById("emptyCompletedState")
+const addTaskInEmpty = document.getElementById("addTaskInEmpty")
+const newTasksPlace = document.getElementById("newTasksPlace")
+const toolBar = document.getElementById("toolBar")
+const totalTasksPlace = document.getElementById("totalCounter")
+const completedTaskPlace = document.getElementById("completedCounter")
+const supInbox = document.getElementById("supInbox")
+const supCompleted = document.getElementById("supCompleted")
+
+let tasks = []
+let completedTasks = []
+let currentTab = "inbox"
+let completeTaskCount
+let newTaskInput
+let addNewTask
+let totalTaskCount = 0
+let newTaskPriority = "not assigned"
+let isEditing = false;
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -127,22 +146,7 @@ leftBtn.addEventListener("click", () => {
     }
 })
 
-let tasks = []
-let completedTasks = []
-let currentTab = "inbox"
-const emptyState = document.getElementById("emptyState")
-const emptystateComplete = document.getElementById("emptyCompletedState")
-const addTaskInEmpty = document.getElementById("addTaskInEmpty")
-const newTasksPlace = document.getElementById("newTasksPlace")
-const toolBar = document.getElementById("toolBar")
-const totalTasksPlace = document.getElementById("totalCounter")
-const completedTaskPlace = document.getElementById("completedCounter")
 
-let newTaskInput
-let addNewTask
-let totalTaskCount = 0
-let newTaskPriority = "not assigned"
-let isEditing = false;
 
 // ------- LOCAL STORAGE ALL TASKS LOAD ------- //
 let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
@@ -252,7 +256,7 @@ function renderTask() {
             addedTask.innerHTML = `
             <div class="flex items-center gap-3 flex-1 min-w-0">
                 <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
-                <span class="break-words flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
                 <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
@@ -267,7 +271,7 @@ function renderTask() {
             addedTask.innerHTML = `
             <div class="flex items-center gap-3 flex-1 min-w-0">
                 <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
-                <span class="break-words flex-1">${val.name}</span>
+                <span class="wrap-break-word flex-1">${val.name}</span>
                 <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
             </div>
             <div class="flex items-center gap-2 shrink-0 ml-2">
@@ -441,11 +445,10 @@ function markComplete(element) {
     check()
 }
 
-// ------- TASKS COUNTER || CHECK() ------- //
+// ------- CHECK() || TASKS COUNTER ------- //
 function check() {
     totalTaskCount = tasks.length
-    let completeTaskCount = 0
-
+    completeTaskCount = 0
     if (tasks.length > 0) {
         tasks.forEach((val) => {
             if (val.status == "on") completeTaskCount++
@@ -454,9 +457,10 @@ function check() {
     loader()
     totalTasksPlace.innerText = totalTaskCount
     completedTaskPlace.innerText = completeTaskCount
+    supInbox.innerText = totalTaskCount
+    supCompleted.innerText = completeTaskCount
+    
     saveTask()
-
-
 }
 
 // ------- CLEAR COMPLETE TASKS ------- //
@@ -480,11 +484,8 @@ function clearCompletedTasks() {
     }
 }
 
-// ------- THIS CEHCKS IF IT SHOULD SHOW THE EMPTY STATE and TOOLBAR ------- //
+// ------- LOADER() ||| THIS CEHCKS IF IT SHOULD SHOW THE EMPTY STATE and TOOLBAR ------- //
 function loader() {
-
-    let completedCount = 0;
-    tasks.forEach(val => { if (val.status === "on") completedCount++; });
 
     if (currentTab === 'inbox') {
         if (tasks.length == 0) {
@@ -506,7 +507,7 @@ function loader() {
     }
     else if (currentTab === 'completed') {
         emptyState.classList.add("hidden")
-        if (completedCount === 0) {
+        if (completeTaskCount === 0) {
             if (newTaskInput) newTaskInput.remove();
             if (addNewTask) addNewTask.remove();
             emptystateComplete.classList.remove("hidden")
