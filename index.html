@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="assets/StyleSheet/output.css">
-    <link rel="stylesheet" href="assets/Font/asd/style.css">
+    <link rel="stylesheet" href="assets/Font/font/style.css">
     <link rel="stylesheet" href="assets/Font/FontSocials/style.css">
 
 
@@ -83,21 +83,22 @@
             <!--==================#1-2 SIDE MENU ==================-->
             <ul class="w-full flex flex-col gap-1.5 p-2 *:flex *:items-center *:gap-3 *:py-2.5 *:px-3 *:rounded-lg *:cursor-pointer *:capitalize *:text-sm *:font-medium *:text-secondary *:transition-colors *:duration-200 *:hover:bg-hover *:hover:text-primary">
 
-                <li onclick="switchTab(this, 'inbox')" class="active-link">
+                <li onclick="switchTab(this,'inbox')" class="active-link">
                     <i class="icon text-lg"></i>
                     inbox
-                  <span id="supInbox" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
+                    <span id="supInbox" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
 
-                <li onclick="switchTab(this, 'completed')" class="">
-                    <i class="icon text-lg"></i>
+                <li onclick="switchTab(this,'completed')">
+                    <i class="icon text-lg"></i>
                     Completed
-                  <span id="supCompleted" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
+                    <span id="supCompleted" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
 
-                <li class="text-xs!">
-                    <i class="icon text-lg"></i>
-                    comming soon ...
+                <li onclick="switchTab(this ,'trash')">
+                    <i class="icon text-lg"></i>
+                    trash
+                    <span id="supTrash" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
                 <li class="text-xs!">
                     <i class="icon text-lg"></i>
@@ -172,13 +173,20 @@
             </div>
 
             <!--=======#2-2-3 EMPTY COMPLETED STATE =======-->
-            <div id="emptyCompletedState" class="absolute w-full max-w-sm px-4  flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
+            <div id="emptyCompletedState" class="absolute w-full max-w-sm px-4 flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
                 <img class="max-w-xs w-full h-auto" src="assets/Images/emptyStateComplete.png" alt="">
                 <span class="w-full font-bold text-primary">Nothing completed yet</span>
                 <span class="w-full text-secondary px-6">Tasks you complete will appear here so you can look back at what you've accomplished.</span>
             </div>
 
-            <!--=======#2-2-4 NEW TASKS =======-->
+            <!--=======#2-2-4 EMPTY TRASH STATE =======-->
+            <div id="emptyTrashState" class="absolute w-full max-w-sm px-4 flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
+                <img class="max-w-xs w-full h-auto" src="assets/Images/emptyStateTrash.png" alt="">
+                <span class="w-full font-bold text-primary">Trash is empty</span>
+                <span class="w-full text-secondary px-6">Tasks you delete will be moved here. You can restore them or permanently remove them later.</span>
+            </div>
+
+            <!--=======#2-2-5 NEW TASKS =======-->
             <ul id="newTasksPlace" class="flex flex-wrap content-start w-full">
 
             </ul>

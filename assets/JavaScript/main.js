@@ -23,16 +23,23 @@ const totalTasksPlace = document.getElementById("totalCounter")
 const completedTaskPlace = document.getElementById("completedCounter")
 const supInbox = document.getElementById("supInbox")
 const supCompleted = document.getElementById("supCompleted")
+const supTrash = document.getElementById("supTrash")
+const emptyStateTrash = document.getElementById("emptyTrashState")
 
 let tasks = []
-let completedTasks = []
+let trashTasks = []
 let currentTab = "inbox"
 let completeTaskCount
+let trashTaskCount
 let newTaskInput
 let addNewTask
 let totalTaskCount = 0
 let newTaskPriority = "not assigned"
 let isEditing = false;
+
+
+console.log(completeTaskCount);
+
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -159,10 +166,10 @@ if (tempTasks) {
 }
 
 // ------- LOCAL STORAGE COMPLETE TASKS LOAD ------- //
-let tempCompletedTasks = JSON.parse(localStorage.getItem("completedDataBase"))
+let tempTrashTasks = JSON.parse(localStorage.getItem("trashDataBase"))
 
-if (tempCompletedTasks) {
-    completedTasks = tempCompletedTasks
+if (tempTrashTasks) {
+    trashTasks = tempTrashTasks
 }
 
 // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
@@ -232,60 +239,83 @@ function saveTask() {
 }
 
 // ------- THIS SAVE THE COMPLETED TASKS ------- //
-function saveCompletedTasks() {
-    localStorage.setItem("completedDataBase", JSON.stringify(completedTasks))
+function saveTrashTasks() {
+    localStorage.setItem("trashDataBase", JSON.stringify(trashTasks))
 }
 
 // ------- RENDER TASKS ------- // 
 function renderTask() {
     newTasksPlace.innerHTML = "";
 
-    tasks.forEach((val) => {
+    if (currentTab === 'inbox' || currentTab === 'completed') {
+        tasks.forEach((val) => {
 
-        // 1. VIEW FILTER: If we are in the completed view, skip uncompleted tasks
-        if (currentTab === "completed" && val.status !== "on") {
-            return;
-        }
+            if (currentTab === "completed" && val.status !== "on") {
+                return;
+            }
 
-        let addedTask = document.createElement("li");
-        addedTask.setAttribute("data-id", val.id);
+            let addedTask = document.createElement("li");
+            addedTask.setAttribute("data-id", val.id);
 
-        if (val.status == "on") {
-            addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
-            addedTask.classList.add("bg-green-700/20");
-            addedTask.innerHTML = `
+            if (val.status == "on") {
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
+                addedTask.classList.add("bg-green-700/20");
+                addedTask.innerHTML = `
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                </div>`;
+            } else {
+                let priorityDot = "bg-gray-300";
+                if (val.priority === "high") priorityDot = "bg-red-500";
+                else if (val.priority === "medium") priorityDot = "bg-yellow-500";
+                else if (val.priority === "low") priorityDot = "bg-green-500";
+
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
+                addedTask.innerHTML = `
+                 <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1">${val.name}</span>
+                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-2">
+                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                    <div class="relative">
+                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                     </div>
+                 </div>`;
+            }
+
+            newTasksPlace.appendChild(addedTask);
+        });
+    }
+
+    else if (currentTab === 'trash') {
+        trashTasks.forEach((val) => {
+
+            let addedTrashTask = document.createElement("li");
+            addedTrashTask.setAttribute("data-id", val.id);
+
+            addedTrashTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/30 rounded-lg opacity-90";
+
+            addedTrashTask.innerHTML = `
             <div class="flex items-center gap-3 flex-1 min-w-0">
-                <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
-                <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
-            </div>`;
-        } else {
-            let priorityDot = "bg-gray-300";
-            if (val.priority === "high") priorityDot = "bg-red-500";
-            else if (val.priority === "medium") priorityDot = "bg-yellow-500";
-            else if (val.priority === "low") priorityDot = "bg-green-500";
-
-            addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
-            addedTask.innerHTML = `
-            <div class="flex items-center gap-3 flex-1 min-w-0">
-                <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
-                <span class="wrap-break-word flex-1">${val.name}</span>
-                <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                <span class="break-words flex-1 text-secondary line-through decoration-red-500/50">${val.name}</span>
             </div>
             <div class="flex items-center gap-2 shrink-0 ml-2">
-                <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
-                <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
-                <div class="relative">
-                    <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
-                </div>
+                <i onclick="restoreTask(this)" class="icon text-secondary hover:text-green-500 cursor-pointer" title="Restore"></i>
+        
+                <i onclick="deleteForever(this)" class="icon text-secondary hover:text-accent cursor-pointer" title="Delete Forever"></i>
             </div>`;
-        }
 
-        newTasksPlace.appendChild(addedTask);
-    });
 
+            newTasksPlace.appendChild(addedTrashTask);
+        })
+    }
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -335,7 +365,7 @@ function deleteAddedTask(element) {
                 </div>
                 <div class="text-center flex flex-col gap-2">
                     <h3 class="text-lg font-bold text-primary">Delete this task?</h3>
-                    <p class="text-sm text-secondary">This action cannot be undone. Are you sure you want to proceed?</p>
+                    <p class="text-sm text-secondary">This task will be moved to the Trash. You can restore it later. Are you sure you want to proceed?</p>
                 </div>
                 <div class="flex gap-3 mt-2">
                     <button id="cancelDelete" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">Cancel</button>
@@ -355,16 +385,11 @@ function deleteAddedTask(element) {
     confirmDelete.addEventListener("click", () => {
         const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
 
-
-
         tasks.forEach((val, i) => {
             if (val.id === taskToDelete) {
 
-                if (val.status == "on") {
-                    completedTasks.push(val)
-                    saveCompletedTasks()
-                }
-
+                trashTasks.push(val)
+                saveTrashTasks()
                 tasks.splice(i, 1)
             }
         })
@@ -444,10 +469,10 @@ function markComplete(element) {
     renderTask()
     check()
 }
-
 // ------- CHECK() || TASKS COUNTER ------- //
 function check() {
     totalTaskCount = tasks.length
+    trashTaskCount = trashTasks.length
     completeTaskCount = 0
     if (tasks.length > 0) {
         tasks.forEach((val) => {
@@ -459,7 +484,7 @@ function check() {
     completedTaskPlace.innerText = completeTaskCount
     supInbox.innerText = totalTaskCount
     supCompleted.innerText = completeTaskCount
-    
+    supTrash.innerText = trashTaskCount
     saveTask()
 }
 
@@ -469,11 +494,11 @@ function clearCompletedTasks() {
 
         tasks.forEach((val) => {
             if (val.status === "on") {
-                completedTasks.push(val);
+                trashTasks.push(val);
             }
         });
 
-        saveCompletedTasks();
+        saveTrashTasks();
 
         tasks = tasks.filter((val) => val.status !== "on");
 
@@ -488,6 +513,10 @@ function clearCompletedTasks() {
 function loader() {
 
     if (currentTab === 'inbox') {
+        emptystateComplete.classList.add("hidden")
+        emptyStateTrash.classList.add("hidden")
+
+        // ------- INBOX
         if (tasks.length == 0) {
             if (newTaskInput) newTaskInput.remove();
             if (addNewTask) addNewTask.remove();
@@ -505,19 +534,44 @@ function loader() {
             emptystateComplete.classList.remove("flex")
         }
     }
+
+    // ------- Completed
     else if (currentTab === 'completed') {
         emptyState.classList.add("hidden")
+        emptyStateTrash.classList.add("hidden")
+
         if (completeTaskCount === 0) {
-            if (newTaskInput) newTaskInput.remove();
-            if (addNewTask) addNewTask.remove();
             emptystateComplete.classList.remove("hidden")
             emptystateComplete.classList.add("flex")
+            toolBar.classList.remove("flex")
+            toolBar.classList.add("hidden")
+
         } else {
             emptystateComplete.classList.add("hidden")
             emptystateComplete.classList.remove("flex")
             toolBar.classList.add("flex")
             toolBar.classList.remove("hidden")
         }
+    }
+    // ------- TRASH
+    else if (currentTab === 'trash') {
+        emptyState.classList.add("hidden")
+        emptystateComplete.classList.add("hidden")
+        emptystateComplete.classList.remove("flex")
+
+        if (trashTasks.length == 0) {
+            emptyStateTrash.classList.remove("hidden")
+            emptyStateTrash.classList.add("flex")
+            toolBar.classList.remove("flex")
+            toolBar.classList.add("hidden")
+
+        } else {
+            emptyStateTrash.classList.add("hidden")
+            emptyStateTrash.classList.remove("flex")
+            toolBar.classList.add("flex")
+            toolBar.classList.remove("hidden")
+        }
+
     }
 
 }
@@ -660,6 +714,8 @@ function setTaskPriority(e, priority, color, taskId = null) {
 
 // ------- SWITCH TO COMPLETED TASKS MENU ------- //
 function switchTab(element, tabName) {
+    check()
+
     currentTab = tabName
 
     document.querySelectorAll("nav ul li").forEach(val => {
