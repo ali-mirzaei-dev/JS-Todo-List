@@ -5,7 +5,33 @@ const main = document.querySelector("main")
 const leftBtn = document.getElementById("leftBtn")
 const placeHolder = document.querySelector("body")
 const themeToggle = document.getElementById("themeToggle");
+const closeWelcome = document.getElementById("closeWelcome")
+const welcomepopup = document.getElementById("welcomePopUp")
+const neverShowPopUp = document.getElementById("neverShowBtn")
 
+/////////////////////----WELCOME POP UP----///////////////////////// ---->
+
+// ------- CLOSE WELCOME POP UP LOCAL STORAGE ------- //
+let savePopUp = localStorage.getItem('chiocePopUp')
+if (savePopUp == "off") {
+    welcomepopup.remove()
+}
+
+neverShowPopUp.addEventListener("click", () => {
+    welcomepopup.remove()
+    localStorage.setItem('chiocePopUp', 'off')
+})
+
+// ------- CLOSE WELCOME POPUP ONCE------- //
+closeWelcome.addEventListener("click", () => {
+    welcomepopup.remove()
+
+})
+
+/////////////////////----WELCOME POP UP----////////////////////////// <----
+
+
+/////////////////////---- THEME SELECT ----////////////////////////// ---->
 
 // ------- THEME LOCAL STORAGE LOAD ------- //
 let savedTheme = localStorage.getItem('theme')
@@ -23,6 +49,8 @@ themeToggle.addEventListener("click", () => {
         localStorage.setItem('theme', 'light')
     }
 });
+
+/////////////////////---- THEME SELECT ----////////////////////////// <----
 
 // ------- CLOSE AND OPEN SIDEBAR ------- //
 function closeSidebar() {
@@ -54,8 +82,6 @@ leftBtn.addEventListener("click", () => {
         closeSidebar();
     }
 })
-
-
 
 let tasks = []
 let completedTasks = []
