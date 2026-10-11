@@ -10,17 +10,20 @@ const welcomepopup = document.getElementById("welcomePopUp")
 const neverShowPopUp = document.getElementById("neverShowBtn")
 const editNameBtn = document.getElementById("editNameBtn")
 const userNameDisplay = document.getElementById("userNameDisplay")
+const userNameInput = document.getElementById("userNameInput")
+const buttonsBox = document.getElementById("buttonsBox")
+const cancelNameBtn = document.getElementById("cancelNameBtn")
+const saveNameBtn = document.getElementById("saveNameBtn")
 
+// ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
 if (tempUserName) {
     userNameDisplay.innerText = tempUserName
 }
 
+// ------- EDIT USER NAME ||| THIS OPENS THE USER NAME EDIT BOX ------- //
 editNameBtn.addEventListener("click", () => {
 
-
-    const userNameInput = document.getElementById("userNameInput")
-    const buttonsBox = document.getElementById("buttonsBox")
     let oldUserName = userNameDisplay.innerText
 
     editNameBtn.classList.add("hidden")
@@ -32,29 +35,31 @@ editNameBtn.addEventListener("click", () => {
     setTimeout(() => {
         userNameInput.focus()
     }, 0);
-
-    buttonsBox.children[0].addEventListener("click", () => {
-        editNameBtn.classList.remove("hidden")
-        userNameDisplay.classList.remove("hidden")
-        userNameInput.classList.add("hidden")
-        buttonsBox.classList.add("hidden")
-        buttonsBox.classList.remove("flex")
-
-    })
-
-    buttonsBox.children[1].addEventListener("click", () => {
-        editNameBtn.classList.remove("hidden")
-        userNameDisplay.classList.remove("hidden")
-        userNameInput.classList.add("hidden")
-        buttonsBox.classList.add("hidden")
-        buttonsBox.classList.remove("flex")
-        let newUserName = userNameInput.value
-        userNameDisplay.innerText = newUserName
-
-        localStorage.setItem("UserName", newUserName)
-
-    })
 })
+
+// ------- CANCELING USERNAME EDIT ------- //
+cancelNameBtn.addEventListener("click", () => {
+    editNameBtn.classList.remove("hidden");
+    userNameDisplay.classList.remove("hidden");
+    userNameInput.classList.add("hidden");
+    buttonsBox.classList.add("hidden");
+    buttonsBox.classList.remove("flex");
+});
+
+// ------- CONFORMING USERNAME EDIT ------- //
+saveNameBtn.addEventListener("click", () => {
+    editNameBtn.classList.remove("hidden");
+    userNameDisplay.classList.remove("hidden");
+    userNameInput.classList.add("hidden");
+    buttonsBox.classList.add("hidden");
+    buttonsBox.classList.remove("flex");
+
+    let newUserName = userNameInput.value.trim();
+    if (newUserName !== "") {
+        userNameDisplay.innerText = newUserName;
+        localStorage.setItem("UserName", newUserName);
+    }
+});
 
 // ------- CLOSE WELCOME POP UP LOCAL STORAGE ------- //
 let savePopUp = localStorage.getItem('chiocePopUp')
