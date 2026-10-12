@@ -27,6 +27,9 @@ const supTrash = document.getElementById("supTrash")
 const emptyStateTrash = document.getElementById("emptyTrashState")
 const sortContainer = document.getElementById("sortContainer")
 const sortSelect = document.getElementById("sortSelect")
+const progressBar = document.getElementById("progressBar")
+const progressLabel = document.getElementById("progressLabel")
+
 
 let tasks = []
 let trashTasks = []
@@ -606,6 +609,7 @@ function check() {
     totalTaskCount = tasks.length
     trashTaskCount = trashTasks.length
     completeTaskCount = 0
+
     if (tasks.length > 0) {
         tasks.forEach((val) => {
             if (val.status == "on") completeTaskCount++
@@ -617,6 +621,24 @@ function check() {
     supInbox.innerText = totalTaskCount
     supCompleted.innerText = completeTaskCount
     supTrash.innerText = trashTaskCount
+
+    if (tasks.length > 0) {
+        let progressCalc = Math.round((completeTaskCount * 100) / totalTaskCount)
+
+        progressLabel.innerText = progressCalc + '%'
+        progressBar.style.width = progressCalc + '%'
+
+        progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
+        if (progressCalc <= 33) {
+            progressBar.classList.add('bg-red-400')
+        }
+        else if (progressCalc >= 34 && progressCalc <= 66) {
+            progressBar.classList.add('bg-yellow-300')
+        }
+        else if (progressCalc >= 67) {
+            progressBar.classList.add('bg-green-300')
+        }
+    }
     saveTask()
 
 }
