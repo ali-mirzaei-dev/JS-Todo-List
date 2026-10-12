@@ -627,7 +627,7 @@ function check() {
 
         progressLabel.innerText = progressCalc + '%'
         progressBar.style.width = progressCalc + '%'
-
+        
         progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
         if (progressCalc <= 33) {
             progressBar.classList.add('bg-red-400')
@@ -637,6 +637,11 @@ function check() {
         }
         else if (progressCalc >= 67) {
             progressBar.classList.add('bg-green-300')
+        }
+         else {
+            progressLabel.innerText = '0%'
+            progressBar.style.width = '0%'
+            progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
         }
     }
     saveTask()
