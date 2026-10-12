@@ -156,7 +156,6 @@ leftBtn.addEventListener("click", () => {
 })
 
 
-
 // ------- LOCAL STORAGE ALL TASKS LOAD ------- //
 let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
 
@@ -253,16 +252,16 @@ function renderTask() {
     if (currentTab === 'inbox') {
         tasks.forEach((val) => {
 
-            if (tempSortValue !== 'default' && val.priority !== tempSortValue) return;
+            if (tempSortValue !== 'default' && val.priority !== tempSortValue) return
             if (val.visibility == 'hide') return
 
-            let addedTask = document.createElement("li");
-            addedTask.setAttribute("data-id", val.id);
+            let addedTask = document.createElement("li")
+            addedTask.setAttribute("data-id", val.id)
 
             // ------- Complete Tasks
             if (val.status == "on") {
-                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
-                addedTask.classList.add("bg-green-700/20");
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg "
+                addedTask.classList.add("bg-green-700/20")
                 addedTask.innerHTML = `
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
@@ -274,12 +273,12 @@ function renderTask() {
                 </div>`
 
             } else {
-                let priorityDot = "bg-gray-300";
-                if (val.priority === "high") priorityDot = "bg-red-500";
-                else if (val.priority === "medium") priorityDot = "bg-yellow-500";
-                else if (val.priority === "low") priorityDot = "bg-green-500";
+                let priorityDot = "bg-gray-300"
+                if (val.priority === "high") priorityDot = "bg-red-500"
+                else if (val.priority === "medium") priorityDot = "bg-yellow-500"
+                else if (val.priority === "low") priorityDot = "bg-green-500"
 
-                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50"
                 addedTask.innerHTML = `
                  <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
@@ -291,11 +290,11 @@ function renderTask() {
                     <div class="relative">
                         <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
                      </div>
-                 </div>`;
+                 </div>`
             }
 
             newTasksPlace.appendChild(addedTask);
-        });
+        })
     }
 
     // 2. COMPLETED TAB
@@ -559,14 +558,14 @@ function check() {
         else if (progressCalc >= 67) {
             progressBar.classList.add('bg-green-300')
         }
-        else {
-            progressLabel.innerText = '0%'
-            progressBar.style.width = '0%'
-            progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
-        }
     }
-    saveTask()
+    else {
+        progressLabel.innerText = '0%'
+        progressBar.style.width = '0%'
+        progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
+    }
 
+    saveTask()
 }
 
 // ------- CLEAR COMPLETE TASKS ------- //
@@ -813,16 +812,22 @@ function toggleSortMenu(element) {
         tempMenu = document.createElement("ul")
         tempMenu.className = "dropdown-menu absolute -top-[25%] left-[110%] mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex-col gap-1 p-2"
         tempMenu.innerHTML = `
-        <li onclick="setSort('default', 'All' , 'text-secondary')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">All</li>
+        <li onclick="setSort('default', 'All' , 'text-secondary')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+            All
+        </li>
         
         <li onclick="setSort('high', 'High Priority', 'text-red-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> High Priority
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+            High Priority
         </li>
         <li onclick="setSort('medium', 'Medium Priority', 'text-yellow-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
-            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Medium Priority
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+            Medium Priority
         </li>
         <li onclick="setSort('low', 'Low Priority', 'text-green-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
-            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Low Priority
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> 
+            Low Priority
         </li>`
 
         element.appendChild(tempMenu)
@@ -881,10 +886,18 @@ function restoreTask(element) {
 }
 
 // ------- TOAST Message ------- //
+let toastTimer = null
 function showToast(message, imagePath) {
+
+    const existingToast = document.querySelector(".toast");
+    if (existingToast) {
+        clearTimeout(toastTimer)
+        existingToast.remove()
+    }
+    
     const toast = document.createElement("div");
 
-    toast.className = "fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-white border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
+    toast.className = "toast fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-white border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
 
     toast.innerHTML = `
         <img src="${imagePath}" alt="Notification" class="w-10 h-10 object-contain shrink-0">
