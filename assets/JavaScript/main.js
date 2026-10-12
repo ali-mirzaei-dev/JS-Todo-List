@@ -244,7 +244,7 @@ function saveTrashTasks() {
     localStorage.setItem("trashDataBase", JSON.stringify(trashTasks))
 }
 
-// ------- RENDER TASKS ------- // 
+// ------- RENDER TASKS ------- // ---------------------------------------------------------------------------------
 function renderTask() {
     newTasksPlace.innerHTML = "";
 
@@ -268,8 +268,9 @@ function renderTask() {
                     <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i> 
                 </div>`;
+                
                 } else {
                     let priorityDot = "bg-gray-300";
                     if (val.priority === "high") priorityDot = "bg-red-500";
@@ -489,7 +490,11 @@ function deleteAddBox() {
 }
 
 // ------- DELETING AN ADDED TASK ------- //
-function deleteAddedTask(element) {
+function deleteAddedTask(e, taskId = null) {
+
+    const openMenu = e.target.closest(".dropdown-menu");
+    if (openMenu) openMenu.remove();
+
     let deleteTaskConfirm = document.createElement("div")
     deleteTaskConfirm.className = "absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
     deleteTaskConfirm.innerHTML = `
@@ -517,20 +522,19 @@ function deleteAddedTask(element) {
     })
 
     confirmDelete.addEventListener("click", () => {
-        const taskToDelete = +element.parentElement.parentElement.getAttribute("data-id")
-
-        tasks.forEach((val, i) => {
-            if (val.id === taskToDelete) {
-
-                trashTasks.push(val)
-                saveTrashTasks()
-                tasks.splice(i, 1)
-                showToast("Task Moved to Trash!", "assets/Images/Delete.WebP");
-            }
-        })
 
 
-        element.parentElement.parentElement.remove()
+        let tempDelete = tasks.findIndex(val => val.id == taskId)
+
+        if (tempDelete !== -1) {
+
+            trashTasks.push(tasks[tempDelete])
+            tasks.splice(tempDelete, 1)
+            saveTrashTasks()
+            showToast("Task Moved to Trash!", "assets/Images/Delete.WebP");
+        }
+
+        renderTask()
         deleteTaskConfirm.remove()
         check()
     })
@@ -604,6 +608,7 @@ function markComplete(element) {
     renderTask()
     check()
 }
+
 // ------- CHECK() || TASKS COUNTER ------- //
 function check() {
     totalTaskCount = tasks.length
@@ -627,7 +632,7 @@ function check() {
 
         progressLabel.innerText = progressCalc + '%'
         progressBar.style.width = progressCalc + '%'
-        
+
         progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
         if (progressCalc <= 33) {
             progressBar.classList.add('bg-red-400')
@@ -638,7 +643,7 @@ function check() {
         else if (progressCalc >= 67) {
             progressBar.classList.add('bg-green-300')
         }
-         else {
+        else {
             progressLabel.innerText = '0%'
             progressBar.style.width = '0%'
             progressBar.classList.remove('bg-red-400', 'bg-yellow-300', 'bg-green-300')
@@ -764,19 +769,20 @@ function openMoreMenu(element, taskId = null) {
 
     if (isMoreOpen) {
         isMoreOpen.remove()
+
     } else {
 
         let moreMenu = document.createElement("ul")
         moreMenu.addEventListener("click", (e) => e.stopPropagation());
         moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2 dropdown-menu";
         moreMenu.innerHTML = `
-            <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
-                <i class="icon no-hover text-base">ﰅ</i>
+            <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
+                <i class="icon no-hover text-base group-hover:text-green-500">ﰅ</i>
                 Set Priority
             </li>
-            <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
-                <i class="icon no-hover text-base"></i>
-                coming soon ...
+            <li onclick="deleteAddedTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
+                <i class="icon icon-delete group-hover:text-accent"></i>
+                Delete Task
             </li>
             <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <i class="icon no-hover text-base"></i>
