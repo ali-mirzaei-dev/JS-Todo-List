@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="assets/StyleSheet/output.css">
-    <link rel="stylesheet" href="assets/Font/font/style.css">
+    <link rel="stylesheet" href="assets/Font/qwe/style.css">
     <link rel="stylesheet" href="assets/Font/FontSocials/style.css">
 
 
@@ -159,6 +159,18 @@
                     <i class="icon no-hover text-base"></i>
                     Clear Completed
                 </button>
+            </div>
+
+            <!--=======#2-2-2 SORT ROW =======-->
+            <div id="sortContainer" class="w-full hidden items-center gap-0 text-sm text-secondary capitalize mb-4">
+                <i class="icon no-hover text-lg cursor-default"></i>
+                <span class="font-medium mr-2">Sort by:</span>
+                <select id="sortSelect" onchange="sortTasks()" class="bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer focus:outline-none focus:border-accent transition-colors">
+                    <option value="default" class="bg-bgDef">default</option>
+                    <option value="high" class="bg-bgDef">High Priority</option>
+                    <option value="medium" class="bg-bgDef">Medium Priority</option>
+                    <option value="low" class="bg-bgDef">Low Priority</option>
+                </select>
             </div>
 
 

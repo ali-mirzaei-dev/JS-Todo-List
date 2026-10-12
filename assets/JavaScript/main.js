@@ -25,6 +25,8 @@ const supInbox = document.getElementById("supInbox")
 const supCompleted = document.getElementById("supCompleted")
 const supTrash = document.getElementById("supTrash")
 const emptyStateTrash = document.getElementById("emptyTrashState")
+const sortContainer = document.getElementById("sortContainer")
+const sortSelect = document.getElementById("sortSelect")
 
 let tasks = []
 let trashTasks = []
@@ -33,13 +35,10 @@ let completeTaskCount
 let trashTaskCount
 let newTaskInput
 let addNewTask
+let tempSortValue = 'default'
 let totalTaskCount = 0
 let newTaskPriority = "not assigned"
 let isEditing = false;
-
-
-console.log(completeTaskCount);
-
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -246,12 +245,79 @@ function saveTrashTasks() {
 function renderTask() {
     newTasksPlace.innerHTML = "";
 
-    if (currentTab === 'inbox' || currentTab === 'completed') {
-        tasks.forEach((val) => {
+    if (tempSortValue == 'default') {
+        if (currentTab === 'inbox' || currentTab === 'completed') {
+            tasks.forEach((val) => {
 
-            if (currentTab === "completed" && val.status !== "on") {
-                return;
-            }
+                if (currentTab === "completed" && val.status !== "on") {
+                    return;
+                }
+
+                let addedTask = document.createElement("li");
+                addedTask.setAttribute("data-id", val.id);
+
+                if (val.status == "on") {
+                    addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
+                    addedTask.classList.add("bg-green-700/20");
+                    addedTask.innerHTML = `
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                </div>`;
+                } else {
+                    let priorityDot = "bg-gray-300";
+                    if (val.priority === "high") priorityDot = "bg-red-500";
+                    else if (val.priority === "medium") priorityDot = "bg-yellow-500";
+                    else if (val.priority === "low") priorityDot = "bg-green-500";
+
+                    addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
+                    addedTask.innerHTML = `
+                 <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1">${val.name}</span>
+                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-2">
+                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                    <div class="relative">
+                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                     </div>
+                 </div>`;
+                }
+
+                newTasksPlace.appendChild(addedTask);
+            });
+        }
+
+        else if (currentTab === 'trash') {
+            trashTasks.forEach((val) => {
+
+                let addedTrashTask = document.createElement("li");
+                addedTrashTask.setAttribute("data-id", val.id);
+
+                addedTrashTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/30 rounded-lg opacity-90";
+
+                addedTrashTask.innerHTML = `
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+                <span class="wrap-break-word flex-1 text-secondary line-through decoration-red-500/50">${val.name}</span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0 ml-2">
+                <i onclick="restoreTask(this)" class="icon hover:text-green-500" title="Restore"></i>
+                <i onclick="deleteForever(this)" class="icon text-secondary hover:text-accent cursor-pointer" title="Delete Forever"></i>
+            </div>`;
+
+
+                newTasksPlace.appendChild(addedTrashTask);
+            })
+        }
+    }
+    else if (tempSortValue === 'high') {
+        tasks.forEach((val) => {
+            if (val.priority !== 'high') return;
 
             let addedTask = document.createElement("li");
             addedTask.setAttribute("data-id", val.id);
@@ -290,30 +356,98 @@ function renderTask() {
             }
 
             newTasksPlace.appendChild(addedTask);
-        });
-    }
-
-    else if (currentTab === 'trash') {
-        trashTasks.forEach((val) => {
-
-            let addedTrashTask = document.createElement("li");
-            addedTrashTask.setAttribute("data-id", val.id);
-
-            addedTrashTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/30 rounded-lg opacity-90";
-
-            addedTrashTask.innerHTML = `
-            <div class="flex items-center gap-3 flex-1 min-w-0">
-                <span class="wrap-break-word flex-1 text-secondary line-through decoration-red-500/50">${val.name}</span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0 ml-2">
-                <i onclick="restoreTask(this)" class="icon hover:text-green-500" title="Restore"></i>
-                <i onclick="deleteForever(this)" class="icon text-secondary hover:text-accent cursor-pointer" title="Delete Forever"></i>
-            </div>`;
-
-
-            newTasksPlace.appendChild(addedTrashTask);
         })
     }
+
+    else if (tempSortValue === 'medium') {
+        tasks.forEach((val) => {
+            if (val.priority !== 'medium') return;
+
+            let addedTask = document.createElement("li");
+            addedTask.setAttribute("data-id", val.id);
+
+            if (val.status == "on") {
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
+                addedTask.classList.add("bg-green-700/20");
+                addedTask.innerHTML = `
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                </div>`;
+            } else {
+                let priorityDot = "bg-gray-300";
+                if (val.priority === "high") priorityDot = "bg-red-500";
+                else if (val.priority === "medium") priorityDot = "bg-yellow-500";
+                else if (val.priority === "low") priorityDot = "bg-green-500";
+
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
+                addedTask.innerHTML = `
+                 <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1">${val.name}</span>
+                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-2">
+                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                    <div class="relative">
+                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                     </div>
+                 </div>`;
+            }
+
+            newTasksPlace.appendChild(addedTask);
+        })
+    }
+
+    else if (tempSortValue === 'low') {
+        tasks.forEach((val) => {
+            if (val.priority !== 'low') return;
+            let addedTask = document.createElement("li");
+            addedTask.setAttribute("data-id", val.id);
+
+            if (val.status == "on") {
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
+                addedTask.classList.add("bg-green-700/20");
+                addedTask.innerHTML = `
+                <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                </div>`;
+            } else {
+                let priorityDot = "bg-gray-300";
+                if (val.priority === "high") priorityDot = "bg-red-500";
+                else if (val.priority === "medium") priorityDot = "bg-yellow-500";
+                else if (val.priority === "low") priorityDot = "bg-green-500";
+
+                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50";
+                addedTask.innerHTML = `
+                 <div class="flex items-center gap-3 flex-1 min-w-0">
+                    <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
+                    <span class="wrap-break-word flex-1">${val.name}</span>
+                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-2">
+                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400"></i>
+                    <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i>
+                    <div class="relative">
+                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                     </div>
+                 </div>`;
+            }
+
+            newTasksPlace.appendChild(addedTask);
+
+        })
+    }
+
+
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -485,6 +619,8 @@ function check() {
     supCompleted.innerText = completeTaskCount
     supTrash.innerText = trashTaskCount
     saveTask()
+    console.log(tempSortValue);
+
 }
 
 // ------- CLEAR COMPLETE TASKS ------- //
@@ -522,15 +658,13 @@ function loader() {
             emptyState.classList.remove("hidden")
             toolBar.classList.remove("flex")
             toolBar.classList.add("hidden")
-            emptystateComplete.classList.add("hidden")
-            emptystateComplete.classList.remove("flex")
         } else {
             emptyState.classList.add("hidden")
             toolBar.classList.add("flex")
             toolBar.classList.remove("hidden")
             if (!newTaskInput || !document.body.contains(newTaskInput)) showAddBtn()
-            emptystateComplete.classList.add("hidden")
-            emptystateComplete.classList.remove("flex")
+            sortContainer.classList.remove("hidden")
+            sortContainer.classList.add("flex")
         }
     }
 
@@ -538,6 +672,8 @@ function loader() {
     else if (currentTab === 'completed') {
         emptyState.classList.add("hidden")
         emptyStateTrash.classList.add("hidden")
+        sortContainer.classList.add("hidden")
+        sortContainer.classList.remove("flex")
 
         if (completeTaskCount === 0) {
             emptystateComplete.classList.remove("hidden")
@@ -557,6 +693,8 @@ function loader() {
         emptyState.classList.add("hidden")
         emptystateComplete.classList.add("hidden")
         emptystateComplete.classList.remove("flex")
+        sortContainer.classList.add("hidden")
+        sortContainer.classList.remove("flex")
 
         if (trashTasks.length == 0) {
             emptyStateTrash.classList.remove("hidden")
@@ -711,7 +849,15 @@ function setTaskPriority(e, priority, color, taskId = null) {
     }
 }
 
-// ------- SWITCH TO COMPLETED TASKS MENU ------- //
+// ------- PRIORITY FILTER ------- //
+function sortTasks() {
+
+    tempSortValue = sortSelect.value
+    renderTask()
+    check()
+}
+
+// ------- SWITCH TAB ------- //
 function switchTab(element, tabName) {
 
     currentTab = tabName
@@ -724,6 +870,7 @@ function switchTab(element, tabName) {
 
     document.querySelector("h2").innerText = tabName
 
+    tempSortValue = 'default'
     renderTask()
     check()
 }
@@ -782,7 +929,7 @@ function deleteForever(element) {
 
     if (indexToDelete !== -1) {
         trashTasks.splice(indexToDelete, 1)
-        
+
         showToast("Task Deleted Forever!", "assets/Images/Delete.WebP");
     }
 
