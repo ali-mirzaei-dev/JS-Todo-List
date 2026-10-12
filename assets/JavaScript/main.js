@@ -222,6 +222,7 @@ function submitTask() {
             name: inputValue.value,
             id: Date.now(),
             status: "off",
+            visibility: "show",
             priority: newTaskPriority
         }
         tasks.push(tempAdd);
@@ -253,11 +254,12 @@ function renderTask() {
         tasks.forEach((val) => {
 
             if (tempSortValue !== 'default' && val.priority !== tempSortValue) return;
+            if (val.visibility == 'hide') return
 
             let addedTask = document.createElement("li");
             addedTask.setAttribute("data-id", val.id);
 
-            // ------- Complete Stat
+            // ------- Complete Tasks
             if (val.status == "on") {
                 addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg ";
                 addedTask.classList.add("bg-green-700/20");
@@ -268,7 +270,7 @@ function renderTask() {
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
                     <i onclick="hideFromInbox(this, ${val.id})" class="icon hover:text-secondary cursor-pointer" title="Hide complete task from Inbox"></i>
-                    <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Edit Task"></i> 
+                    <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Move to Task"></i> 
                 </div>`
 
             } else {
@@ -493,10 +495,24 @@ function markComplete(element) {
         }
         else if (val.id === tempMarkId && val.status == "on") {
             val.status = "off"
+            val.visibility = "show"
         }
     })
     renderTask()
     check()
+}
+
+// ------- HIDING A COMPLETED TASK ------- //
+function hideFromInbox(element, taskId = null) {
+
+    let tempVisibilityState = tasks.findIndex(val => val.id == taskId)
+
+    if (tempVisibilityState !== -1) {
+        tasks[tempVisibilityState].visibility = 'hide'
+        saveTask()
+        renderTask()
+        check()
+    }
 }
 
 // ------- CHECK() || TASKS COUNTER ------- //
@@ -504,16 +520,26 @@ function check() {
     totalTaskCount = tasks.length
     trashTaskCount = trashTasks.length
     completeTaskCount = 0
+    hiddenTasksCount = 0
 
     if (tasks.length > 0) {
         tasks.forEach((val) => {
-            if (val.status == "on") completeTaskCount++
+            if (val.status == "on") {
+                completeTaskCount++
+
+                if (val.visibility == "hide") {
+                    hiddenTasksCount++
+                }
+            }
         })
     }
+
+    console.log(hiddenTasksCount);
+
     loader()
     totalTasksPlace.innerText = totalTaskCount
     completedTaskPlace.innerText = completeTaskCount
-    supInbox.innerText = totalTaskCount
+    supInbox.innerText = (totalTaskCount - hiddenTasksCount)
     supCompleted.innerText = completeTaskCount
     supTrash.innerText = trashTaskCount
 
