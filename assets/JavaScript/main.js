@@ -314,7 +314,7 @@ function renderTask() {
                 <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-                <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i> 
+                <i onclick="deleteAddedTask(event , ${val.id})" class="icon icon-delete hover:text-accent"></i> 
             </div>`;
 
             newTasksPlace.appendChild(addedTask);
@@ -894,7 +894,7 @@ function showToast(message, imagePath) {
         clearTimeout(toastTimer)
         existingToast.remove()
     }
-    
+
     const toast = document.createElement("div");
 
     toast.className = "toast fixed top-10 left-1/2 -translate-x-1/2 z-[200] w-[90%] max-w-sm bg-white border border-hover shadow-2xl rounded-xl px-6 py-4 flex items-center gap-4 opacity-0 -translate-y-4 transition-all duration-500 ease-out";
