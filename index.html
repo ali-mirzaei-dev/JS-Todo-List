@@ -161,16 +161,32 @@
                 </button>
             </div>
 
-            <!--=======#2-2-2 SORT ROW =======-->
-            <div id="sortContainer" class="w-full items-center gap-2 text-sm text-secondary capitalize mb-4 hidden relative">
-                <i class="icon no-hover text-lg cursor-default"></i>
-                <span class="font-medium">Sort by:</span>
+            <!--=======#2-2-2 SORT ROW & PROGRESS =======-->
+            <div id="sortContainer" class="w-full items-start justify-between gap-4 text-sm text-secondary capitalize mb-4 hidden relative">
 
-                <button onclick="event.stopPropagation(); toggleSortMenu(this)" class="relative flex items-center gap-2 bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer hover:border-accent transition-colors">
-                    
-                    <span id="sortLabel">all</span>
-                    <i class="icon no-hover text-xs"></i>
-                </button>
+                <!-- LEFT: Sort Dropdown -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <i class="icon no-hover text-lg cursor-default"></i>
+                    <span class="font-medium">Sort by:</span>
+
+                    <button onclick="event.stopPropagation(); toggleSortMenu(this)" class="relative flex items-center gap-2 bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer hover:border-black transition-colors">
+                        <span id="sortLabel">all</span>
+                        <i class="icon no-hover text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- RIGHT: Progress Bar -->
+                <div class="flex flex-wrap items-center gap-3 flex-1 max-w-[40%]">
+                    <div class="w-full flex gap-4">
+                        <span class="font-bold text-secondary">progress : </span>
+                        <span id="progressLabel" class="font-bold text-primary shrink-0">0%</span>
+                    </div>
+
+                    <div class="flex-1 h-2.5 bg-hover rounded-full overflow-hidden border border-border-soft">
+                        <div id="progressBar" class="h-full w-50 bg-linear-30 bg-accent rounded-full transition-all duration-700 ease-out"></div>
+                    </div>
+                </div>
+
             </div>
 
 

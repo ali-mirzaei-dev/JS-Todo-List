@@ -865,6 +865,7 @@ function toggleSortMenu(element) {
         tempMenu.className = "dropdown-menu absolute -top-[25%] left-[110%] mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex-col gap-1 p-2"
         tempMenu.innerHTML = `
         <li onclick="setSort('default', 'All' , 'text-secondary')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">All</li>
+        
         <li onclick="setSort('high', 'High Priority', 'text-red-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> High Priority
         </li>
