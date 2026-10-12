@@ -162,15 +162,15 @@
             </div>
 
             <!--=======#2-2-2 SORT ROW =======-->
-            <div id="sortContainer" class="w-full hidden items-center gap-0 text-sm text-secondary capitalize mb-4">
+            <div id="sortContainer" class="w-full items-center gap-2 text-sm text-secondary capitalize mb-4 hidden relative">
                 <i class="icon no-hover text-lg cursor-default"></i>
-                <span class="font-medium mr-2">Sort by:</span>
-                <select id="sortSelect" onchange="sortTasks()" class="bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer focus:outline-none focus:border-accent transition-colors">
-                    <option value="default" class="bg-bgDef">default</option>
-                    <option value="high" class="bg-bgDef">High Priority</option>
-                    <option value="medium" class="bg-bgDef">Medium Priority</option>
-                    <option value="low" class="bg-bgDef">Low Priority</option>
-                </select>
+                <span class="font-medium">Sort by:</span>
+
+                <button onclick="event.stopPropagation(); toggleSortMenu(this)" class="relative flex items-center gap-2 bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer hover:border-accent transition-colors">
+                    
+                    <span id="sortLabel">all</span>
+                    <i class="icon no-hover text-xs"></i>
+                </button>
             </div>
 
 

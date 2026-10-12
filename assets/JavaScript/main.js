@@ -315,6 +315,7 @@ function renderTask() {
             })
         }
     }
+
     else if (tempSortValue === 'high') {
         tasks.forEach((val) => {
             if (val.priority !== 'high') return;
@@ -446,8 +447,6 @@ function renderTask() {
 
         })
     }
-
-
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -619,7 +618,6 @@ function check() {
     supCompleted.innerText = completeTaskCount
     supTrash.innerText = trashTaskCount
     saveTask()
-    console.log(tempSortValue);
 
 }
 
@@ -658,6 +656,8 @@ function loader() {
             emptyState.classList.remove("hidden")
             toolBar.classList.remove("flex")
             toolBar.classList.add("hidden")
+            sortContainer.classList.add("hidden")
+            sortContainer.classList.remove("flex")
         } else {
             emptyState.classList.add("hidden")
             toolBar.classList.add("flex")
@@ -849,10 +849,46 @@ function setTaskPriority(e, priority, color, taskId = null) {
     }
 }
 
-// ------- PRIORITY FILTER ------- //
-function sortTasks() {
+// ------- OPEN SORT MENU ------- //
+function toggleSortMenu(element) {
 
-    tempSortValue = sortSelect.value
+    const isMenuOpen = element.querySelector("ul")
+
+    const isMoreOpen2 = document.querySelectorAll(".dropdown-menu")
+    isMoreOpen2.forEach(menu => menu.remove());
+
+    if (isMenuOpen) {
+        isMenuOpen.remove()
+    }
+    else {
+        tempMenu = document.createElement("ul")
+        tempMenu.className = "dropdown-menu absolute -top-[25%] left-[110%] mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex-col gap-1 p-2"
+        tempMenu.innerHTML = `
+        <li onclick="setSort('default', 'All' , 'text-secondary')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">All</li>
+        <li onclick="setSort('high', 'High Priority', 'text-red-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span> High Priority
+        </li>
+        <li onclick="setSort('medium', 'Medium Priority', 'text-yellow-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Medium Priority
+        </li>
+        <li onclick="setSort('low', 'Low Priority', 'text-green-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+            <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Low Priority
+        </li>`
+
+        element.appendChild(tempMenu)
+    }
+}
+
+// ------- SELECTING AN OPTION IN THE SORT MENU ------- //
+function setSort(value, text, color) {
+
+    tempSortValue = value
+
+    const sortLabel = document.getElementById("sortLabel")
+
+    sortLabel.innerText = text
+    sortLabel.classList.remove('text-red-500', 'text-yellow-500', 'text-green-500', 'text-secondary')
+    sortLabel.classList.add(color)
     renderTask()
     check()
 }
