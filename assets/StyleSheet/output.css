@@ -1039,6 +1039,9 @@
     .hover\:text-primary:hover {
       color: var(--color-primary);
     }
+    .hover\:text-secondary:hover {
+      color: var(--color-secondary);
+    }
     .hover\:text-yellow-400:hover {
       color: var(--color-yellow-400);
     }
