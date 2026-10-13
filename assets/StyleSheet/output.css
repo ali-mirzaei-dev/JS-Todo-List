@@ -8,7 +8,6 @@
       "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-300: oklch(80.8% 0.114 19.571);
     --color-red-400: oklch(70.4% 0.191 22.216);
     --color-red-500: oklch(63.7% 0.237 25.331);
     --color-red-700: oklch(50.5% 0.213 27.518);
@@ -16,6 +15,7 @@
     --color-yellow-300: oklch(90.5% 0.182 98.111);
     --color-yellow-400: oklch(85.2% 0.199 91.936);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
+    --color-yellow-600: oklch(68.1% 0.162 75.834);
     --color-green-300: oklch(87.1% 0.15 154.449);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
@@ -218,9 +218,6 @@
   }
 }
 @layer utilities {
-  .visible {
-    visibility: visible;
-  }
   .absolute {
     position: absolute;
   }
@@ -480,6 +477,12 @@
   .cursor-default {
     cursor: default;
   }
+  .cursor-grab {
+    cursor: grab;
+  }
+  .cursor-grabbing {
+    cursor: grabbing;
+  }
   .cursor-pointer {
     cursor: pointer;
   }
@@ -559,6 +562,10 @@
     border-style: var(--tw-border-style);
     border-width: 1px;
   }
+  .border-2 {
+    border-style: var(--tw-border-style);
+    border-width: 2px;
+  }
   .border-4 {
     border-style: var(--tw-border-style);
     border-width: 4px;
@@ -571,6 +578,10 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
+  .border-dashed {
+    --tw-border-style: dashed;
+    border-style: dashed;
+  }
   .border-none {
     --tw-border-style: none;
     border-style: none;
@@ -582,6 +593,12 @@
     border-color: color-mix(in srgb, #d63226 20%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-accent) 20%, transparent);
+    }
+  }
+  .border-accent\/50 {
+    border-color: color-mix(in srgb, #d63226 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-accent) 50%, transparent);
     }
   }
   .border-bgDef {
@@ -856,6 +873,9 @@
   .opacity-0 {
     opacity: 0%;
   }
+  .opacity-50 {
+    opacity: 50%;
+  }
   .opacity-90 {
     opacity: 90%;
   }
@@ -996,6 +1016,15 @@
     }
     .group-hover\:text-green-500:is(:where(.group):hover *) {
       color: var(--color-green-500);
+    }
+    .group-hover\:text-yellow-300:is(:where(.group):hover *) {
+      color: var(--color-yellow-300);
+    }
+    .group-hover\:text-yellow-500:is(:where(.group):hover *) {
+      color: var(--color-yellow-500);
+    }
+    .group-hover\:text-yellow-600:is(:where(.group):hover *) {
+      color: var(--color-yellow-600);
     }
     .hover\:border-black:hover {
       border-color: var(--color-black);
@@ -1225,6 +1254,9 @@
     font-weight: var(--font-weight-bold);
     color: #BE3144;
   }
+}
+body {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 .swipe {
   transform: translateX(-200%);

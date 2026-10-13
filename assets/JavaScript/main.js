@@ -268,7 +268,7 @@ function renderTask() {
                     <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    <i onclick="hideFromInbox(this, ${val.id})" class="icon hover:text-secondary cursor-pointer" title="Hide complete task from Inbox"></i>
+                    <i onclick="hideFromInbox(this, ${val.id})" class="icon cursor-pointer hover:text-green-500" title="Hide complete task from Inbox"></i>
                     <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Move to Task"></i> 
                 </div>`
 
@@ -704,12 +704,8 @@ function openMoreMenu(element, taskId = null) {
                 coming soon ...
             </li>
         `
-
         element.appendChild(moreMenu)
-
     }
-
-
 }
 
 // ------- PRIORITY MENU ||| THIS OPENS THE PRIORITY MENU ------- //
