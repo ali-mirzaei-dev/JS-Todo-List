@@ -533,8 +533,6 @@ function check() {
         })
     }
 
-    console.log(hiddenTasksCount);
-
     loader()
     totalTasksPlace.innerText = totalTaskCount
     completedTaskPlace.innerText = completeTaskCount
@@ -691,22 +689,44 @@ function openMoreMenu(element, taskId = null) {
         moreMenu.addEventListener("click", (e) => e.stopPropagation());
         moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2 dropdown-menu";
         moreMenu.innerHTML = `
+             <li onclick="pinToTop(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
+                <i class="icon no-hover text-base group-hover:text-violet-500"></i>
+                Pin to top
+            </li>
             <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-green-500">ﰅ</i>
                 Set Priority
             </li>
             <li onclick="deleteAddedTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
-                <i class="icon icon-delete group-hover:text-accent"></i>
+                <i class="icon icon-delete no-hover text-base group-hover:text-accent"></i>
                 Delete Task
-            </li>
-            <li class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
-                <i class="icon no-hover text-base"></i>
-                coming soon ...
             </li>
         `
         element.appendChild(moreMenu)
     }
 }
+
+// ------- PIN TO TOP ------- //
+function pinToTop(e, taskId) {
+
+    const openMenu = e.target.closest(".dropdown-menu");
+    if (openMenu) openMenu.remove();
+
+    let indexPinToTop = tasks.findIndex(val => val.id == taskId)
+
+    if (indexPinToTop !== -1) {
+        let taskToPin = tasks.splice(indexPinToTop, 1)[0];
+        tasks.unshift(taskToPin)
+    }
+
+    saveTask()
+    renderTask()
+    check()
+    showToast("Task Pinned to Top!", "assets/Images/Notes.svg");
+
+}
+
+
 
 // ------- PRIORITY MENU ||| THIS OPENS THE PRIORITY MENU ------- //
 function setPriorityMenu(e, taskId = null) {
