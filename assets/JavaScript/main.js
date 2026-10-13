@@ -41,7 +41,7 @@ let addNewTask
 let tempSortValue = 'default'
 let totalTaskCount = 0
 let newTaskPriority = "not assigned"
-let isEditing = false;
+let isEditing = false
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -222,6 +222,7 @@ function submitTask() {
             id: Date.now(),
             status: "off",
             visibility: "show",
+            isPinned: false,
             priority: newTaskPriority
         }
         tasks.push(tempAdd);
@@ -252,8 +253,25 @@ function renderTask() {
     if (currentTab === 'inbox') {
         tasks.forEach((val) => {
 
+            // ------- this handles sort by priority 
             if (tempSortValue !== 'default' && val.priority !== tempSortValue) return
+
+            // ------- this handles to hide or show the completed tasks
             if (val.visibility == 'hide') return
+
+            // ------- this handles the pinned task Icon 
+            let pinnedIcon = "";
+            if (val.isPinned === true) {
+                pinnedIcon = `<i class="icon text-secondary no-hover cursor-default shrink-0 text-base" title="Pinned to top"></i>`;
+            }
+
+            // ------- this handles the pin/unpin action button
+            let pinButton = "";
+            if (val.isPinned === true) {
+                pinButton = `<i onclick="unpinTask(event, ${val.id})" class="icon cursor-pointer hover:text-violet-500" title="Unpin from top"></i>`;
+            } else {
+                pinButton = `<i onclick="pinToTop(event, ${val.id})" class="icon cursor-pointer hover:text-violet-500" title="Pin to top"></i>`;
+            }
 
             let addedTask = document.createElement("li")
             addedTask.setAttribute("data-id", val.id)
@@ -265,11 +283,15 @@ function renderTask() {
                 addedTask.innerHTML = `
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
-                    <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                    <span class="relative wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">
+                        ${val.name}
+                        <span class="absolute top-0 rotate-45">${pinnedIcon}<span>
+                    </span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
+                    ${pinButton}
                     <i onclick="hideFromInbox(this, ${val.id})" class="icon cursor-pointer hover:text-green-500" title="Hide complete task from Inbox"></i>
-                    <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Move to Task"></i> 
+                    <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Move to Trash"></i> 
                 </div>`
 
             } else {
@@ -282,7 +304,10 @@ function renderTask() {
                 addedTask.innerHTML = `
                  <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
-                    <span class="wrap-break-word flex-1">${val.name}</span>
+                    <span class="wrap-break-word flex-1 relative">
+                        ${val.name}
+                        <span class="absolute top-0 rotate-45">${pinnedIcon}<span>
+                    </span>
                     <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0 ml-2">
@@ -303,6 +328,12 @@ function renderTask() {
 
             if (val.status !== "on") return;
 
+            // ------- this handles the pinned task Icon
+            let pinnedIcon = "";
+            if (val.isPinned === true) {
+                pinnedIcon = `<i class="icon text-secondary no-hover cursor-default shrink-0 text-base" title="Pinned to top"></i>`;
+            }
+
             let addedTask = document.createElement("li");
             addedTask.setAttribute("data-id", val.id);
 
@@ -311,10 +342,13 @@ function renderTask() {
             addedTask.innerHTML = `
             <div class="flex items-center gap-3 flex-1 min-w-0">
                 <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
-                <span class="wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">${val.name}</span>
+                <span class="relative wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">
+                    ${val.name}
+                    <span class="absolute top-0 rotate-45">${pinnedIcon}<span>
+                </span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-                <i onclick="deleteAddedTask(event , ${val.id})" class="icon icon-delete hover:text-accent"></i> 
+                <i onclick="deleteAddedTask(this)" class="icon icon-delete hover:text-accent"></i> 
             </div>`;
 
             newTasksPlace.appendChild(addedTask);
@@ -683,31 +717,51 @@ function openMoreMenu(element, taskId = null) {
     if (isMoreOpen) {
         isMoreOpen.remove()
 
-    } else {
+    }
+    else {
 
-        let moreMenu = document.createElement("ul")
-        moreMenu.addEventListener("click", (e) => e.stopPropagation());
-        moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2 dropdown-menu";
-        moreMenu.innerHTML = `
-             <li onclick="pinToTop(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
+        let taskData = tasks.find(val => val.id == taskId);
+
+        let pinButtonHTML = ""
+
+        if (taskData && taskData.isPinned === true) {
+            pinButtonHTML = `
+            <li onclick="unpinTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
+                <i class="icon no-hover text-base group-hover:text-violet-500"></i>
+                Unpin from top
+            </li>`;
+            
+        } else {
+            pinButtonHTML = `
+            <li onclick="pinToTop(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-violet-500"></i>
                 Pin to top
-            </li>
+            </li>`
+        }
+
+        let moreMenu = document.createElement("ul")
+        moreMenu.addEventListener("click", (e) => e.stopPropagation())
+        moreMenu.className = "absolute top-full left-1/2 -translate-x-1/2 mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex flex-col gap-1 p-2 dropdown-menu"
+
+        moreMenu.innerHTML = `
+            ${pinButtonHTML}
+
             <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-green-500">ﰅ</i>
                 Set Priority
             </li>
+
             <li onclick="deleteAddedTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon icon-delete no-hover text-base group-hover:text-accent"></i>
                 Delete Task
-            </li>
-        `
+            </li>`
+
         element.appendChild(moreMenu)
     }
 }
-
 // ------- PIN TO TOP ------- //
 function pinToTop(e, taskId) {
+
 
     const openMenu = e.target.closest(".dropdown-menu");
     if (openMenu) openMenu.remove();
@@ -716,6 +770,7 @@ function pinToTop(e, taskId) {
 
     if (indexPinToTop !== -1) {
         let taskToPin = tasks.splice(indexPinToTop, 1)[0];
+        taskToPin.isPinned = true;
         tasks.unshift(taskToPin)
     }
 
@@ -726,7 +781,25 @@ function pinToTop(e, taskId) {
 
 }
 
+// ------- UNPIN FROM TOP ------- //
+function unpinTask(e, taskId) {
 
+    const openMenu = e.target.closest(".dropdown-menu");
+    if (openMenu) openMenu.remove();
+
+    let taskIndex = tasks.findIndex(val => val.id == taskId);
+
+    if (taskIndex !== -1) {
+        tasks[taskIndex].isPinned = false;
+        let taskToUnpin = tasks.splice(taskIndex, 1)[0]
+        tasks.push(taskToUnpin)
+    }
+
+    saveTask();
+    renderTask();
+    check();
+    showToast("Task Unpinned!", "assets/Images/Notes.svg");
+}
 
 // ------- PRIORITY MENU ||| THIS OPENS THE PRIORITY MENU ------- //
 function setPriorityMenu(e, taskId = null) {
