@@ -962,7 +962,7 @@ function toggleSortMenu(element) {
         <li onclick="setSort('default', 'All' , 'text-secondary', '${totalTaskCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
             All
-            <span id="mediunPriorityPlace" class="ml-auto text-xs">${totalTaskCount}</span>
+            <span id="mediumPriorityPlace" class="ml-auto text-xs">${totalTaskCount}</span>
         </li>
         <li onclick="setSort('high', 'High Priority', 'text-red-500', '${highPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -989,7 +989,7 @@ function toggleSortMenu(element) {
 function setSort(value, text, color, amount) {
 
     const sortLabel = document.getElementById("sortLabel")
-    
+
 
     if (amount > 0) {
         tempSortValue = value
@@ -1000,6 +1000,7 @@ function setSort(value, text, color, amount) {
         tempSortValue = 'default'
         sortLabel.innerText = 'All'
         sortLabel.classList.remove('text-red-500', 'text-yellow-500', 'text-green-500', 'text-secondary')
+        showToast("No tasks with this priority!", "assets/Images/Empty Box.SVG");
     }
 
     renderTask()
