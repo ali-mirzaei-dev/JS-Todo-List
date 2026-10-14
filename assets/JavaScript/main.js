@@ -29,7 +29,7 @@ const sortContainer = document.getElementById("sortContainer")
 const sortSelect = document.getElementById("sortSelect")
 const progressBar = document.getElementById("progressBar")
 const progressLabel = document.getElementById("progressLabel")
-
+const activeTasks = document.getElementById("activeTasks")
 
 let tasks = []
 let trashTasks = []
@@ -192,8 +192,8 @@ function addTask() {
                 </div>
              
                 <div class="flex items-center gap-2">
-                    <i onclick="deleteAddBox()" class="icon text-secondary text-lg"></i>
-                    <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white">מּ</i>
+                    <i onclick="deleteAddBox()" class="icon text-secondary text-lg" title="Close task input"></i>
+                    <i onclick="submitTask()" class="icon bg-accent hover:bg-red-700 text-white" title="Submit task">מּ</i>
                 </div>
             </div>`
 
@@ -570,9 +570,11 @@ function check() {
     loader()
     totalTasksPlace.innerText = totalTaskCount
     completedTaskPlace.innerText = completeTaskCount
+    activeTasks.innerText = totalTaskCount - completeTaskCount
     supInbox.innerText = (totalTaskCount - hiddenTasksCount)
     supCompleted.innerText = completeTaskCount
     supTrash.innerText = trashTaskCount
+
 
     if (tasks.length > 0) {
         let progressCalc = Math.round((completeTaskCount * 100) / totalTaskCount)

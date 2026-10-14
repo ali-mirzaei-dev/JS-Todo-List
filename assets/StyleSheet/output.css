@@ -15,6 +15,8 @@
     --color-yellow-300: oklch(90.5% 0.182 98.111);
     --color-yellow-400: oklch(85.2% 0.199 91.936);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
+    --color-yellow-600: oklch(68.1% 0.162 75.834);
+    --color-yellow-700: oklch(55.4% 0.135 66.442);
     --color-green-300: oklch(87.1% 0.15 154.449);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
@@ -833,6 +835,12 @@
   }
   .text-yellow-500 {
     color: var(--color-yellow-500);
+  }
+  .text-yellow-600 {
+    color: var(--color-yellow-600);
+  }
+  .text-yellow-700 {
+    color: var(--color-yellow-700);
   }
   .capitalize {
     text-transform: capitalize;
