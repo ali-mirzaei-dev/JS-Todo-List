@@ -36,6 +36,9 @@ let trashTasks = []
 let currentTab = "inbox"
 let completeTaskCount
 let trashTaskCount
+let highPriorityCount
+let mediumPriorityCount
+let lowPriorityCount
 let newTaskInput
 let addNewTask
 let tempSortValue = 'default'
@@ -43,6 +46,8 @@ let totalTaskCount = 0
 let newTaskPriority = "not assigned"
 let isEditing = false
 let isReorder = false
+let startToDragTaskId = null
+let finalTaskToReplaceId = null
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -417,68 +422,6 @@ function renderTask() {
     }
 }
 
-
-// ------- REORDER TASKS ------- //
-function toggleReorderMode() {
-    isReorder = !isReorder
-    renderTask()
-    check()
-}
-
-// ------- MOUSE DOWN || STRAT DRAGING ------- //
-let startToDragTaskId = null
-let finalTaskToReplaceId = null;
-
-function dragMouseDown(e, taskId) {
-    e.preventDefault();
-
-    startToDragTaskId = taskId
-    e.currentTarget.classList.add("opacity-50", "cursor-grabbing")
-
-    document.addEventListener("mouseup", dragMouseUp)
-}
-
-// ------- MOUSE OVER || THIS HANDLES HOVERING TASKS ------- //
-function dragMouseOver(e, taskId) {
-
-    if (startToDragTaskId !== null && taskId !== startToDragTaskId) {
-
-        finalTaskToReplaceId = taskId;
-
-        const allTasks = document.querySelectorAll("#newTasksPlace li");
-        allTasks.forEach(val => val.classList.remove("border-t-4", "border-b-4", "border-green-500"));
-
-        e.currentTarget.classList.add("border-t-4", "border-b-4", "border-green-500");
-    }
-}
-
-// ------- MOUSE UP || FINISHING DRAGING ------- // 
-function dragMouseUp(e) {
-
-    document.removeEventListener("mouseup", dragMouseUp);
-
-    if (startToDragTaskId !== null && finalTaskToReplaceId !== null && startToDragTaskId !== finalTaskToReplaceId) {
-
-        let startIndex = tasks.findIndex(val => val.id == startToDragTaskId)
-        let finalIndex = tasks.findIndex(val => val.id == finalTaskToReplaceId)
-
-        if (startIndex !== -1 && finalIndex !== -1) {
-            let draggedTask = tasks.splice(startIndex, 1)[0]
-
-            tasks.splice(finalIndex, 0, draggedTask)
-
-            saveTask()
-        }
-    }
-
-    startToDragTaskId = null
-    finalTaskToReplaceId = null
-
-    isReorder = false
-    renderTask()
-    check()
-}
-
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
 function showAddBtn() {
     if (addNewTask && document.body.contains(addNewTask)) return;
@@ -655,6 +598,9 @@ function check() {
     trashTaskCount = trashTasks.length
     completeTaskCount = 0
     hiddenTasksCount = 0
+    highPriorityCount = 0
+    mediumPriorityCount = 0
+    lowPriorityCount = 0
 
     if (tasks.length > 0) {
         tasks.forEach((val) => {
@@ -665,6 +611,9 @@ function check() {
                     hiddenTasksCount++
                 }
             }
+            if (val.priority == 'high') { highPriorityCount++ }
+            if (val.priority == 'medium') { mediumPriorityCount++ }
+            if (val.priority == 'low') { lowPriorityCount++ }
         })
     }
 
@@ -675,7 +624,6 @@ function check() {
     supInbox.innerText = (totalTaskCount - hiddenTasksCount)
     supCompleted.innerText = completeTaskCount
     supTrash.innerText = trashTaskCount
-
 
     if (tasks.length > 0) {
         let progressCalc = Math.round((completeTaskCount * 100) / totalTaskCount)
@@ -1011,38 +959,49 @@ function toggleSortMenu(element) {
         tempMenu = document.createElement("ul")
         tempMenu.className = "dropdown-menu absolute -top-[25%] left-[110%] mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex-col gap-1 p-2"
         tempMenu.innerHTML = `
-        <li onclick="setSort('default', 'All' , 'text-secondary')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('default', 'All' , 'text-secondary', '${totalTaskCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
             All
+            <span id="mediunPriorityPlace" class="ml-auto text-xs">${totalTaskCount}</span>
         </li>
-        
-        <li onclick="setSort('high', 'High Priority', 'text-red-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('high', 'High Priority', 'text-red-500', '${highPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
             High Priority
+            <span id="highPriorityPlace" class="ml-auto text-xs">${highPriorityCount}</span>
         </li>
-        <li onclick="setSort('medium', 'Medium Priority', 'text-yellow-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('medium', 'Medium Priority', 'text-yellow-500', '${mediumPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
             Medium Priority
+            <span id="mediunPriorityPlace" class="ml-auto text-xs">${mediumPriorityCount}</span>
         </li>
-        <li onclick="setSort('low', 'Low Priority', 'text-green-500')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('low', 'Low Priority', 'text-green-500', '${lowPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> 
             Low Priority
+            <span id="lowPriorityPlace" class="ml-auto text-xs">${lowPriorityCount}</span>
         </li>`
 
         element.appendChild(tempMenu)
+        isReorder = false
     }
 }
 
 // ------- SELECTING AN OPTION IN THE SORT MENU ------- //
-function setSort(value, text, color) {
-
-    tempSortValue = value
+function setSort(value, text, color, amount) {
 
     const sortLabel = document.getElementById("sortLabel")
+    
 
-    sortLabel.innerText = text
-    sortLabel.classList.remove('text-red-500', 'text-yellow-500', 'text-green-500', 'text-secondary')
-    sortLabel.classList.add(color)
+    if (amount > 0) {
+        tempSortValue = value
+        sortLabel.innerText = text
+        sortLabel.classList.remove('text-red-500', 'text-yellow-500', 'text-green-500', 'text-secondary')
+        sortLabel.classList.add(color)
+    } else {
+        tempSortValue = 'default'
+        sortLabel.innerText = 'All'
+        sortLabel.classList.remove('text-red-500', 'text-yellow-500', 'text-green-500', 'text-secondary')
+    }
+
     renderTask()
     check()
 }
@@ -1137,36 +1096,62 @@ function deleteForever(element) {
     check()
 }
 
+// ------- REORDER TASKS ------- //
+function toggleReorderMode() {
+    isReorder = !isReorder
+    renderTask()
+    check()
+}
 
+// ------- MOUSE DOWN || STRAT DRAGING ------- //
+function dragMouseDown(e, taskId) {
+    e.preventDefault();
 
+    startToDragTaskId = taskId
+    e.currentTarget.classList.add("opacity-50", "cursor-grabbing")
 
+    document.addEventListener("mouseup", dragMouseUp)
+}
 
+// ------- MOUSE OVER || THIS HANDLES HOVERING TASKS ------- //
+function dragMouseOver(e, taskId) {
 
+    if (startToDragTaskId !== null && taskId !== startToDragTaskId) {
 
+        finalTaskToReplaceId = taskId;
 
+        const allTasks = document.querySelectorAll("#newTasksPlace li");
+        allTasks.forEach(val => val.classList.remove("border-t-4", "border-b-4", "border-green-500"));
 
+        e.currentTarget.classList.add("border-t-4", "border-b-4", "border-green-500");
+    }
+}
 
+// ------- MOUSE UP || FINISHING DRAGING ------- // 
+function dragMouseUp(e) {
 
+    document.removeEventListener("mouseup", dragMouseUp);
 
+    if (startToDragTaskId !== null && finalTaskToReplaceId !== null && startToDragTaskId !== finalTaskToReplaceId) {
 
+        let startIndex = tasks.findIndex(val => val.id == startToDragTaskId)
+        let finalIndex = tasks.findIndex(val => val.id == finalTaskToReplaceId)
 
+        if (startIndex !== -1 && finalIndex !== -1) {
+            let draggedTask = tasks.splice(startIndex, 1)[0]
 
+            tasks.splice(finalIndex, 0, draggedTask)
 
+            saveTask()
+        }
+    }
 
+    startToDragTaskId = null
+    finalTaskToReplaceId = null
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    isReorder = false
+    renderTask()
+    check()
+}
 
 check()
