@@ -180,7 +180,7 @@ if (tempTrashTasks) {
 // ------- THIS GENERATES THE NEW TASK INPUT BOX ------- //
 function addTask() {
     newTaskInput = document.createElement("li")
-    newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 *:w-full"
+    newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 mb-5 *:w-full"
     newTaskInput.innerHTML = `
         
             <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
@@ -203,10 +203,16 @@ function addTask() {
             </div>`
 
     newTasksPlace.appendChild(newTaskInput)
+
+    if (main) {
+        main.scrollTo({ top: main.scrollHeight, behavior: 'smooth' });
+    }
+
     setTimeout(() => {
+
         const textarea = document.getElementById("inputValue");
         if (textarea) textarea.focus();
-    }, 0);
+    }, 100);
 }
 
 // ------- FIRST TASK ------- //
