@@ -121,7 +121,7 @@
 
     <!--==================#2 RIGHT CONTENT  ==================-->
     <!--======================================================-->
-     <main class="flex flex-col content-start justify-start duration-500 **:duration-500 flex-1 h-screen w-full bg-bgDef text-primary overflow-y-auto">
+    <main class="flex flex-col content-start justify-start duration-500 **:duration-500 flex-1 h-screen w-full bg-bgDef text-primary overflow-y-auto">
 
         <!--==================#2-1 HEADER ==================-->
         <header class="flex w-full h-fit justify-between md:justify-end p-3 sticky top-0 backdrop-blur-md z-20">
@@ -167,9 +167,13 @@
                 </div>
 
                 <!-- Right btns -->
-                <button onclick="clearCompletedTasks()" class="text-sm text-secondary hover:text-accent capitalize flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover">
+                <!-- <button onclick="clearCompletedTasks()" class="text-sm text-secondary hover:text-accent capitalize flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover">
                     <i class="icon no-hover text-base"></i>
                     Clear Completed
+                </button> -->
+                <button onclick="toggleReorderMode()" class="text-sm text-secondary  capitalize flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover">
+                    <i class="icon no-hover text-base"></i>
+                    <span class="hidden sm:inline">Reorder Tasks</span>
                 </button>
             </div>
 

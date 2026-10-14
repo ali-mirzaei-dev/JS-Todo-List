@@ -42,6 +42,7 @@ let tempSortValue = 'default'
 let totalTaskCount = 0
 let newTaskPriority = "not assigned"
 let isEditing = false
+let isReorder = false
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -287,22 +288,53 @@ function renderTask() {
             let addedTask = document.createElement("li")
             addedTask.setAttribute("data-id", val.id)
 
+            // ------- Creating the base classes of tasks based on their condition
+            let baseClasses = "w-full flex items-center justify-between px-4 py-4 gap-4 transition-colors rounded-lg";
+
+            if (isReorder) {
+                baseClasses += " border-2 border-dashed border-accent/50 cursor-grab hover:bg-hover/50 mb-1 select-none";
+                addedTask.setAttribute("onmousedown", `dragMouseDown(event, ${val.id})`);
+                addedTask.setAttribute("onmouseover", `dragMouseOver(event, ${val.id})`);
+
+            } else {
+                baseClasses += " border-b border-secondary/20";
+
+                if (val.status == "on") {
+                    baseClasses += " bg-green-700/20 hover:bg-green-700/30";
+                } else {
+                    baseClasses += " hover:bg-hover/50";
+                }
+            }
+            addedTask.className = baseClasses;
+
+            let actionButtons = "";
+            if (!isReorder) {
+                if (val.status == "on") {
+                    actionButtons = `
+                        ${pinButton}
+                        <i onclick="hideFromInbox(this, ${val.id})" class="icon cursor-pointer hover:text-green-500" title="Hide complete task from Inbox"></i>
+                        <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Move to Trash"></i>`;
+                } else {
+                    actionButtons = `
+                        <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400" title="Edit Task"></i>
+                        <div class="relative">
+                            <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
+                        </div>`;
+                }
+            }
+
             // ------- Complete Tasks
             if (val.status == "on") {
-                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-green-700/30 rounded-lg "
-                addedTask.classList.add("bg-green-700/20")
                 addedTask.innerHTML = `
                 <div class="flex items-center gap-3 flex-1 min-w-0">
                     <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
                     <span class="relative wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">
                         ${val.name}
-                        <span class="absolute top-0 rotate-45">${pinnedIcon}<span>
+                        <span class="absolute top-0 rotate-45">${pinnedIcon}</span>
                     </span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0">
-                    ${pinButton}
-                    <i onclick="hideFromInbox(this, ${val.id})" class="icon cursor-pointer hover:text-green-500" title="Hide complete task from Inbox"></i>
-                    <i onclick="deleteAddedTask(event, ${val.id})" class="icon icon-delete hover:text-accent" title="Move to Trash"></i> 
+                    ${actionButtons}
                 </div>`
 
             } else {
@@ -311,7 +343,6 @@ function renderTask() {
                 else if (val.priority === "medium") priorityDot = "bg-yellow-500"
                 else if (val.priority === "low") priorityDot = "bg-green-500"
 
-                addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50"
                 addedTask.innerHTML = `
                 <div class="flex items-center gap-3 flex-1 min-w-0 justify-between">
                     <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
@@ -322,11 +353,8 @@ function renderTask() {
                     <span class=" w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0 ml-2">
-                    <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400" title="Edit Task"></i>
-                    <div class="relative">
-                        <i onclick="event.stopPropagation(); openMoreMenu(this, ${val.id})" class="icon cursor-pointer">ﭏ</i>
-                     </div>
-                 </div>`
+                    ${actionButtons}
+                </div>`
             }
 
             newTasksPlace.appendChild(addedTask);
@@ -355,7 +383,7 @@ function renderTask() {
                 <input onchange="markComplete(this)" type="checkbox" checked class="custom-checkbox shrink-0">
                 <span class="relative wrap-break-word flex-1 line-through decoration-1 decoration-green-800 text-green-700">
                     ${val.name}
-                    <span class="absolute top-0 rotate-45">${pinnedIcon}<span>
+                    <span class="absolute top-0 rotate-45">${pinnedIcon}</span>
                 </span>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -387,6 +415,68 @@ function renderTask() {
             newTasksPlace.appendChild(addedTrashTask);
         });
     }
+}
+
+
+// ------- REORDER TASKS ------- //
+function toggleReorderMode() {
+    isReorder = !isReorder
+    renderTask()
+    check()
+}
+
+// ------- MOUSE DOWN || STRAT DRAGING ------- //
+let startToDragTaskId = null
+let finalTaskToReplaceId = null;
+
+function dragMouseDown(e, taskId) {
+    e.preventDefault();
+
+    startToDragTaskId = taskId
+    e.currentTarget.classList.add("opacity-50", "cursor-grabbing")
+
+    document.addEventListener("mouseup", dragMouseUp)
+}
+
+// ------- MOUSE OVER || THIS HANDLES HOVERING TASKS ------- //
+function dragMouseOver(e, taskId) {
+
+    if (startToDragTaskId !== null && taskId !== startToDragTaskId) {
+
+        finalTaskToReplaceId = taskId;
+
+        const allTasks = document.querySelectorAll("#newTasksPlace li");
+        allTasks.forEach(val => val.classList.remove("border-t-4", "border-b-4", "border-green-500"));
+
+        e.currentTarget.classList.add("border-t-4", "border-b-4", "border-green-500");
+    }
+}
+
+// ------- MOUSE UP || FINISHING DRAGING ------- // 
+function dragMouseUp(e) {
+
+    document.removeEventListener("mouseup", dragMouseUp);
+
+    if (startToDragTaskId !== null && finalTaskToReplaceId !== null && startToDragTaskId !== finalTaskToReplaceId) {
+
+        let startIndex = tasks.findIndex(val => val.id == startToDragTaskId)
+        let finalIndex = tasks.findIndex(val => val.id == finalTaskToReplaceId)
+
+        if (startIndex !== -1 && finalIndex !== -1) {
+            let draggedTask = tasks.splice(startIndex, 1)[0]
+
+            tasks.splice(finalIndex, 0, draggedTask)
+
+            saveTask()
+        }
+    }
+
+    startToDragTaskId = null
+    finalTaskToReplaceId = null
+
+    isReorder = false
+    renderTask()
+    check()
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -559,7 +649,7 @@ function hideFromInbox(element, taskId = null) {
     }
 }
 
-// ------- CHECK() || TASKS COUNTER ------- //
+// ------- CHECK() || TASKS COUNTER ------- // ++++++++++++++++++++++++++++++++++++++++
 function check() {
     totalTaskCount = tasks.length
     trashTaskCount = trashTasks.length
@@ -654,7 +744,11 @@ function loader() {
             emptyState.classList.add("hidden")
             toolBar.classList.add("flex")
             toolBar.classList.remove("hidden")
-            if (!newTaskInput || !document.body.contains(newTaskInput)) showAddBtn()
+            if (!newTaskInput || !document.body.contains(newTaskInput)) {
+                if (!isReorder) {
+                    showAddBtn()
+                }
+            }
             sortContainer.classList.remove("hidden")
             sortContainer.classList.add("flex")
         }
@@ -855,6 +949,7 @@ function setTaskPriority(e, priority, color, taskId = null) {
 
     e.stopImmediatePropagation()
 
+    // ------- For Existing tasks
     if (taskId != null) {
         tasks.forEach((val) => {
             if (val.id == taskId) {
@@ -870,6 +965,7 @@ function setTaskPriority(e, priority, color, taskId = null) {
         return;
     }
 
+    // ------- For new generating tasks
     if (taskId == null) {
         newTaskPriority = priority
         let currentText = color
@@ -965,6 +1061,7 @@ function switchTab(element, tabName) {
     document.querySelector("h2").innerText = tabName
 
     tempSortValue = 'default'
+    isReorder = false
     renderTask()
     check()
 }
