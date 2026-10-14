@@ -302,13 +302,13 @@ function renderTask() {
 
                 addedTask.className = "w-full flex items-center justify-between border-b border-secondary/20 px-4 py-4 gap-4 transition-colors hover:bg-hover/50"
                 addedTask.innerHTML = `
-                 <div class="flex items-center gap-3 flex-1 min-w-0">
+                <div class="flex items-center gap-3 flex-1 min-w-0 justify-between">
                     <input onchange="markComplete(this)" type="checkbox" class="custom-checkbox shrink-0">
                     <span class="wrap-break-word flex-1 relative">
                         ${val.name}
-                        <span class="absolute top-0 rotate-45">${pinnedIcon}<span>
+                        <span class="absolute top-0 rotate-45">${pinnedIcon}</span>
                     </span>
-                    <span class="relative w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
+                    <span class=" w-2.5 h-2.5 rounded-full ${priorityDot} shrink-0 ring-2 ring-bgDef/40" title="Priority: ${val.priority}"></span>
                 </div>
                 <div class="flex items-center gap-2 shrink-0 ml-2">
                     <i onclick="editAddedTask(this)" class="icon hover:text-yellow-400" title="Edit Task"></i>
@@ -730,7 +730,7 @@ function openMoreMenu(element, taskId = null) {
                 <i class="icon no-hover text-base group-hover:text-violet-500"></i>
                 Unpin from top
             </li>`;
-            
+
         } else {
             pinButtonHTML = `
             <li onclick="pinToTop(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
@@ -759,6 +759,7 @@ function openMoreMenu(element, taskId = null) {
         element.appendChild(moreMenu)
     }
 }
+
 // ------- PIN TO TOP ------- //
 function pinToTop(e, taskId) {
 
