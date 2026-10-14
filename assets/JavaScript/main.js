@@ -89,22 +89,27 @@ saveNameBtn.addEventListener("click", () => {
     }
 });
 
-// ------- CLOSE WELCOME POP UP LOCAL STORAGE ------- //
+// ------- CLOSE WELCOME POPUP LOCAL STORAGE ------- //
 let savePopUp = localStorage.getItem('chiocePopUp')
 if (savePopUp == "off") {
-    welcomepopup.remove()
+    welcomepopup.classList.add("hidden")
 }
 
 neverShowPopUp.addEventListener("click", () => {
-    welcomepopup.remove()
+    welcomepopup.classList.add("hidden")
     localStorage.setItem('chiocePopUp', 'off')
 })
 
 // ------- CLOSE WELCOME POPUP ONCE------- //
 closeWelcome.addEventListener("click", () => {
-    welcomepopup.remove()
+    welcomepopup.classList.add("hidden")
 
 })
+
+// ------- SHOW CREDITS ------- //
+function showCredits() {
+    welcomepopup.classList.remove("hidden");
+}
 
 // ------- THEME LOCAL STORAGE LOAD ------- //
 let savedTheme = localStorage.getItem('theme')
