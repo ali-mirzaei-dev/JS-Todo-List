@@ -189,13 +189,13 @@ function addTask() {
     newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 mb-5 *:w-full"
     newTaskInput.innerHTML = `
         
-            <textarea id="inputValue" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
+            <textarea id="inputValue" onkeydown="keyFunctions(event)" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
         
             <div class="flex justify-between">
                 <div class="flex gap-2 items-center">
                     <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
 
-                   <span  onclick="event.stopPropagation(); setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
+                   <span onclick="event.stopPropagation(); setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
                         <i class="icon no-hover text-secondary"></i>
                         <span>set priority</span>
                     </span>
@@ -228,6 +228,18 @@ addTaskInEmpty.addEventListener("click", () => {
     toolBar.classList.add("flex")
     addTask()
 })
+
+function keyFunctions(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault()
+        submitTask()
+    }
+
+    if(e.key === "Escape"){
+        e.preventDefault()
+        deleteAddBox()
+    }
+}
 
 // ------- SUBMIT TASK AND CREATING THE ARRAY AND DATABASE------- //
 function submitTask() {
@@ -1103,10 +1115,10 @@ function toggleReorderMode() {
         isReorder = !isReorder
         renderTask()
         check()
-    }else if( totalTaskCount == 1){
-        showToast("there is only one task" , 'assets/Images/empty ghost.SVG')
-    }else {
-        showToast('there is no task to reorder' , 'assets/Images/empty ghost.SVG')
+    } else if (totalTaskCount == 1) {
+        showToast("there is only one task", 'assets/Images/empty ghost.SVG')
+    } else {
+        showToast('there is no task to reorder', 'assets/Images/empty ghost.SVG')
     }
 }
 
