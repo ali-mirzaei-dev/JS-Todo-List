@@ -101,6 +101,9 @@ const translations = {
         highPriority: "High Priority",
         mediumPriority: "Medium Priority",
         lowPriority: "Low Priority",
+        high: "High",
+        medium: "Medium",
+        low: "Low",
         progress: "Progress",
         addTask: "Add Task",
         emptyInboxTitle: "A fresh start",
@@ -108,7 +111,14 @@ const translations = {
         emptyCompletedTitle: "Nothing completed yet",
         emptyCompletedDesc: "Tasks you complete will appear here so you can look back at what you've accomplished.",
         emptyTrashTitle: "Trash is empty",
-        emptyTrashDesc: "Tasks you delete will be moved here. You can restore them or permanently remove them later."
+        emptyTrashDesc: "Tasks you delete will be moved here. You can restore them or permanently remove them later.",
+        addTaskBtn: "Add Task",
+        taskPlaceholder: "Please write your task here!",
+        setPriority: "Set Priority",
+        deleteTask: "Delete Task",
+        pinToTop: "Pin to top",
+        unpinFromTop: "Unpin from top",
+        newTaskInputPlaceHolder: "Please write your task here!"
     },
     fa: {
         welcome: " خوش اومدی،",
@@ -117,25 +127,35 @@ const translations = {
         trash: "سطل زباله",
         credits: "درباره ما",
         display: "نمایش",
-        total: "همه کار ها",
+        total: "همه تسک ها",
         active: "در حال انجام",
         completedLabel: "انجام‌شده",
         reorder: "مرتب‌سازی",
-        clearCompleted: "پاک کردن کار ها انجام‌شده",
+        clearCompleted: "پاک کردن تسک ها انجام‌شده",
         emptyTrash: "خالی کردن سطل زباله",
         sortBy: "ترتیب:",
         all: "همه",
         highPriority: "اولویت بالا",
         mediumPriority: "اولویت متوسط",
-        lowPriority: "اولویت پایین",
+        lowPriority: "اولویت کم",
+        high: "بالا",
+        medium: "متوسط",
+        low: "کم",
         progress: "پیشرفت",
-        addTask: "افزودن کار",
+        addTask: "افزودن تسک",
         emptyInboxTitle: "فعلاً ثبت کن، بعداً برنامه‌ریزی کن",
-        emptyInboxDesc: "هر کاری که به ذهنت می‌رسه، همین‌جا سریع ثبت کن. لازم نیست همین الان مرتبشون کنی؛ هر وقت آماده بودی، بهشون سر و سامان بده.",
-        emptyCompletedTitle: "هنوز کاری انجام ندادی!",
-        emptyCompletedDesc: "هر کار‌ای که انجام بدی، اینجا می‌بینیش. کم‌کم این بخش پر از کارهاییه که با موفقیت به پایان رسوندی.",
+        emptyInboxDesc: "هر تسکی که به ذهنت می‌رسه، همین‌جا سریع ثبت کن. لازم نیست همین الان مرتبشون کنی؛ هر وقت آماده بودی، بهشون سر و سامان بده.",
+        emptyCompletedTitle: "هنوز تسکی انجام ندادی!",
+        emptyCompletedDesc: "هر تسک‌ای که انجام بدی، اینجا می‌بینیش. کم‌کم این بخش پر از تسکهاییه که با موفقیت به پایان رسوندی.",
         emptyTrashTitle: "سطل زباله خالیه",
-        emptyTrashDesc: "کار های که حذف می‌کنی، اینجا قرار می‌گیرن. هر وقت خواستی می‌تونی برشون گردونی یا برای همیشه حذفشون کنی."
+        emptyTrashDesc: "تسک های که حذف می‌کنی، اینجا قرار می‌گیرن. هر وقت خواستی می‌تونی برشون گردونی یا برای همیشه حذفشون کنی.",
+        addTaskBtn: "افزودن تسک",
+        taskPlaceholder: "تسک خود را اینجا بنویسید...",
+        setPriority: "تعیین اولویت",
+        deleteTask: "حذف تسک",
+        pinToTop: "سنجاق به بالا",
+        unpinFromTop: "حذف سنجاق",
+        newTaskInputPlaceHolder: "لطفا تسک خود را بنویسید!"
     }
 };
 
@@ -373,7 +393,7 @@ function addTask() {
     newTaskInput.className = "mt-1 border w-full border-gray-300 rounded-xl py-4 px-3 flex flex-wrap gap-2 mb-5 *:w-full"
     newTaskInput.innerHTML = `
         
-            <textarea id="inputValue" onkeydown="keyFunctions(event)" placeholder="Please write your task here!" class="border text-primary border-none resize-none focus:outline-none"></textarea>
+            <textarea id="inputValue" onkeydown="keyFunctions(event)" placeholder="${translations[PageLanguage].newTaskInputPlaceHolder}" class="border text-primary border-none resize-none focus:outline-none"></textarea>
         
             <div class="flex justify-between">
                 <div class="flex gap-2 items-center">
@@ -381,7 +401,7 @@ function addTask() {
 
                    <span onclick="event.stopPropagation(); setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
                         <i class="icon no-hover text-secondary"></i>
-                        <span>set priority</span>
+                        <span>${translations[PageLanguage].setPriority}</span>
                     </span>
 
                 </div>
@@ -627,7 +647,7 @@ function showAddBtn() {
     addNewTask.innerHTML = `
                 <button onclick="addNewTaskFunc()" class="capitalize hover:bg-hover cursor-pointer py-1 pr-2 rounded-lg">
                     <i class="icon no-hover">ﭐ</i>
-                    add task
+                   ${translations[PageLanguage].addTaskBtn}
                 </button>`;
     newTasksPlace.appendChild(addNewTask);
 }
@@ -1007,14 +1027,14 @@ function openMoreMenu(element, taskId = null) {
             pinButtonHTML = `
             <li onclick="unpinTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-violet-500"></i>
-                Unpin from top
+                ${translations[PageLanguage].unpinFromTop}
             </li>`
 
         } else {
             pinButtonHTML = `
             <li onclick="pinToTop(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-violet-500"></i>
-                Pin to top
+                ${translations[PageLanguage].pinToTop}
             </li>`
         }
 
@@ -1027,12 +1047,12 @@ function openMoreMenu(element, taskId = null) {
 
             <li onclick="setPriorityMenu(event , ${taskId})" class="relative flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-green-500">ﰅ</i>
-                Set Priority
+               ${translations[PageLanguage].setPriority}
             </li>
 
             <li onclick="deleteAddedTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon icon-delete no-hover text-base group-hover:text-accent"></i>
-                Delete Task
+                ${translations[PageLanguage].deleteTask}              
             </li>`
 
         element.appendChild(moreMenu)
@@ -1101,15 +1121,15 @@ function setPriorityMenu(e, taskId = null) {
         dropDownPriority.innerHTML = `
             <li onclick="setTaskPriority(event , 'high' , 'text-red-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                High
+               ${translations[PageLanguage].high}
             </li>
             <li onclick="setTaskPriority(event , 'medium' , 'text-yellow-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-                Medium
+                ${translations[PageLanguage].medium}
             </li>
             <li onclick="setTaskPriority(event , 'low' , 'text-green-500', ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
                 <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-                Low
+                ${translations[PageLanguage].low}
             </li>`
 
         wrapper.appendChild(dropDownPriority)
@@ -1185,22 +1205,22 @@ function toggleSortMenu(element) {
         tempMenu.innerHTML = `
         <li onclick="setSort('default', 'All' , 'text-secondary', '${totalTaskCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
-            All
+           ${translations[PageLanguage].all}
             <span id="mediumPriorityPlace" class="ml-auto text-xs">${totalTaskCount}</span>
         </li>
         <li onclick="setSort('high', 'High Priority', 'text-red-500', '${highPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-            High Priority
+            ${translations[PageLanguage].highPriority}
             <span id="highPriorityPlace" class="ml-auto text-xs">${highPriorityCount}</span>
         </li>
         <li onclick="setSort('medium', 'Medium Priority', 'text-yellow-500', '${mediumPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-            Medium Priority
+            ${translations[PageLanguage].mediumPriority}
             <span id="mediunPriorityPlace" class="ml-auto text-xs">${mediumPriorityCount}</span>
         </li>
         <li onclick="setSort('low', 'Low Priority', 'text-green-500', '${lowPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> 
-            Low Priority
+            ${translations[PageLanguage].lowPriority}
             <span id="lowPriorityPlace" class="ml-auto text-xs">${lowPriorityCount}</span>
         </li>`
 
