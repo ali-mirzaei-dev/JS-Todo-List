@@ -118,20 +118,34 @@ const translations = {
         deleteTask: "Delete Task",
         pinToTop: "Pin to top",
         unpinFromTop: "Unpin from top",
-        newTaskInputPlaceHolder: "Please write your task here!"
+        newTaskInputPlaceHolder: "Please write your task here!",
+        deleteTitle: "Delete this task?",
+        deleteDesc: "This task will be moved to the Trash. You can restore it later. Are you sure you want to proceed?",
+        cancel: "Cancel",
+        delete: "Delete",
+        toastMovedToTrash: "Task Moved to Trash!",
+        toastRestored: "Task Restored Successfully!",
+        toastDeletedForever: "Task Deleted Forever!",
+        toastPinned: "Task Pinned to Top!",
+        toastUnpinned: "Task Unpinned!",
+        toastTrashEmptied: "Trash Emptied Forever!",
+        toastCompletedToTrash: "Completed tasks moved to trash!",
+        toastOneTask: "There is only one task",
+        toastNoTasks: "There is no task to reorder",
+        toastNoPriority: "No tasks with this priority!"
     },
     fa: {
         welcome: " خوش اومدی،",
         inbox: "ورودی",
-        completed: "انجام‌شده‌ها",
+        completed: "انجام‌ شده ها",
         trash: "سطل زباله",
         credits: "درباره ما",
         display: "نمایش",
         total: "همه تسک ها",
         active: "در حال انجام",
-        completedLabel: "انجام‌شده",
+        completedLabel: "انجام‌ شده",
         reorder: "مرتب‌سازی",
-        clearCompleted: "پاک کردن تسک ها انجام‌شده",
+        clearCompleted: "پاک کردن تسک های انجام‌شده",
         emptyTrash: "خالی کردن سطل زباله",
         sortBy: "ترتیب:",
         all: "همه",
@@ -155,7 +169,21 @@ const translations = {
         deleteTask: "حذف تسک",
         pinToTop: "سنجاق به بالا",
         unpinFromTop: "حذف سنجاق",
-        newTaskInputPlaceHolder: "لطفا تسک خود را بنویسید!"
+        newTaskInputPlaceHolder: "لطفا تسک خود را بنویسید!",
+        deleteTitle: "این تسک حذف شود؟",
+        deleteDesc: "این تسک به سطل زباله منتقل می‌شود. شما می‌توانید بعداً آن را بازیابی کنید. آیا مطمئن هستید که می‌خواهید ادامه دهید؟",
+        cancel: "انصراف",
+        delete: "حذف",
+        toastMovedToTrash: "تسک به سطل زباله منتقل شد!",
+        toastRestored: "تسک با موفقیت بازیابی شد!",
+        toastDeletedForever: "تسک برای همیشه حذف شد!",
+        toastPinned: "تسک به بالا سنجاق شد!",
+        toastUnpinned: "سنجاق تسک حذف شد!",
+        toastTrashEmptied: "سطل زباله برای همیشه خالی شد!",
+        toastCompletedToTrash: "تسک های تکمیل شده به سطل زباله منتقل شدند!",
+        toastOneTask: "فقط یک تسک وجود دارد",
+        toastNoTasks: "تسکی برای مرتب‌سازی وجود ندارد",
+        toastNoPriority: "هیچ تسکی با این اولویت وجود ندارد!"
     }
 };
 
@@ -676,9 +704,10 @@ function deleteAddBox() {
 
 // ------- DELETING AN ADDED TASK ------- //
 function deleteAddedTask(e, taskId = null) {
+    let t = translations[PageLanguage]
 
-    const openMenu = e.target.closest(".dropdown-menu");
-    if (openMenu) openMenu.remove();
+    const openMenu = e.target.closest(".dropdown-menu")
+    if (openMenu) openMenu.remove()
 
     let deleteTaskConfirm = document.createElement("div")
     deleteTaskConfirm.className = "absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
@@ -688,12 +717,12 @@ function deleteAddedTask(e, taskId = null) {
                     <i class="icon text-2xl text-accent no-hover"></i>
                 </div>
                 <div class="text-center flex flex-col gap-2">
-                    <h3 class="text-lg font-bold text-primary">Delete this task?</h3>
-                    <p class="text-sm text-secondary">This task will be moved to the Trash. You can restore it later. Are you sure you want to proceed?</p>
+                    <h3 class="text-lg font-bold text-primary">${t.deleteTitle}</h3>
+                    <p class="text-sm text-secondary">${t.deleteDesc}</p>
                 </div>
                 <div class="flex gap-3 mt-2">
-                    <button id="cancelDelete" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">Cancel</button>
-                    <button id="confirmDelete" class="flex-1 py-2 rounded-lg bg-accent text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer">Delete</button>
+                    <button id="cancelDelete" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">${t.cancel}</button>
+                    <button id="confirmDelete" class="flex-1 py-2 rounded-lg bg-accent text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer">${t.delete}</button>
                 </div>
             </div>`
 
@@ -716,7 +745,7 @@ function deleteAddedTask(e, taskId = null) {
             trashTasks.push(tasks[tempDelete])
             tasks.splice(tempDelete, 1)
             saveTrashTasks()
-            showToast("Task Moved to Trash!", "assets/Images/Delete.WebP");
+            showToast(t.toastMovedToTrash, "assets/Images/Delete.WebP");
         }
 
         renderTask()
@@ -881,7 +910,7 @@ function clearCompletedTasks() {
 
         tasks = tasks.filter((val) => val.status !== "on")
 
-        showToast("Completed tasks moved to trash!", "assets/Images/Delete.WebP")
+        showToast(translations[PageLanguage].toastCompletedToTrash, "assets/Images/Delete.WebP")
         renderTask()
         loader()
         check()
@@ -895,7 +924,7 @@ function clearTrashTasks() {
         trashTasks = []
         saveTrashTasks()
 
-        showToast("Trash Emptied Forever!", "assets/Images/Delete.WebP")
+        showToast(translations[PageLanguage].toastTrashEmptied, "assets/Images/Delete.WebP")
         renderTask()
         check()
     }
@@ -1077,7 +1106,7 @@ function pinToTop(e, taskId) {
     saveTask()
     renderTask()
     check()
-    showToast("Task Pinned to Top!", "assets/Images/Notes.svg");
+    showToast(translations[PageLanguage].toastPinned, "assets/Images/Notes.svg");
 
 }
 
@@ -1098,7 +1127,7 @@ function unpinTask(e, taskId) {
     saveTask();
     renderTask();
     check();
-    showToast("Task Unpinned!", "assets/Images/Notes.svg");
+    showToast(translations[PageLanguage].toastUnpinned, "assets/Images/Notes.svg");
 }
 
 // ------- PRIORITY MENU ||| THIS OPENS THE PRIORITY MENU ------- //
@@ -1203,22 +1232,22 @@ function toggleSortMenu(element) {
         tempMenu = document.createElement("ul")
         tempMenu.className = "dropdown-menu absolute -top-[25%] left-[110%] mt-2 w-48 bg-bgDef border border-hover rounded-xl shadow-2xl shadow-black/10 z-50 flex-col gap-1 p-2"
         tempMenu.innerHTML = `
-        <li onclick="setSort('default', 'All' , 'text-secondary', '${totalTaskCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('default', '${translations[PageLanguage].all}' , 'text-secondary', '${totalTaskCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-gray-300"></span>
            ${translations[PageLanguage].all}
             <span id="mediumPriorityPlace" class="ml-auto text-xs">${totalTaskCount}</span>
         </li>
-        <li onclick="setSort('high', 'High Priority', 'text-red-500', '${highPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('high', '${translations[PageLanguage].highPriority}', 'text-red-500', '${highPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
             ${translations[PageLanguage].highPriority}
             <span id="highPriorityPlace" class="ml-auto text-xs">${highPriorityCount}</span>
         </li>
-        <li onclick="setSort('medium', 'Medium Priority', 'text-yellow-500', '${mediumPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('medium', '${translations[PageLanguage].mediumPriority}', 'text-yellow-500', '${mediumPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
             ${translations[PageLanguage].mediumPriority}
             <span id="mediunPriorityPlace" class="ml-auto text-xs">${mediumPriorityCount}</span>
         </li>
-        <li onclick="setSort('low', 'Low Priority', 'text-green-500', '${lowPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
+        <li onclick="setSort('low', '${translations[PageLanguage].lowPriority}' , 'text-green-500', '${lowPriorityCount}')" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors">
             <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> 
             ${translations[PageLanguage].lowPriority}
             <span id="lowPriorityPlace" class="ml-auto text-xs">${lowPriorityCount}</span>
@@ -1232,6 +1261,8 @@ function toggleSortMenu(element) {
 // ------- SELECTING AN OPTION IN THE SORT MENU ------- //
 function setSort(value, text, color, amount) {
 
+    let t = translations[PageLanguage]
+
     const sortLabel = document.getElementById("sortLabel")
 
 
@@ -1242,9 +1273,9 @@ function setSort(value, text, color, amount) {
         sortLabel.classList.add(color)
     } else {
         tempSortValue = 'default'
-        sortLabel.innerText = 'All'
+        sortLabel.innerText = t.all
         sortLabel.classList.remove('text-red-500', 'text-yellow-500', 'text-green-500', 'text-secondary')
-        showToast("No tasks with this priority!", "assets/Images/Empty Box.SVG");
+        showToast(t.toastNoPriority, "assets/Images/Empty Box.SVG");
     }
 
     renderTask()
@@ -1280,7 +1311,7 @@ function restoreTask(element) {
 
         tasks.push(trashTasks[indexRestoreId])
         trashTasks.splice(indexRestoreId, 1)
-        showToast("Task Restored Successfully!", "assets/Images/Restore.WebP");
+        showToast(translations[PageLanguage].toastRestored, "assets/Images/Restore.WebP")
     }
 
     renderTask()
@@ -1333,7 +1364,7 @@ function deleteForever(element) {
     if (indexToDelete !== -1) {
         trashTasks.splice(indexToDelete, 1)
 
-        showToast("Task Deleted Forever!", "assets/Images/Delete.WebP");
+        showToast(translations[PageLanguage].toastDeletedForever, "assets/Images/Delete.WebP")
     }
 
     saveTrashTasks()
@@ -1348,9 +1379,9 @@ function toggleReorderMode() {
         renderTask()
         check()
     } else if (totalTaskCount == 1) {
-        showToast("there is only one task", 'assets/Images/empty ghost.SVG')
+        showToast(translations[PageLanguage].toastOneTask, 'assets/Images/empty ghost.SVG')
     } else {
-        showToast('there is no task to reorder', 'assets/Images/empty ghost.SVG')
+        showToast(translations[PageLanguage].toastNoTasks, 'assets/Images/empty ghost.SVG')
     }
 }
 
