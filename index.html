@@ -42,26 +42,26 @@
         </div>
     </div>
 
-    <!--==================#2 LEFT SIDE NAV ==================-->
+    <!--==================#2 SIDE NAV ==================-->
     <!--==================================================-->
     <nav class="absolute inset-y-0 left-0 w-full -translate-x-full md:translate-x-0 md:static md:block md:w-[20%] lg:w-[15%] h-screen transition-all duration-500 z-30 overflow-hidden">
-        <i id="closeBtn" class="absolute top-2.5 right-2.5 text-2xl icon">ﵽ</i>
         <section class="flex h-screen flex-col gap-4 bg-sidebar py-5 px-4 border-r-2 border-bgDef 2xl:container">
 
-            <!--==================#2-1 TOP ROW ==================-->
-            <div class="w-full flex justify-between items-start mb-4">
-                <div class="flex flex-col gap-1 mt-1">
-                    <span class="text-xs text-secondary uppercase tracking-wider">Welcome,</span>
-                    <div class="flex items-center gap-2">
+                  <!--==================#2-1 TOP ROW ==================-->
+            <div class="w-full flex justify-between items-start gap-3">
+                <div class="flex flex-col gap-1 flex-1 min-w-0 mt-1">
+                    <span id="welcomeLabel" class="text-xs text-secondary uppercase tracking-wider">Welcome,</span>
+                    <div class="flex items-center gap-2 flex-wrap">
                         <span id="userNameDisplay" class="text-xl font-bold text-primary capitalize">Ali Mirzaei</span>
-                        <input id="userNameInput" onkeydown="submitUserName(event)" type="text" class="hidden text-xl font-bold text-primary bg-transparent border-b border-accent focus:outline-none capitalize w-32">
-                        <i id="editNameBtn" class="icon" title="Edit Name"></i>
-                        <div id="buttonsBox" class="hidden">
-                            <button id="cancelNameBtn"><i class="icon"></i></button>
-                            <button id="saveNameBtn"><i class="icon">מּ</i></button>
+                        <input id="userNameInput" onkeydown="submitUserName(event)" type="text" class="hidden text-xl font-bold text-primary bg-transparent border-b border-accent focus:outline-none capitalize w-24">
+                        <i id="editNameBtn" class="icon cursor-pointer" title="Edit Name"></i>
+                        <div id="buttonsBox" class="hidden items-center gap-1">
+                            <button id="cancelNameBtn" class="icon"><i></i></button>
+                            <button id="saveNameBtn" class="icon"><i>מּ</i></button>
                         </div>
                     </div>
                 </div>
+                <i id="closeBtn" class="text-2xl icon cursor-pointer shrink-0 mt-1">ﵽ</i>
             </div>
 
             <!--==================#1-2 SIDE MENU ==================-->
@@ -93,7 +93,7 @@
         </section>
     </nav>
 
-    <!--==================#3 RIGHT CONTENT  ==================-->
+    <!--==================#3 CONTENT  ==================-->
     <!--======================================================-->
     <main class="flex flex-col content-start justify-start duration-500 **:duration-500 flex-1 h-screen w-full bg-bgDef text-primary overflow-y-auto">
 

@@ -410,6 +410,9 @@
   .w-12 {
     width: calc(var(--spacing) * 12);
   }
+  .w-24 {
+    width: calc(var(--spacing) * 24);
+  }
   .w-32 {
     width: calc(var(--spacing) * 32);
   }
@@ -451,6 +454,12 @@
   }
   .flex-shrink {
     flex-shrink: 1;
+  }
+  .shrink {
+    flex-shrink: 1;
+  }
+  .shrink\! {
+    flex-shrink: 1 !important;
   }
   .shrink-0 {
     flex-shrink: 0;

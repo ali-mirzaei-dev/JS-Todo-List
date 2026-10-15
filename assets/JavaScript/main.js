@@ -34,7 +34,7 @@ const reorderBtnWrapper = document.getElementById("reorderBtnWrapper")
 const clearCompletedWrapper = document.getElementById("clearCompletedWrapper")
 const clearTrashWrapper = document.getElementById("clearTrashWrapper")
 const chooseLanguagePopUp = document.getElementById("chooseLanguagePopUp")
-
+const welcomeLabel = document.getElementById("welcomeLabel")
 
 
 
@@ -103,8 +103,8 @@ const translations = {
         lowPriority: "Low Priority",
         progress: "Progress",
         addTask: "Add Task",
-        emptyInboxTitle: "Capture now, plan later",
-        emptyInboxDesc: "Inbox is your go-to spot for quick task entry. Clear your mind now, organize when you’re ready.",
+        emptyInboxTitle: "A fresh start",
+        emptyInboxDesc: "Nothing on your list yet. Add a task whenever something comes to mind.",
         emptyCompletedTitle: "Nothing completed yet",
         emptyCompletedDesc: "Tasks you complete will appear here so you can look back at what you've accomplished.",
         emptyTrashTitle: "Trash is empty",
@@ -141,61 +141,60 @@ const translations = {
 
 // ------- APPLY LANGUAGE TO UI ------- //
 function applyLanguage() {
-    const t = translations[PageLanguage]; // Grab the dictionary
+    const t = translations[PageLanguage]
 
-    // 1. Flip the layout (RTL for Farsi, LTR for English)
     if (PageLanguage === 'fa') {
-        document.documentElement.dir = "rtl";
-        document.documentElement.lang = "fa";
+        document.documentElement.dir = "rtl"
+        document.documentElement.lang = "fa"
     } else {
-        document.documentElement.dir = "ltr";
-        document.documentElement.lang = "en";
+        document.documentElement.dir = "ltr"
+        document.documentElement.lang = "en"
     }
 
     // 2. Update Sidebar
-    document.querySelector(".text-secondary.uppercase.tracking-wider").innerText = t.welcome;
-    document.querySelector("h2").innerText = t[currentTab];
+    document.getElementById("welcomeLabel").innerText = t.welcome
+    document.querySelector("h2").innerText = t[currentTab]
 
     // Sidebar Links (Safe selector: finds the badge, changes the text right before it)
-    const supInbox = document.getElementById("supInbox");
-    if (supInbox) supInbox.previousSibling.textContent = " " + t.inbox + " ";
+    const supInbox = document.getElementById("supInbox")
+    if (supInbox) supInbox.previousSibling.textContent = " " + t.inbox + " "
 
     const supCompleted = document.getElementById("supCompleted");
-    if (supCompleted) supCompleted.previousSibling.textContent = " " + t.completed + " ";
+    if (supCompleted) supCompleted.previousSibling.textContent = " " + t.completed + " "
 
-    const supTrash = document.getElementById("supTrash");
-    if (supTrash) supTrash.previousSibling.textContent = " " + t.trash + " ";
+    const supTrash = document.getElementById("supTrash")
+    if (supTrash) supTrash.previousSibling.textContent = " " + t.trash + " "
 
-    document.querySelector("button[onclick='showCredits()']").lastChild.textContent = t.credits;
-    themeToggle.querySelector("span").innerText = t.display;
+    document.querySelector("button[onclick='showCredits()']").lastChild.textContent = t.credits
+    themeToggle.querySelector("span").innerText = t.display
 
     // 3. Update Toolbar
-    document.querySelector("#totalCounter").previousSibling.textContent = t.total + ": ";
-    document.querySelector("#activeTasks").previousSibling.textContent = t.active + ": ";
-    document.querySelector("#completedCounter").previousSibling.textContent = t.completedLabel + ": ";
+    document.querySelector("#totalCounter").previousSibling.textContent = t.total + ": "
+    document.querySelector("#activeTasks").previousSibling.textContent = t.active + ": "
+    document.querySelector("#completedCounter").previousSibling.textContent = t.completedLabel + ": "
 
-    document.querySelector("#reorderBtnWrapper span").innerText = t.reorder;
-    document.querySelector("#clearCompletedWrapper span").innerText = t.clearCompleted;
-    document.querySelector("#clearTrashWrapper span").innerText = t.emptyTrash;
+    document.querySelector("#reorderBtnWrapper span").innerText = t.reorder
+    document.querySelector("#clearCompletedWrapper span").innerText = t.clearCompleted
+    document.querySelector("#clearTrashWrapper span").innerText = t.emptyTrash
 
     // 4. Update Sort & Progress
-    document.querySelector("#sortContainer .font-medium").innerText = t.sortBy;
-    document.querySelector("#sortLabel").innerText = t.all;
+    document.querySelector("#sortContainer .font-medium").innerText = t.sortBy
+    document.querySelector("#sortLabel").innerText = t.all
 
     // Safe selector for Progress label
-    const progressText = document.querySelector("#progressLabel").previousElementSibling;
-    if (progressText) progressText.innerText = t.progress + " :";
+    const progressText = document.querySelector("#progressLabel").previousElementSibling
+    if (progressText) progressText.innerText = t.progress + " :"
 
     // 5. Update Empty States
-    document.querySelector("#emptyState span:nth-child(2)").innerText = t.emptyInboxTitle;
-    document.querySelector("#emptyState span:nth-child(3)").innerText = t.emptyInboxDesc;
-    document.querySelector("#emptyState button").lastChild.textContent = " " + t.addTask;
+    document.querySelector("#emptyState span:nth-child(2)").innerText = t.emptyInboxTitle
+    document.querySelector("#emptyState span:nth-child(3)").innerText = t.emptyInboxDesc
+    document.querySelector("#emptyState button").lastChild.textContent = " " + t.addTask
 
-    document.querySelector("#emptyCompletedState span:nth-child(2)").innerText = t.emptyCompletedTitle;
-    document.querySelector("#emptyCompletedState span:nth-child(3)").innerText = t.emptyCompletedDesc;
+    document.querySelector("#emptyCompletedState span:nth-child(2)").innerText = t.emptyCompletedTitle
+    document.querySelector("#emptyCompletedState span:nth-child(3)").innerText = t.emptyCompletedDesc
 
-    document.querySelector("#emptyTrashState span:nth-child(2)").innerText = t.emptyTrashTitle;
-    document.querySelector("#emptyTrashState span:nth-child(3)").innerText = t.emptyTrashDesc;
+    document.querySelector("#emptyTrashState span:nth-child(2)").innerText = t.emptyTrashTitle
+    document.querySelector("#emptyTrashState span:nth-child(3)").innerText = t.emptyTrashDesc
 }
 
 
@@ -1243,7 +1242,7 @@ function switchTab(element, tabName) {
 
     element.classList.add("active-link")
 
-    document.querySelector("h2").innerText = tabName
+    document.querySelector("h2").innerText = translations[PageLanguage][tabName] || tabName;
 
     tempSortValue = 'default'
     isReorder = false
