@@ -55,14 +55,17 @@ let isEditing = false
 let isReorder = false
 let startToDragTaskId = null
 let finalTaskToReplaceId = null
-let PageLanguage = ""
+let PageLanguage
 
 // ------- PAGE LANGUAGE LOAD ------- //
 let PageLanguageStorage = localStorage.getItem("selectedLanguage")
 if (PageLanguageStorage) {
     chooseLanguagePopUp.classList.add("hidden")
     chooseLanguagePopUp.classList.remove("flex")
-
+    PageLanguage = PageLanguageStorage
+} else {
+    chooseLanguagePopUp.classList.remove("hidden")
+    chooseLanguagePopUp.classList.add("flex")
 }
 
 // ------- PAGE LANGUAGE SAVE ------- //
@@ -73,9 +76,127 @@ function setLanguage(language) {
 
     chooseLanguagePopUp.classList.add("hidden")
     chooseLanguagePopUp.classList.remove("flex")
+
+    applyLanguage()
+    renderTask()
 }
 
+// ------- LANGUAGE DICTIONARY ------- //
+const translations = {
+    en: {
+        welcome: "Welcome,",
+        inbox: "Inbox",
+        completed: "Completed",
+        trash: "Trash",
+        credits: "Credits & About",
+        display: "Display",
+        total: "Total",
+        active: "Active",
+        completedLabel: "Completed",
+        reorder: "Reorder",
+        clearCompleted: "Clear Completed",
+        emptyTrash: "Empty Trash",
+        sortBy: "Sort by:",
+        all: "All",
+        highPriority: "High Priority",
+        mediumPriority: "Medium Priority",
+        lowPriority: "Low Priority",
+        progress: "Progress",
+        addTask: "Add Task",
+        emptyInboxTitle: "Capture now, plan later",
+        emptyInboxDesc: "Inbox is your go-to spot for quick task entry. Clear your mind now, organize when you’re ready.",
+        emptyCompletedTitle: "Nothing completed yet",
+        emptyCompletedDesc: "Tasks you complete will appear here so you can look back at what you've accomplished.",
+        emptyTrashTitle: "Trash is empty",
+        emptyTrashDesc: "Tasks you delete will be moved here. You can restore them or permanently remove them later."
+    },
+    fa: {
+        welcome: " خوش اومدی،",
+        inbox: "ورودی",
+        completed: "انجام‌شده‌ها",
+        trash: "سطل زباله",
+        credits: "درباره ما",
+        display: "نمایش",
+        total: "همه کار ها",
+        active: "در حال انجام",
+        completedLabel: "انجام‌شده",
+        reorder: "مرتب‌سازی",
+        clearCompleted: "پاک کردن کار ها انجام‌شده",
+        emptyTrash: "خالی کردن سطل زباله",
+        sortBy: "ترتیب:",
+        all: "همه",
+        highPriority: "اولویت بالا",
+        mediumPriority: "اولویت متوسط",
+        lowPriority: "اولویت پایین",
+        progress: "پیشرفت",
+        addTask: "افزودن کار",
+        emptyInboxTitle: "فعلاً ثبت کن، بعداً برنامه‌ریزی کن",
+        emptyInboxDesc: "هر کاری که به ذهنت می‌رسه، همین‌جا سریع ثبت کن. لازم نیست همین الان مرتبشون کنی؛ هر وقت آماده بودی، بهشون سر و سامان بده.",
+        emptyCompletedTitle: "هنوز کاری انجام ندادی!",
+        emptyCompletedDesc: "هر کار‌ای که انجام بدی، اینجا می‌بینیش. کم‌کم این بخش پر از کارهاییه که با موفقیت به پایان رسوندی.",
+        emptyTrashTitle: "سطل زباله خالیه",
+        emptyTrashDesc: "کار های که حذف می‌کنی، اینجا قرار می‌گیرن. هر وقت خواستی می‌تونی برشون گردونی یا برای همیشه حذفشون کنی."
+    }
+};
 
+// ------- APPLY LANGUAGE TO UI ------- //
+function applyLanguage() {
+    const t = translations[PageLanguage]; // Grab the dictionary
+
+    // 1. Flip the layout (RTL for Farsi, LTR for English)
+    if (PageLanguage === 'fa') {
+        document.documentElement.dir = "rtl";
+        document.documentElement.lang = "fa";
+    } else {
+        document.documentElement.dir = "ltr";
+        document.documentElement.lang = "en";
+    }
+
+    // 2. Update Sidebar
+    document.querySelector(".text-secondary.uppercase.tracking-wider").innerText = t.welcome;
+    document.querySelector("h2").innerText = t[currentTab];
+
+    // Sidebar Links (Safe selector: finds the badge, changes the text right before it)
+    const supInbox = document.getElementById("supInbox");
+    if (supInbox) supInbox.previousSibling.textContent = " " + t.inbox + " ";
+
+    const supCompleted = document.getElementById("supCompleted");
+    if (supCompleted) supCompleted.previousSibling.textContent = " " + t.completed + " ";
+
+    const supTrash = document.getElementById("supTrash");
+    if (supTrash) supTrash.previousSibling.textContent = " " + t.trash + " ";
+
+    document.querySelector("button[onclick='showCredits()']").lastChild.textContent = t.credits;
+    themeToggle.querySelector("span").innerText = t.display;
+
+    // 3. Update Toolbar
+    document.querySelector("#totalCounter").previousSibling.textContent = t.total + ": ";
+    document.querySelector("#activeTasks").previousSibling.textContent = t.active + ": ";
+    document.querySelector("#completedCounter").previousSibling.textContent = t.completedLabel + ": ";
+
+    document.querySelector("#reorderBtnWrapper span").innerText = t.reorder;
+    document.querySelector("#clearCompletedWrapper span").innerText = t.clearCompleted;
+    document.querySelector("#clearTrashWrapper span").innerText = t.emptyTrash;
+
+    // 4. Update Sort & Progress
+    document.querySelector("#sortContainer .font-medium").innerText = t.sortBy;
+    document.querySelector("#sortLabel").innerText = t.all;
+
+    // Safe selector for Progress label
+    const progressText = document.querySelector("#progressLabel").previousElementSibling;
+    if (progressText) progressText.innerText = t.progress + " :";
+
+    // 5. Update Empty States
+    document.querySelector("#emptyState span:nth-child(2)").innerText = t.emptyInboxTitle;
+    document.querySelector("#emptyState span:nth-child(3)").innerText = t.emptyInboxDesc;
+    document.querySelector("#emptyState button").lastChild.textContent = " " + t.addTask;
+
+    document.querySelector("#emptyCompletedState span:nth-child(2)").innerText = t.emptyCompletedTitle;
+    document.querySelector("#emptyCompletedState span:nth-child(3)").innerText = t.emptyCompletedDesc;
+
+    document.querySelector("#emptyTrashState span:nth-child(2)").innerText = t.emptyTrashTitle;
+    document.querySelector("#emptyTrashState span:nth-child(3)").innerText = t.emptyTrashDesc;
+}
 
 
 
@@ -1264,5 +1385,5 @@ function dragMouseUp(e) {
     renderTask()
     check()
 }
-
+applyLanguage()
 check()

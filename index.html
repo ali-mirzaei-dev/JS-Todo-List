@@ -225,32 +225,29 @@
 
     <!--==================# CHOOSE LANGUAGE POP-UP ==================-->
     <!--=============================================================-->
-    <div id="chooseLanguagePopUp" class="absolute inset-0 z-150 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 ">
+    <div id="chooseLanguagePopUp" class="absolute inset-0 z-150 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
         <div class="bg-bgDef border border-hover rounded-3xl shadow-2xl w-full max-w-md p-8 flex flex-col items-center text-center gap-6 relative">
 
             <div class="flex flex-col gap-2">
                 <h2 class="text-2xl font-bold text-primary">Choose your language</h2>
-                <p class="text-sm text-secondary">زبان خود را انتخاب کنید</p>
+                <p class="text-sm text-secondary" dir="rtl">زبان خود را انتخاب کنید</p>
             </div>
 
-            <!-- Language Choices -->
-            <div class="w-full flex flex-col sm:flex-row gap-4 mt-2">
+            <div class="w-full flex gap-4 mt-2">
 
-                <!-- English Button -->
-                <button onclick="setLanguage('en')" class="lang-choice group flex-1 flex items-center justify-center gap-3 p-4 border-2 border-hover rounded-xl hover:border-accent hover:bg-hover/50 transition-all cursor-pointer">
+                <button onclick="setLanguage('en')" class="lang-choice group flex-1 flex items-center justify-center gap-2 p-4 border-2 border-hover rounded-xl hover:border-accent hover:bg-hover/50 transition-all cursor-pointer">
                     <span class="font-bold text-primary text-md group-hover:text-accent transition-colors">English</span>
                 </button>
 
-                <!-- Farsi Button -->
-                <button onclick="setLanguage('fa')" class="lang-choice group flex-1 flex items-center justify-center gap-3 p-4 border-2 border-hover rounded-xl hover:border-accent hover:bg-hover/50 transition-all cursor-pointer">
+                <button onclick="setLanguage('fa')" class="lang-choice group flex-1 flex items-center justify-center gap-2 p-4 border-2 border-hover rounded-xl hover:border-accent hover:bg-hover/50 transition-all cursor-pointer">
                     <span class="font-bold text-primary text-lg group-hover:text-accent transition-colors">فارسی</span>
                 </button>
             </div>
 
-            <!-- Skip Button -->
-            <button onclick="setLanguage('en')" class="text-xs text-secondary hover:text-accent uppercase tracking-widest transition-colors mt-2">
-                Skip for now
-            </button>
+            <div class="w-full pt-4 border-t border-border-soft flex flex-col gap-1.5">
+                <span class="text-sm text-secondary">You can change your language in the settings tab later!</span>
+                <span class="text-sm text-secondary" dir="rtl">شما میتوانید زبان خود را از قسمت تنظیمات تغییر دهید!</span>
+            </div>
         </div>
     </div>
 
