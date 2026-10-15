@@ -16,7 +16,6 @@
     --color-yellow-400: oklch(85.2% 0.199 91.936);
     --color-yellow-500: oklch(79.5% 0.184 86.047);
     --color-yellow-600: oklch(68.1% 0.162 75.834);
-    --color-yellow-700: oklch(55.4% 0.135 66.442);
     --color-green-300: oklch(87.1% 0.15 154.449);
     --color-green-500: oklch(72.3% 0.219 149.579);
     --color-green-600: oklch(62.7% 0.194 149.214);
@@ -384,6 +383,9 @@
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
+  .h-20 {
+    height: calc(var(--spacing) * 20);
+  }
   .h-60 {
     height: calc(var(--spacing) * 60);
   }
@@ -410,6 +412,9 @@
   }
   .w-12 {
     width: calc(var(--spacing) * 12);
+  }
+  .w-20 {
+    width: calc(var(--spacing) * 20);
   }
   .w-32 {
     width: calc(var(--spacing) * 32);
@@ -608,10 +613,6 @@
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
   }
-  .border-b-3 {
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 3px;
-  }
   .border-b-4 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 4px;
@@ -620,19 +621,12 @@
     --tw-border-style: dashed;
     border-style: dashed;
   }
-  .border-dashed\! {
-    --tw-border-style: dashed !important;
-    border-style: dashed !important;
-  }
   .border-none {
     --tw-border-style: none;
     border-style: none;
   }
   .border-accent {
     border-color: var(--color-accent);
-  }
-  .border-accent\! {
-    border-color: var(--color-accent) !important;
   }
   .border-accent\/20 {
     border-color: color-mix(in srgb, #d63226 20%, transparent);
@@ -644,12 +638,6 @@
     border-color: color-mix(in srgb, #d63226 50%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
       border-color: color-mix(in oklab, var(--color-accent) 50%, transparent);
-    }
-  }
-  .border-accent\/50\! {
-    border-color: color-mix(in srgb, #d63226 50%, transparent) !important;
-    @supports (color: color-mix(in lab, red, red)) {
-      border-color: color-mix(in oklab, var(--color-accent) 50%, transparent) !important;
     }
   }
   .border-bgDef {
@@ -806,10 +794,6 @@
   .text-3xl {
     font-size: var(--text-3xl);
     line-height: var(--tw-leading, var(--text-3xl--line-height));
-  }
-  .text-4xl {
-    font-size: var(--text-4xl);
-    line-height: var(--tw-leading, var(--text-4xl--line-height));
   }
   .text-base {
     font-size: var(--text-base);

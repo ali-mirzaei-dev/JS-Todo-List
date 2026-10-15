@@ -1099,9 +1099,15 @@ function deleteForever(element) {
 
 // ------- REORDER TASKS ------- //
 function toggleReorderMode() {
-    isReorder = !isReorder
-    renderTask()
-    check()
+    if (totalTaskCount > 1) {
+        isReorder = !isReorder
+        renderTask()
+        check()
+    }else if( totalTaskCount == 1){
+        showToast("there is only one task" , 'assets/Images/empty ghost.SVG')
+    }else {
+        showToast('there is no task to reorder' , 'assets/Images/empty ghost.SVG')
+    }
 }
 
 // ------- MOUSE DOWN || STRAT DRAGING ------- //
