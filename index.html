@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="assets/Font/font/style.css">
     <link rel="stylesheet" href="assets/Font/FontSocials/style.css">
 
-
     <!-- npx @tailwindcss/cli -i ./assets/StyleSheet/master.css -o ./assets/StyleSheet/output.css --watch -->
 </head>
 
@@ -66,7 +65,7 @@
 
                         <span id="userNameDisplay" class="text-xl font-bold text-primary capitalize">Ali Mirzaei</span>
 
-                        <input id="userNameInput" type="text" class="hidden text-xl font-bold text-primary bg-transparent border-b border-accent focus:outline-none capitalize w-32">
+                        <input id="userNameInput" onkeydown="submitUserName(event)" type="text" class="hidden text-xl font-bold text-primary bg-transparent border-b border-accent focus:outline-none capitalize w-32">
 
                         <i id="editNameBtn" class="icon" title="Edit Name"></i>
 

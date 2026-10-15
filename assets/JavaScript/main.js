@@ -74,6 +74,33 @@ editNameBtn.addEventListener("click", () => {
     }, 0);
 })
 
+// ------- CONFIRMING AND CANCELING USERNAME EDIT WITH KEYS ------- //
+function submitUserName(e) {
+
+    if (e.key == "Enter") {
+        editNameBtn.classList.remove("hidden");
+        userNameDisplay.classList.remove("hidden");
+        userNameInput.classList.add("hidden");
+        buttonsBox.classList.add("hidden");
+        buttonsBox.classList.remove("flex");
+
+        let newUserName = userNameInput.value.trim();
+        if (newUserName !== "") {
+            userNameDisplay.innerText = newUserName;
+            localStorage.setItem("UserName", newUserName);
+        }
+    }
+
+    if (e.key == "Escape") {
+        editNameBtn.classList.remove("hidden");
+        userNameDisplay.classList.remove("hidden");
+        userNameInput.classList.add("hidden");
+        buttonsBox.classList.add("hidden");
+        buttonsBox.classList.remove("flex");
+    }
+}
+
+
 // ------- CANCELING USERNAME EDIT ------- //
 cancelNameBtn.addEventListener("click", () => {
     editNameBtn.classList.remove("hidden");
@@ -679,7 +706,7 @@ function clearCompletedTasks() {
 
 
         tasks = tasks.filter((val) => val.status !== "on")
-        
+
         showToast("Completed tasks moved to trash!", "assets/Images/Delete.WebP")
         renderTask()
         loader()
