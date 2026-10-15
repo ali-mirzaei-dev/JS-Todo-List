@@ -14,20 +14,19 @@
 
 <body class="relative flex flex-col md:flex-row">
 
-    <!--================== WELCOME POP UP ==================-->
+    <!--==================#1 WELCOME POP UP  ==================-->
+    <!--=======================================================-->
     <div id="welcomePopUp" class="absolute inset-0 z-100 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 ">
         <div class="bg-bgDef border border-hover rounded-3xl shadow-2xl w-full max-w-lg p-8 flex flex-col items-center text-center gap-4 relative">
 
             <button id="closeWelcome" class="absolute top-4 right-4 text-secondary hover:text-accent text-xl cursor-pointer">✕</button>
 
-            <!-- Profile Card -->
             <img src="assets/Images/Avatar2.webp" alt="Ali Mirzaei" class="w-40 h-60 rounded-4xl object-cover border-4 border-accent/20 shadow-md">
             <h3 class="text-2xl font-bold text-primary">Ali Mirzaei</h3>
             <p class="text-md text-accent font-medium">&lt;Frontend Developer/&gt;</p>
 
             <p class="text-sm text-secondary max-w-xs leading-relaxed">Welcome to my state-driven Task Manager. Built from scratch with Vanilla JS and Tailwind CSS.</p>
 
-            <!-- Social Icons -->
             <div class="flex items-center gap-6 mt-2">
                 <a title="Github" target="_blank" href="https://github.com/ali-mirzaei-dev"><i class="icon text-secondary hover:text-accent transition-colors text-xl"></i></a>
                 <a title="Linkdin" target="_blank" href="https://www.linkedin.com/in/ali-mirzaei-dev/"><i class="icon text-secondary hover:text-accent transition-colors text-xl"></i></a>
@@ -35,7 +34,6 @@
                 <a title="Instagram" target="_blank" href="https://instagram.com/ali.mirzaei.dev"><i class="icon text-secondary hover:text-accent transition-colors text-xl"></i></a>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-3 mt-6 w-full">
                 <button id="neverShowBtn" class="flex-1 py-2.5 rounded-lg border border-hover text-secondary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">
                     Never show again
@@ -44,71 +42,48 @@
         </div>
     </div>
 
-    <!--==================#1 LEFT SIDE NAV ==================-->
+    <!--==================#2 LEFT SIDE NAV ==================-->
     <!--==================================================-->
     <nav class="absolute inset-y-0 left-0 w-full -translate-x-full md:translate-x-0 md:static md:block md:w-[20%] lg:w-[15%] h-screen transition-all duration-500 z-30 overflow-hidden">
-
         <i id="closeBtn" class="absolute top-2.5 right-2.5 text-2xl icon">ﵽ</i>
-
-
         <section class="flex h-screen flex-col gap-4 bg-sidebar py-5 px-4 border-r-2 border-bgDef 2xl:container">
 
-            <!--==================#1-1 TOP ROW (Name & Close) ==================-->
+            <!--==================#2-1 TOP ROW ==================-->
             <div class="w-full flex justify-between items-start mb-4">
-
-                <!-- Left Side: Welcome & Name -->
                 <div class="flex flex-col gap-1 mt-1">
-
                     <span class="text-xs text-secondary uppercase tracking-wider">Welcome,</span>
-
                     <div class="flex items-center gap-2">
-
                         <span id="userNameDisplay" class="text-xl font-bold text-primary capitalize">Ali Mirzaei</span>
-
                         <input id="userNameInput" onkeydown="submitUserName(event)" type="text" class="hidden text-xl font-bold text-primary bg-transparent border-b border-accent focus:outline-none capitalize w-32">
-
                         <i id="editNameBtn" class="icon" title="Edit Name"></i>
-
                         <div id="buttonsBox" class="hidden">
                             <button id="cancelNameBtn"><i class="icon"></i></button>
                             <button id="saveNameBtn"><i class="icon">מּ</i></button>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
             <!--==================#1-2 SIDE MENU ==================-->
             <ul class="w-full flex flex-col gap-1.5 p-2 *:flex *:items-center *:gap-3 *:py-2.5 *:px-3 *:rounded-lg *:cursor-pointer *:capitalize *:text-sm *:font-medium *:text-secondary *:transition-colors *:duration-200 *:hover:bg-hover *:hover:text-primary">
-
                 <li onclick="switchTab(this,'inbox')" class="active-link">
                     <i class="icon text-lg"></i>
                     inbox
                     <span id="supInbox" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
-
                 <li onclick="switchTab(this,'completed')">
                     <i class="icon text-lg"></i>
                     Completed
                     <span id="supCompleted" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
-
                 <li onclick="switchTab(this ,'trash')">
                     <i class="icon text-lg"></i>
                     trash
                     <span id="supTrash" class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-md px-1 text-[11px] leading-none font-semibold text-secondary bg-accent/10 transition-colors">0</span>
                 </li>
-                <!-- <li class="text-xs!">
-                    <i class="icon text-lg"></i>
-                    comming soon ...
-                </li> -->
-                <!-- <li class="text-xs!">
-                    <i class="icon text-lg"></i>
-                    comming soon ...
-                </li> -->
             </ul>
-            <!-- Credit Button -->
+
+            <!--==================#1-3 CREDIT  ==================-->
             <div class="w-full mt-auto pt-4 border-t border-hover">
                 <button onclick="showCredits()" class="w-full flex items-center gap-3 p-2 rounded-lg cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors capitalize">
                     <i class="icon text-lg"></i>
@@ -118,35 +93,33 @@
         </section>
     </nav>
 
-    <!--==================#2 RIGHT CONTENT  ==================-->
+    <!--==================#3 RIGHT CONTENT  ==================-->
     <!--======================================================-->
     <main class="flex flex-col content-start justify-start duration-500 **:duration-500 flex-1 h-screen w-full bg-bgDef text-primary overflow-y-auto">
 
-        <!--==================#2-1 HEADER ==================-->
+        <!--==================#3-1 HEADER ==================-->
         <header class="flex w-full h-fit justify-between md:justify-end p-3 sticky top-0 backdrop-blur-md z-20">
 
-            <!--=======#2-1-1 ICON LEFT  =======-->
+            <!--=======#3-1-1 ICON LEFT  =======-->
             <i id="leftBtn" class="md:hidden text-2xl icon px-1 py-2">ﵽ</i>
 
-            <!--=======#2-1-2 ICONS RIGHT  =======-->
+            <!--=======#3-1-2 ICONS RIGHT  =======-->
             <div class="flex gap-3 md:gap-5 items-center">
                 <span id="themeToggle" class="flex text-md font-medium capitalize text-secondary items-center gap-1 p-1 rounded-lg hover:bg-hover cursor-pointer">
                     <i class="icon text-2xl"></i>
                     <span class="hidden sm:inline">display</span>
                 </span>
-                <i class="mt-0.5 text-3xl icon cursor-pointer">ￖ</i>
             </div>
         </header>
 
-        <!--==================#2-2 CONTENT ==================-->
+        <!--==================#3-2 CONTENT ==================-->
         <section class="w-full flex flex-wrap content-start flex-1 relative px-4 md:px-16 lg:pl-40 lg:pr-70 gap-2 ">
-
             <h2 onclick="check()" class="w-full capitalize text-[32px] mt-4">Inbox</h2>
 
-            <!--=======#2-2-1 TOOLBAR (Row 1: Counters & Tiny Actions) =======-->
+            <!--=======#3-2-1 TOOLBAR =======-->
             <div id="toolBar" class="w-full flex-wrap justify-between items-center gap-4 py-2 mb-4 border-b border-border-soft hidden">
 
-                <!-- Left: Counters -->
+                <!-- COUNTERS -->
                 <div class="flex items-center gap-4 md:gap-6 text-sm font-medium text-secondary capitalize">
                     <span class="flex items-center gap-1.5">
                         <i class="icon no-hover text-base cursor-default"></i>
@@ -162,14 +135,14 @@
                     </span>
                 </div>
 
-                <!-- 👇 RIGHT: Actions Grouped Together 👇 -->
+                <!-- ACTION BUTTONS -->
                 <div class="flex items-center gap-2">
 
                     <!-- Reorder Button -->
                     <div id="reorderBtnWrapper">
                         <button onclick="toggleReorderMode()" class="text-sm text-secondary hover:text-accent flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover" title="Reorder Tasks">
                             <i class="icon no-hover text-base"></i>
-                            <span class="hidden sm:inline text-sm">Reorder</span>
+                            <span class="hidden sm:inline text-sm">Reorder Tasks</span>
                         </button>
                     </div>
 
@@ -181,21 +154,20 @@
                         </button>
                     </div>
 
-                    <!-- 👇 NEW: Clear Trash Button 👇 -->
+                    <!-- Clear Trash Button -->
                     <div id="clearTrashWrapper" class="hidden">
                         <button onclick="clearTrashTasks()" class="text-sm text-secondary hover:text-accent flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover" title="Empty Trash">
                             <i class="icon no-hover text-base"></i>
                             <span class="hidden sm:inline text-sm">Empty Trash</span>
                         </button>
                     </div>
-
                 </div>
             </div>
 
-            <!--=======#2-2-2 SORT ROW & PROGRESS (Row 2) =======-->
-            <!-- This entire block will be hidden in the Completed tab! -->
+            <!--=======#2-2-2 SORT ROW & PROGRESS  =======-->
             <div id="sortContainer" class="w-full items-start justify-between gap-4 text-sm text-secondary capitalize mb-4 hidden relative">
-                <!-- LEFT: Sort Dropdown -->
+
+                <!-- Sort Dropdown -->
                 <div class="flex items-center gap-2 shrink-0">
                     <i class="icon no-hover text-lg cursor-default"></i>
                     <span class="font-medium">Sort by:</span>
@@ -205,7 +177,7 @@
                     </button>
                 </div>
 
-                <!-- RIGHT: Progress Bar -->
+                <!-- Progress Bar -->
                 <div class="flex flex-wrap items-center gap-3 flex-1 max-w-[40%]">
                     <div class="w-full flex gap-4">
                         <span class="font-bold text-secondary">Progress :</span>
@@ -217,40 +189,7 @@
                 </div>
             </div>
 
-            <!--=======#2-2-3 CLEAR COMPLETED BTN (Hidden by default) =======-->
-            <!-- This only shows up in the Completed Tab! -->
-
-
-            <!--=======#2-2-2 SORT ROW & PROGRESS =======-->
-            <div id="sortContainer" class="w-full items-start justify-between gap-4 text-sm text-secondary capitalize mb-4 hidden relative">
-
-                <!-- LEFT: Sort Dropdown -->
-                <div class="flex items-center gap-2 shrink-0">
-                    <i class="icon no-hover text-lg cursor-default"></i>
-                    <span class="font-medium">Sort by:</span>
-
-                    <button onclick="event.stopPropagation(); toggleSortMenu(this)" class="relative flex items-center gap-2 bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer hover:border-black transition-colors">
-                        <span id="sortLabel">all</span>
-                        <i class="icon no-hover text-xs"></i>
-                    </button>
-                </div>
-
-                <!-- RIGHT: Progress Bar -->
-                <div class="flex flex-wrap items-center gap-3 flex-1 max-w-[40%]">
-                    <div class="w-full flex gap-4">
-                        <span class="font-bold text-secondary">progress : </span>
-                        <span id="progressLabel" class="font-bold text-primary shrink-0">0%</span>
-                    </div>
-
-                    <div class="flex-1 flex h-2.5 bg-hover rounded-full overflow-hidden border border-border-soft">
-                        <div id="progressBar" class="h-full bg-accent rounded-full transition-all duration-700 ease-out"></div>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <!--=======#2-2-2 EMPTY STATE =======-->
+            <!--=======#2-2-3 EMPTY STATE =======-->
             <div id="emptyState" class="absolute w-full max-w-sm px-4 flex flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <img class="max-w-xs w-full h-auto" src="assets/Images/emptyStateInbox.png" alt="">
                 <span class="w-full font-bold text-primary">Capture now, plan later</span>
@@ -260,32 +199,29 @@
                     add task</button>
             </div>
 
-            <!--=======#2-2-3 EMPTY COMPLETED STATE =======-->
+            <!--=======#2-2-4 EMPTY COMPLETED STATE =======-->
             <div id="emptyCompletedState" class="absolute w-full max-w-sm px-4 flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
                 <img class="max-w-xs w-full h-auto" src="assets/Images/emptyStateComplete.png" alt="">
                 <span class="w-full font-bold text-primary">Nothing completed yet</span>
                 <span class="w-full text-secondary px-6">Tasks you complete will appear here so you can look back at what you've accomplished.</span>
             </div>
 
-            <!--=======#2-2-4 EMPTY TRASH STATE =======-->
+            <!--=======#2-2-5 EMPTY TRASH STATE =======-->
             <div id="emptyTrashState" class="absolute w-full max-w-sm px-4 flex-wrap justify-center text-center gap-3 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden">
                 <img class="max-w-xs w-full h-auto" src="assets/Images/emptyStateTrash.png" alt="">
                 <span class="w-full font-bold text-primary">Trash is empty</span>
                 <span class="w-full text-secondary px-6">Tasks you delete will be moved here. You can restore them or permanently remove them later.</span>
             </div>
 
-            <!--=======#2-2-5 NEW TASKS =======-->
+            <!--=======#2-2-6 NEW TASKS =======-->
             <ul id="newTasksPlace" class="flex flex-wrap content-start w-full">
 
+                <!-- +++++ JS WILL ADD THE TASKS HERE +++++ -->
+
             </ul>
-
         </section>
-
-
     </main>
-
 </body>
-
 <script src="assets/JavaScript/main.js"></script>
 
 </html>
