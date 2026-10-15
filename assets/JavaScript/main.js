@@ -33,6 +33,10 @@ const activeTasks = document.getElementById("activeTasks")
 const reorderBtnWrapper = document.getElementById("reorderBtnWrapper")
 const clearCompletedWrapper = document.getElementById("clearCompletedWrapper")
 const clearTrashWrapper = document.getElementById("clearTrashWrapper")
+const chooseLanguagePopUp = document.getElementById("chooseLanguagePopUp")
+
+
+
 
 let tasks = []
 let trashTasks = []
@@ -51,6 +55,36 @@ let isEditing = false
 let isReorder = false
 let startToDragTaskId = null
 let finalTaskToReplaceId = null
+let PageLanguage = ""
+
+// ------- PAGE LANGUAGE LOAD ------- //
+let PageLanguageStorage = localStorage.getItem("selectedLanguage")
+if (PageLanguageStorage) {
+    chooseLanguagePopUp.classList.add("hidden")
+    chooseLanguagePopUp.classList.remove("flex")
+
+}
+
+// ------- PAGE LANGUAGE SAVE ------- //
+function setLanguage(language) {
+
+    PageLanguage = language
+    localStorage.setItem("selectedLanguage", PageLanguage)
+
+    chooseLanguagePopUp.classList.add("hidden")
+    chooseLanguagePopUp.classList.remove("flex")
+}
+
+
+
+
+
+
+
+
+
+
+
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
