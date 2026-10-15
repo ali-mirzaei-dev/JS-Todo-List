@@ -4,7 +4,7 @@ const nav = document.querySelector("nav")
 const main = document.querySelector("main")
 const leftBtn = document.getElementById("leftBtn")
 const placeHolder = document.querySelector("body")
-const themeToggle = document.getElementById("themeToggle");
+const themeToggle = document.getElementById("themeToggle")
 const closeWelcome = document.getElementById("closeWelcome")
 const welcomepopup = document.getElementById("welcomePopUp")
 const neverShowPopUp = document.getElementById("neverShowBtn")
@@ -30,6 +30,9 @@ const sortSelect = document.getElementById("sortSelect")
 const progressBar = document.getElementById("progressBar")
 const progressLabel = document.getElementById("progressLabel")
 const activeTasks = document.getElementById("activeTasks")
+const reorderBtnWrapper = document.getElementById("reorderBtnWrapper")
+const clearCompletedWrapper = document.getElementById("clearCompletedWrapper")
+const clearTrashWrapper = document.getElementById("clearTrashWrapper")
 
 let tasks = []
 let trashTasks = []
@@ -235,7 +238,7 @@ function keyFunctions(e) {
         submitTask()
     }
 
-    if(e.key === "Escape"){
+    if (e.key === "Escape") {
         e.preventDefault()
         deleteAddBox()
     }
@@ -671,18 +674,32 @@ function clearCompletedTasks() {
             if (val.status === "on") {
                 trashTasks.push(val);
             }
-        });
-
+        })
         saveTrashTasks();
 
-        tasks = tasks.filter((val) => val.status !== "on");
 
-
+        tasks = tasks.filter((val) => val.status !== "on")
+        
+        showToast("Completed tasks moved to trash!", "assets/Images/Delete.WebP")
         renderTask()
         loader()
         check()
     }
 }
+
+// ------- CLEAR ALL TRASH TASKS PERMANENTLY ------- //
+function clearTrashTasks() {
+    if (trashTasks.length > 0) {
+
+        trashTasks = []
+        saveTrashTasks()
+
+        showToast("Trash Emptied Forever!", "assets/Images/Delete.WebP")
+        renderTask()
+        check()
+    }
+}
+
 
 // ------- LOADER() ||| THIS CEHCKS IF IT SHOULD SHOW THE EMPTY STATE and TOOLBAR ------- //
 function loader() {
@@ -690,16 +707,24 @@ function loader() {
     if (currentTab === 'inbox') {
         emptystateComplete.classList.add("hidden")
         emptyStateTrash.classList.add("hidden")
+        clearTrashWrapper.classList.add("hidden")
+        clearCompletedWrapper.classList.add("hidden")
+        reorderBtnWrapper.classList.add("flex")
+        reorderBtnWrapper.classList.remove("hidden")
 
         // ------- INBOX
         if (tasks.length == 0) {
-            if (newTaskInput) newTaskInput.remove();
-            if (addNewTask) addNewTask.remove();
+            if (newTaskInput) newTaskInput.remove()
+            if (addNewTask) addNewTask.remove()
             emptyState.classList.remove("hidden")
             toolBar.classList.remove("flex")
             toolBar.classList.add("hidden")
             sortContainer.classList.add("hidden")
             sortContainer.classList.remove("flex")
+            reorderBtnWrapper.classList.remove("hidden")
+            clearCompletedWrapper.classList.add("hidden")
+            clearTrashWrapper.classList.add("hidden")
+
         } else {
             emptyState.classList.add("hidden")
             toolBar.classList.add("flex")
@@ -720,18 +745,22 @@ function loader() {
         emptyStateTrash.classList.add("hidden")
         sortContainer.classList.add("hidden")
         sortContainer.classList.remove("flex")
+        reorderBtnWrapper.classList.add("hidden")
+        clearTrashWrapper.classList.add("hidden")
 
         if (completeTaskCount === 0) {
             emptystateComplete.classList.remove("hidden")
             emptystateComplete.classList.add("flex")
             toolBar.classList.remove("flex")
             toolBar.classList.add("hidden")
+            clearCompletedWrapper.classList.add("hidden")
 
         } else {
             emptystateComplete.classList.add("hidden")
             emptystateComplete.classList.remove("flex")
             toolBar.classList.add("flex")
             toolBar.classList.remove("hidden")
+            clearCompletedWrapper.classList.remove("hidden")
         }
     }
     // ------- TRASH
@@ -741,33 +770,35 @@ function loader() {
         emptystateComplete.classList.remove("flex")
         sortContainer.classList.add("hidden")
         sortContainer.classList.remove("flex")
+        reorderBtnWrapper.classList.add("hidden")
+        clearCompletedWrapper.classList.add("hidden")
 
         if (trashTasks.length == 0) {
             emptyStateTrash.classList.remove("hidden")
             emptyStateTrash.classList.add("flex")
             toolBar.classList.remove("flex")
             toolBar.classList.add("hidden")
+            clearTrashWrapper.classList.add("hidden")
 
         } else {
             emptyStateTrash.classList.add("hidden")
             emptyStateTrash.classList.remove("flex")
             toolBar.classList.add("flex")
             toolBar.classList.remove("hidden")
+            clearTrashWrapper.classList.remove("hidden")
         }
-
     }
-
 }
 
 // ------- GLOBAL CLICK OUTSIDE LISTENER ------- //
 document.addEventListener("click", (e) => {
 
-    const isClickInsideMenu = e.target.closest(".dropdown-menu");
+    const isClickInsideMenu = e.target.closest(".dropdown-menu")
 
     if (!isClickInsideMenu) {
-        const openMenus = document.querySelectorAll(".dropdown-menu");
+        const openMenus = document.querySelectorAll(".dropdown-menu")
 
-        openMenus.forEach(menu => menu.remove());
+        openMenus.forEach(menu => menu.remove())
     }
 });
 
@@ -778,7 +809,7 @@ function openMoreMenu(element, taskId = null) {
 
     // ------- THIS ALLOWS ONLY ONE MENU TO OPEN
     const isMoreOpen2 = document.querySelectorAll(".dropdown-menu")
-    isMoreOpen2.forEach(menu => menu.remove());
+    isMoreOpen2.forEach(menu => menu.remove())
     deleteAddBox()
 
     if (isMoreOpen) {
@@ -787,7 +818,7 @@ function openMoreMenu(element, taskId = null) {
     }
     else {
 
-        let taskData = tasks.find(val => val.id == taskId);
+        let taskData = tasks.find(val => val.id == taskId)
 
         let pinButtonHTML = ""
 
@@ -796,7 +827,7 @@ function openMoreMenu(element, taskId = null) {
             <li onclick="unpinTask(event , ${taskId})" class="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm font-medium text-secondary hover:bg-hover hover:text-primary transition-colors group">
                 <i class="icon no-hover text-base group-hover:text-violet-500"></i>
                 Unpin from top
-            </li>`;
+            </li>`
 
         } else {
             pinButtonHTML = `

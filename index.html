@@ -144,38 +144,83 @@
 
             <h2 onclick="check()" class="w-full capitalize text-[32px] mt-4">Inbox</h2>
 
-            <!--=======#2-2-1 TOOLBAR =======-->
-            <div id="toolBar" class="w-full flex-col md:flex-row flex-wrap justify-between items-start md:items-center gap-4 py-2 mb-6 border-b border-border-soft hidden">
+            <!--=======#2-2-1 TOOLBAR (Row 1: Counters & Tiny Actions) =======-->
+            <div id="toolBar" class="w-full flex-wrap justify-between items-center gap-4 py-2 mb-4 border-b border-border-soft hidden">
 
-                <!-- Left btns -->
+                <!-- Left: Counters -->
                 <div class="flex items-center gap-4 md:gap-6 text-sm font-medium text-secondary capitalize">
                     <span class="flex items-center gap-1.5">
                         <i class="icon no-hover text-base cursor-default"></i>
-                        Total:
-                        <span id="totalCounter" class="text-primary font-bold">0</span>
+                        Total: <span id="totalCounter" class="text-primary font-bold">0</span>
                     </span>
                     <span class="flex items-center gap-1.5">
                         <i class="icon no-hover text-base cursor-default"></i>
-                        active:
-                        <span id="activeTasks" class="text-yellow-600 font-bold">0</span>
+                        Active: <span id="activeTasks" class="text-yellow-600 font-bold">0</span>
                     </span>
                     <span class="flex items-center gap-1.5">
                         <i class="icon no-hover text-lg cursor-default"></i>
-                        Completed:
-                        <span id="completedCounter" class="text-green-700 font-bold">0</span>
+                        Completed: <span id="completedCounter" class="text-green-700 font-bold">0</span>
                     </span>
                 </div>
 
-                <!-- Right btns -->
-                <!-- <button onclick="clearCompletedTasks()" class="text-sm text-secondary hover:text-accent capitalize flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover">
-                    <i class="icon no-hover text-base"></i>
-                    Clear Completed
-                </button> -->
-                <button onclick="toggleReorderMode()" class="text-sm text-secondary  capitalize flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover">
-                    <i class="icon no-hover text-base"></i>
-                    <span class="hidden sm:inline">Reorder Tasks</span>
-                </button>
+                <!-- 👇 RIGHT: Actions Grouped Together 👇 -->
+                <div class="flex items-center gap-2">
+
+                    <!-- Reorder Button -->
+                    <div id="reorderBtnWrapper">
+                        <button onclick="toggleReorderMode()" class="text-sm text-secondary hover:text-accent flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover" title="Reorder Tasks">
+                            <i class="icon no-hover text-base"></i>
+                            <span class="hidden sm:inline text-sm">Reorder</span>
+                        </button>
+                    </div>
+
+                    <!-- Clear Completed Button -->
+                    <div id="clearCompletedWrapper" class="hidden">
+                        <button onclick="clearCompletedTasks()" class="text-sm text-secondary hover:text-accent flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover" title="Clear Completed Tasks">
+                            <i class="icon no-hover text-base"></i>
+                            <span class="hidden sm:inline text-sm">Clear Completed</span>
+                        </button>
+                    </div>
+
+                    <!-- 👇 NEW: Clear Trash Button 👇 -->
+                    <div id="clearTrashWrapper" class="hidden">
+                        <button onclick="clearTrashTasks()" class="text-sm text-secondary hover:text-accent flex items-center gap-1 cursor-pointer transition-colors py-1 px-2 rounded-lg hover:bg-hover" title="Empty Trash">
+                            <i class="icon no-hover text-base"></i>
+                            <span class="hidden sm:inline text-sm">Empty Trash</span>
+                        </button>
+                    </div>
+
+                </div>
             </div>
+
+            <!--=======#2-2-2 SORT ROW & PROGRESS (Row 2) =======-->
+            <!-- This entire block will be hidden in the Completed tab! -->
+            <div id="sortContainer" class="w-full items-start justify-between gap-4 text-sm text-secondary capitalize mb-4 hidden relative">
+                <!-- LEFT: Sort Dropdown -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <i class="icon no-hover text-lg cursor-default"></i>
+                    <span class="font-medium">Sort by:</span>
+                    <button onclick="event.stopPropagation(); toggleSortMenu(this)" class="relative flex items-center gap-2 bg-transparent border border-hover rounded-md py-1 px-2 text-primary font-medium capitalize cursor-pointer hover:border-accent transition-colors">
+                        <span id="sortLabel">All</span>
+                        <i class="icon no-hover text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- RIGHT: Progress Bar -->
+                <div class="flex flex-wrap items-center gap-3 flex-1 max-w-[40%]">
+                    <div class="w-full flex gap-4">
+                        <span class="font-bold text-secondary">Progress :</span>
+                        <span id="progressLabel" class="font-bold text-primary shrink-0">0%</span>
+                    </div>
+                    <div class="flex-1 flex h-2.5 bg-hover rounded-full overflow-hidden border border-border-soft">
+                        <div id="progressBar" class="h-full bg-accent rounded-full transition-all duration-700 ease-out" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!--=======#2-2-3 CLEAR COMPLETED BTN (Hidden by default) =======-->
+            <!-- This only shows up in the Completed Tab! -->
+
 
             <!--=======#2-2-2 SORT ROW & PROGRESS =======-->
             <div id="sortContainer" class="w-full items-start justify-between gap-4 text-sm text-secondary capitalize mb-4 hidden relative">
