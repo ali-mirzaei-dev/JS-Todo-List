@@ -132,7 +132,13 @@ const translations = {
         toastCompletedToTrash: "Completed tasks moved to trash!",
         toastOneTask: "There is only one task",
         toastNoTasks: "There is no task to reorder",
-        toastNoPriority: "No tasks with this priority!"
+        toastNoPriority: "No tasks with this priority!",
+        language: "Language",
+        langDesc: "Choose your preferred language.",
+        dangerZone: "Danger Zone",
+        resetDesc: "Permanently delete all tasks and settings.",
+        resetData: "Reset All Data",
+        setting: "setting"
     },
     fa: {
         welcome: " خوش اومدی،",
@@ -183,7 +189,13 @@ const translations = {
         toastCompletedToTrash: "تسک های تکمیل شده به سطل زباله منتقل شدند!",
         toastOneTask: "فقط یک تسک وجود دارد",
         toastNoTasks: "تسکی برای مرتب‌سازی وجود ندارد",
-        toastNoPriority: "هیچ تسکی با این اولویت وجود ندارد!"
+        toastNoPriority: "هیچ تسکی با این اولویت وجود ندارد!",
+        language: "زبان",
+        langDesc: "زبان مورد نظر خود را انتخاب کنید.",
+        dangerZone: "منطقه خطر",
+        resetDesc: "تمام تسک ها و تنظیمات را برای همیشه پاک کنید.",
+        resetData: "بازنشانی همه داده‌ها",
+        setting: "تنظیمات"
     }
 };
 
@@ -213,13 +225,16 @@ function applyLanguage() {
     const supTrash = document.getElementById("supTrash")
     if (supTrash) supTrash.previousSibling.textContent = " " + t.trash + " "
 
-    document.querySelector("button[onclick='showCredits()']").lastChild.textContent = t.credits
+    const settingTabId = document.getElementById("settingTabId")
+    if(settingTabId) settingTabId.lastChild.textContent = " " + t.setting + " " 
+
+    document.querySelector("button[onclick='showCredits()']").firstChild.textContent = t.credits
     themeToggle.querySelector("span").innerText = t.display
 
     // 3. Update Toolbar
-    document.querySelector("#totalCounter").previousSibling.textContent = t.total + ": "
-    document.querySelector("#activeTasks").previousSibling.textContent = t.active + ": "
-    document.querySelector("#completedCounter").previousSibling.textContent = t.completedLabel + ": "
+    document.querySelector("#totalCounter").previousSibling.textContent = t.total + " : "
+    document.querySelector("#activeTasks").previousSibling.textContent = t.active + " : "
+    document.querySelector("#completedCounter").previousSibling.textContent = t.completedLabel + " : "
 
     document.querySelector("#reorderBtnWrapper span").innerText = t.reorder
     document.querySelector("#clearCompletedWrapper span").innerText = t.clearCompleted
@@ -664,6 +679,44 @@ function renderTask() {
             newTasksPlace.appendChild(addedTrashTask);
         });
     }
+
+    // 4. SETTINGS TAB
+    else if (currentTab === 'setting') {
+        let t = translations[PageLanguage]
+
+        let addSettingList = document.createElement("ul")
+        addSettingList.className = "flex flex-col gap-4 w-full max-w-2xl mx-auto mt-10"
+
+        addSettingList.innerHTML = `
+            <li class="p-6 border border-border-soft rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 hover:bg-hover/50 transition-colors">
+                <div class="flex items-center gap-4">
+                    <i class="icon text-2xl text-secondary no-hover cursor-default"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-primary">${t.language || 'Language'}</h3>
+                        <p class="text-sm text-secondary">${t.langDesc || 'Choose your preferred language.'}</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="setLanguage('en')" class="px-4 py-2 border-2 rounded-lg font-bold text-sm transition-all ${PageLanguage === 'en' ? 'border-accent text-accent' : 'border-hover text-secondary'}">English</button>
+                    <button onclick="setLanguage('fa')" class="px-4 py-2 border-2 rounded-lg font-bold text-sm transition-all ${PageLanguage === 'fa' ? 'border-accent text-accent' : 'border-hover text-secondary'}">فارسی</button>
+                </div>
+            </li>
+
+            <li class="p-6 border-2 border-accent/30 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-4 bg-accent/5">
+                <div class="flex items-center gap-4">
+                    <i class="icon text-2xl no-hover cursor-default text-accent"></i>
+                    <div>
+                        <h3 class="text-lg font-bold text-accent">${t.dangerZone || 'Danger Zone'}</h3>
+                        <p class="text-sm text-secondary">${t.resetDesc || 'Permanently delete all tasks and settings.'}</p>
+                    </div>
+                </div>
+                <button onclick="resetDatabase()" class="px-4 py-2 bg-accent text-white rounded-lg hover:bg-red-700 transition-colors font-bold text-sm uppercase tracking-wider cursor-pointer">
+                    ${t.resetData || 'Reset All Data'}
+                </button>
+            </li>`
+
+        newTasksPlace.appendChild(addSettingList)
+    }
 }
 
 // ------- THIS SHOWS THE ADD BTN UNDER THE TASKS ------- //
@@ -934,6 +987,7 @@ function clearTrashTasks() {
 // ------- LOADER() ||| THIS CEHCKS IF IT SHOULD SHOW THE EMPTY STATE and TOOLBAR ------- //
 function loader() {
 
+    // ------- INBOX
     if (currentTab === 'inbox') {
         emptystateComplete.classList.add("hidden")
         emptyStateTrash.classList.add("hidden")
@@ -942,7 +996,6 @@ function loader() {
         reorderBtnWrapper.classList.add("flex")
         reorderBtnWrapper.classList.remove("hidden")
 
-        // ------- INBOX
         if (tasks.length == 0) {
             if (newTaskInput) newTaskInput.remove()
             if (addNewTask) addNewTask.remove()
@@ -1017,6 +1070,20 @@ function loader() {
             toolBar.classList.remove("hidden")
             clearTrashWrapper.classList.remove("hidden")
         }
+    }
+
+    // ------- SETTINGS
+    else if (currentTab === 'setting') {
+        emptyState.classList.add("hidden")
+        emptystateComplete.classList.add("hidden")
+        emptyStateTrash.classList.add("hidden")
+        clearTrashWrapper.classList.add("hidden")
+        clearCompletedWrapper.classList.add("hidden")
+        toolBar.classList.add("hidden")
+        toolBar.classList.remove("flex")
+        sortContainer.classList.add("hidden")
+        sortContainer.classList.remove("flex")
+
     }
 }
 
