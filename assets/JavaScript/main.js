@@ -138,7 +138,10 @@ const translations = {
         dangerZone: "Danger Zone",
         resetDesc: "Permanently delete all tasks and settings.",
         resetData: "Reset All Data",
-        setting: "setting"
+        setting: "setting",
+        resetConfirmTitle: "Are you absolutely sure?",
+        resetConfirmDesc: "This will permanently delete all your tasks, trash, and settings. This action cannot be undone.",
+        resetConfirmBtn: "Yes, reset everything"
     },
     fa: {
         welcome: " خوش اومدی،",
@@ -195,7 +198,10 @@ const translations = {
         dangerZone: "منطقه خطر",
         resetDesc: "تمام تسک ها و تنظیمات را برای همیشه پاک کنید.",
         resetData: "بازنشانی همه داده‌ها",
-        setting: "تنظیمات"
+        setting: "تنظیمات",
+        resetConfirmTitle: "آیا کاملاً مطمئن هستید؟",
+        resetConfirmDesc: "این کار تمام تسمکها سطل زباله و تنظیمات شما را برای همیشه پاک می‌کند. این عمل قابل بازگشت نیست.",
+        resetConfirmBtn: "بله، همه چیز بازنشانی شود"
     }
 };
 
@@ -226,7 +232,7 @@ function applyLanguage() {
     if (supTrash) supTrash.previousSibling.textContent = " " + t.trash + " "
 
     const settingTabId = document.getElementById("settingTabId")
-    if(settingTabId) settingTabId.lastChild.textContent = " " + t.setting + " " 
+    if (settingTabId) settingTabId.lastChild.textContent = " " + t.setting + " "
 
     document.querySelector("button[onclick='showCredits()']").firstChild.textContent = t.credits
     themeToggle.querySelector("span").innerText = t.display
@@ -1502,5 +1508,51 @@ function dragMouseUp(e) {
     renderTask()
     check()
 }
+
+// ------- RESET DATABASE ------- //
+function resetDatabase() {
+    let t = translations[PageLanguage]
+
+    let resetConfirmPopUp = document.createElement("div")
+    resetConfirmPopUp.className = "absolute inset-0 z-[120] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"
+
+    resetConfirmPopUp.innerHTML = `
+            <div class="bg-bgDef border border-hover rounded-xl p-6 w-full max-w-sm flex flex-col gap-5 shadow-2xl">
+                <div class="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center mx-auto">
+                    <i class="icon text-2xl text-accent no-hover cursor-default"></i>
+                </div>
+                <div class="text-center flex flex-col gap-2">
+                    <h3 class="text-lg font-bold text-primary">${t.resetConfirmTitle}</h3>
+                    <p class="text-sm text-secondary">${t.resetConfirmDesc}</p>
+                </div>
+                <div class="flex gap-3 mt-2">
+                    <button id="cancelReset" class="flex-1 py-2 rounded-lg border border-hover text-primary text-sm font-bold uppercase tracking-wider hover:bg-hover transition-colors cursor-pointer">${t.cancel}</button>
+                    <button id="confirmReset" class="flex-1 py-2 rounded-lg bg-accent text-white text-sm font-bold uppercase tracking-wider hover:bg-red-700 transition-colors cursor-pointer">${t.resetConfirmBtn}</button>
+                </div>
+            </div>`
+
+    placeHolder.appendChild(resetConfirmPopUp)
+
+    const cancelReset = document.getElementById("cancelReset")
+    cancelReset.addEventListener("click", () => {
+        resetConfirmPopUp.remove()
+    })
+
+    resetConfirmPopUp.addEventListener("click", (e) => {
+        if (e.target === resetConfirmPopUp) resetConfirmPopUp.remove()
+    })
+
+    const confirmReset = document.getElementById("confirmReset")
+    confirmReset.addEventListener("click", () => {
+        localStorage.removeItem('dataBase')
+        localStorage.removeItem('trashDataBase')
+        localStorage.removeItem('selectedLanguage')
+        localStorage.removeItem('theme')
+        localStorage.removeItem('UserName')
+
+        location.reload()
+    })
+}
+
 applyLanguage()
 check()
