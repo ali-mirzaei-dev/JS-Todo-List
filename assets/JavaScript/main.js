@@ -431,7 +431,6 @@ function addTask() {
         
             <div class="flex justify-between">
                 <div class="flex gap-2 items-center">
-                    <i class="icon text-secondary bg-hover hover:bg-gray-300">ﭐ</i>
 
                    <span onclick="event.stopPropagation(); setPriorityMenu(event)" class="flex items-center capitalize p-1 rounded-lg cursor-pointer hover:bg-hover text-primary relative">
                         <i class="icon no-hover text-secondary"></i>
