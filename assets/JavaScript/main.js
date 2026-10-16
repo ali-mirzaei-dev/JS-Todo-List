@@ -36,8 +36,6 @@ const clearTrashWrapper = document.getElementById("clearTrashWrapper")
 const chooseLanguagePopUp = document.getElementById("chooseLanguagePopUp")
 const welcomeLabel = document.getElementById("welcomeLabel")
 
-
-
 let tasks = []
 let trashTasks = []
 let currentTab = "inbox"
@@ -205,7 +203,7 @@ const translations = {
     }
 };
 
-// ------- APPLY LANGUAGE TO UI ------- //
+// ------- APPLY LANGUAGE ------- //
 function applyLanguage() {
     const t = translations[PageLanguage]
 
@@ -217,11 +215,10 @@ function applyLanguage() {
         document.documentElement.lang = "en"
     }
 
-    // 2. Update Sidebar
+    // ------- SIDEBAR 
     document.getElementById("welcomeLabel").innerText = t.welcome
     document.querySelector("h2").innerText = t[currentTab]
 
-    // Sidebar Links (Safe selector: finds the badge, changes the text right before it)
     const supInbox = document.getElementById("supInbox")
     if (supInbox) supInbox.previousSibling.textContent = " " + t.inbox + " "
 
@@ -237,7 +234,7 @@ function applyLanguage() {
     document.querySelector("button[onclick='showCredits()']").firstChild.textContent = t.credits
     themeToggle.querySelector("span").innerText = t.display
 
-    // 3. Update Toolbar
+    // ------- TOOLBAR
     document.querySelector("#totalCounter").previousSibling.textContent = t.total + " : "
     document.querySelector("#activeTasks").previousSibling.textContent = t.active + " : "
     document.querySelector("#completedCounter").previousSibling.textContent = t.completedLabel + " : "
@@ -246,15 +243,14 @@ function applyLanguage() {
     document.querySelector("#clearCompletedWrapper span").innerText = t.clearCompleted
     document.querySelector("#clearTrashWrapper span").innerText = t.emptyTrash
 
-    // 4. Update Sort & Progress
+    // ------- PROGRESS BAR AND SORT BUTTON
     document.querySelector("#sortContainer .font-medium").innerText = t.sortBy
     document.querySelector("#sortLabel").innerText = t.all
 
-    // Safe selector for Progress label
     const progressText = document.querySelector("#progressLabel").previousElementSibling
     if (progressText) progressText.innerText = t.progress + " :"
 
-    // 5. Update Empty States
+    // ------- EMPTY STATES
     document.querySelector("#emptyState span:nth-child(2)").innerText = t.emptyInboxTitle
     document.querySelector("#emptyState span:nth-child(3)").innerText = t.emptyInboxDesc
     document.querySelector("#emptyState button").lastChild.textContent = " " + t.addTask
@@ -265,15 +261,6 @@ function applyLanguage() {
     document.querySelector("#emptyTrashState span:nth-child(2)").innerText = t.emptyTrashTitle
     document.querySelector("#emptyTrashState span:nth-child(3)").innerText = t.emptyTrashDesc
 }
-
-
-
-
-
-
-
-
-
 
 // ------- LOCAL STORAGE LOAD FOR USER NAME ------- // 
 let tempUserName = localStorage.getItem("UserName")
@@ -322,7 +309,6 @@ function submitUserName(e) {
         buttonsBox.classList.remove("flex");
     }
 }
-
 
 // ------- CANCELING USERNAME EDIT ------- //
 cancelNameBtn.addEventListener("click", () => {
@@ -418,7 +404,6 @@ leftBtn.addEventListener("click", () => {
         closeSidebar();
     }
 })
-
 
 // ------- LOCAL STORAGE ALL TASKS LOAD ------- //
 let tempTasks = JSON.parse(localStorage.getItem('dataBase'))
